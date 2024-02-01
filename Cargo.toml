@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "rpg_tools_core",
+]
+resolver = "2"
