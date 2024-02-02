@@ -13,6 +13,7 @@ pub enum Color {
     Navy,
     Olive,
     Orange,
+    #[default]
     Purple,
     Red,
     SaddleBrown,
