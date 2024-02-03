@@ -47,7 +47,7 @@ impl Point2d {
         Self { x: 0, y }
     }
 
-    /// Calculates the euclidean distance to another point.
+    /// Calculates the Euclidean distance to another point.
     ///
     /// ```
     ///# use rpg_tools_core::model::math::point2d::Point2d;
