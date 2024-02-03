@@ -15,23 +15,17 @@ pub struct BorderMap<Tile, Border> {
 }
 
 impl<Tile, Border> BorderMap<Tile, Border> {
-    /// Returns a tilemap of the desired size with the default [`Tile`], but no [`Border`]s.
-    pub fn default(size: Size2d, tile: Tile) -> BorderMap<Tile, Border> {
+    /// Creates a border map with the default tile & border.
+    pub fn simple(size: Size2d, tile: Tile, border: Border) -> BorderMap<Tile, Border> {
         let tiles = vec![tile; size.len()];
+        let horizontal_borders = vec![border; get_horizontal_borders_size(size).len()];
+        let vertical_borders = vec![border; get_vertical_borders_size(size).len()];
 
-        Self::new(size, tiles).unwrap()
+        Self::new(size, tiles, horizontal_borders, vertical_borders).unwrap()
     }
 
-    /// Returns a tilemap of the desired [`Tile`]s, but no [`Border`]s.
-    pub fn new(size: Size2d, tiles: Vec<Tile>) -> Option<BorderMap<Tile, Border>> {
-        let horizontal_borders = vec![Border::Empty; get_horizontal_borders_size(size).len()];
-        let vertical_borders = vec![Border::Empty; get_vertical_borders_size(size).len()];
-
-        Self::with_borders(size, tiles, horizontal_borders, vertical_borders)
-    }
-
-    /// Returns a tilemap of the desired [`Tile`]s & [`Border`]s.
-    pub fn with_borders(
+    /// Creates a border map.
+    pub fn new(
         size: Size2d,
         tiles: Vec<Tile>,
         horizontal_borders: Vec<Border>,
@@ -117,4 +111,23 @@ pub fn below_tile(size: Size2d, tile_index: usize) -> usize {
 /// Returns the index of the vertical [`Border`] to the right of the [`Tile`].
 pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
     left_of_tile(size, tile_index) + 1
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_simple() {
+        let size = Size2d::new(2, 3);
+        let map = BorderMap::simple(size, 2, 3);
+
+        assert_eq!(map.get_size(), size);
+
+        for i in 0..6 {
+            assert_eq!(*map.get_tile(i), 2);
+        }
+
+        assert_eq!(map.get_horizontal_borders().len(), 8);
+    }
 }

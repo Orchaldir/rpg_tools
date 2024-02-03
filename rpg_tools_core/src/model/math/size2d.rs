@@ -63,6 +63,39 @@ impl Size2d {
         self.height
     }
 
+    /// Returns the number of cells covered by this size.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    /// assert_eq!(size.len(), 6);
+    /// ```
+    pub fn len(&self) -> usize {
+        (self.width * self.height) as usize
+    }
+
+    /// Converts an index to the x-coordinate of the equivalent [`Point`].
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    /// assert_eq!(size.to_x(5), 1);
+    /// ```
+    pub fn to_x(&self, index: usize) -> i32 {
+        index as i32 % self.width as i32
+    }
+
+    /// Converts an index to the y-coordinate of the equivalent [`Point`].
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    /// assert_eq!(size.to_y(5), 2);
+    /// ```
+    pub fn to_y(&self, index: usize) -> i32 {
+        index as i32 / self.width as i32
+    }
+
     /// Scales the size.
     ///
     /// ```
