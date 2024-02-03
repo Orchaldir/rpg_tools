@@ -123,17 +123,17 @@ pub fn get_vertical_borders_size(size: Size2d) -> Size2d {
     Size2d::new(size.width() + 1, size.height())
 }
 
-/// Returns the index of the horizontal [`Border`] below the [`Tile`].
+/// Returns the index of the vertical border to the left of the tile.
 pub fn left_of_tile(size: Size2d, tile_index: usize) -> usize {
     tile_index + size.to_y(tile_index) as usize
 }
 
-/// Returns the index of the horizontal [`Border`] below the [`Tile`].
+/// Returns the index of the horizontal border below the tile.
 pub fn below_tile(size: Size2d, tile_index: usize) -> usize {
     tile_index + size.width() as usize
 }
 
-/// Returns the index of the vertical [`Border`] to the right of the [`Tile`].
+/// Returns the index of the vertical border to the right of the tile.
 pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
     left_of_tile(size, tile_index) + 1
 }
