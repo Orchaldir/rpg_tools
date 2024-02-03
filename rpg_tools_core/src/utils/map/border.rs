@@ -56,12 +56,12 @@ impl<Tile: Clone, Border: Clone> BorderMap<Tile, Border> {
         &self.tiles
     }
 
-    pub fn get_tile(&self, index: usize) -> &Tile {
-        &self.tiles[index]
+    pub fn get_tile(&self, index: usize) -> Option<&Tile> {
+        self.tiles.get(index)
     }
 
-    pub fn get_tile_mut(&mut self, index: usize) -> &mut Tile {
-        &mut self.tiles[index]
+    pub fn get_tile_mut(&mut self, index: usize) -> Option<&mut Tile> {
+        self.tiles.get_mut(index)
     }
 
     /// Borders
@@ -74,16 +74,41 @@ impl<Tile: Clone, Border: Clone> BorderMap<Tile, Border> {
         &self.vertical_borders
     }
 
-    pub fn get_border(&self, tile_index: usize, side: Side2d) -> &Border {
+    pub fn get_border(&self, tile_index: usize, side: Side2d) -> Option<&Border> {
         if tile_index >= self.size.len() {
-            panic!("get_border(): Tile {} is outside the tilemap!", tile_index);
+            return None;
         }
 
         match side {
-            Side2d::Top => &self.horizontal_borders[tile_index],
-            Side2d::Left => &self.vertical_borders[left_of_tile(self.size, tile_index)],
-            Side2d::Bottom => &self.horizontal_borders[below_tile(self.size, tile_index)],
-            Side2d::Right => &self.vertical_borders[right_of_tile(self.size, tile_index)],
+            Side2d::Top => self.horizontal_borders.get(tile_index),
+            Side2d::Left => self
+                .vertical_borders
+                .get(left_of_tile(self.size, tile_index)),
+            Side2d::Bottom => self
+                .horizontal_borders
+                .get(below_tile(self.size, tile_index)),
+            Side2d::Right => self
+                .vertical_borders
+                .get(right_of_tile(self.size, tile_index)),
+        }
+    }
+
+    pub fn get_border_mut(&mut self, tile_index: usize, side: Side2d) -> Option<&mut Border> {
+        if tile_index >= self.size.len() {
+            return None;
+        }
+
+        match side {
+            Side2d::Top => self.horizontal_borders.get_mut(tile_index),
+            Side2d::Left => self
+                .vertical_borders
+                .get_mut(left_of_tile(self.size, tile_index)),
+            Side2d::Bottom => self
+                .horizontal_borders
+                .get_mut(below_tile(self.size, tile_index)),
+            Side2d::Right => self
+                .vertical_borders
+                .get_mut(right_of_tile(self.size, tile_index)),
         }
     }
 }
@@ -116,6 +141,7 @@ pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use Side2d::{Bottom, Left, Right, Top};
 
     #[test]
     fn test_simple() {
@@ -126,5 +152,31 @@ mod tests {
         assert_eq!(map.get_tiles(), &vec![2; 6]);
         assert_eq!(map.get_horizontal_borders(), &vec![3; 8]);
         assert_eq!(map.get_vertical_borders(), &vec![3; 9]);
+    }
+
+    #[test]
+    fn test_borders() {
+        let size = Size2d::new(3, 3);
+        let mut map = BorderMap::simple(size, 0, 0);
+
+        *map.get_border_mut(4, Top).unwrap() = 10;
+        *map.get_border_mut(4, Left).unwrap() = 20;
+        *map.get_border_mut(4, Bottom).unwrap() = 30;
+        *map.get_border_mut(4, Right).unwrap() = 40;
+
+        assert_eq!(map.get_border(4, Top), Some(&10));
+        assert_eq!(map.get_border(1, Bottom), Some(&10));
+
+        assert_eq!(map.get_border(4, Top), Some(&10));
+        assert_eq!(map.get_border(1, Bottom), Some(&10));
+
+        assert_eq!(map.get_border(4, Left), Some(&20));
+        assert_eq!(map.get_border(3, Right), Some(&20));
+
+        assert_eq!(map.get_border(4, Bottom), Some(&30));
+        assert_eq!(map.get_border(7, Top), Some(&30));
+
+        assert_eq!(map.get_border(4, Right), Some(&40));
+        assert_eq!(map.get_border(5, Left), Some(&40));
     }
 }
