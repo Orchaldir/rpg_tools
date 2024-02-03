@@ -2,6 +2,7 @@ pub mod builder;
 
 use anyhow::Result;
 use std::fs::File;
+use std::io::Write;
 
 /// A valid [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
 #[derive(Debug, PartialEq, Eq)]
