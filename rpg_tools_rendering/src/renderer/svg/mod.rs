@@ -1,3 +1,5 @@
+pub mod builder;
+
 use anyhow::Result;
 use std::fs::File;
 
