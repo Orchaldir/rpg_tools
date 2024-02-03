@@ -14,11 +14,11 @@ pub struct BorderMap<Tile, Border> {
     vertical_borders: Vec<Border>,
 }
 
-impl<Tile, Border> BorderMap<Tile, Border> {
+impl<Tile: Clone, Border: Clone> BorderMap<Tile, Border> {
     /// Creates a border map with the default tile & border.
     pub fn simple(size: Size2d, tile: Tile, border: Border) -> BorderMap<Tile, Border> {
         let tiles = vec![tile; size.len()];
-        let horizontal_borders = vec![border; get_horizontal_borders_size(size).len()];
+        let horizontal_borders = vec![border.clone(); get_horizontal_borders_size(size).len()];
         let vertical_borders = vec![border; get_vertical_borders_size(size).len()];
 
         Self::new(size, tiles, horizontal_borders, vertical_borders).unwrap()
@@ -123,11 +123,8 @@ mod tests {
         let map = BorderMap::simple(size, 2, 3);
 
         assert_eq!(map.get_size(), size);
-
-        for i in 0..6 {
-            assert_eq!(*map.get_tile(i), 2);
-        }
-
-        assert_eq!(map.get_horizontal_borders().len(), 8);
+        assert_eq!(map.get_tiles(), &vec![2; 6]);
+        assert_eq!(map.get_horizontal_borders(), &vec![3; 8]);
+        assert_eq!(map.get_vertical_borders(), &vec![3; 9]);
     }
 }
