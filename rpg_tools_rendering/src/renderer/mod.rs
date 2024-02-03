@@ -3,6 +3,7 @@ use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
 
 pub mod style;
+pub mod svg;
 
 pub trait Renderer {
     /// Renders a circle.
