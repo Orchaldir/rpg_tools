@@ -61,8 +61,8 @@ impl SvgBuilder {
 
 impl Renderer for SvgBuilder {
     fn render_circle(&mut self, center: &Point2d, radius: u32, style: &RenderStyle) {
-        self.lines.push(format!(
-            "  <circle cx=\"{}\" cy=\"{}\" r=\"{}\" style=\"{}\"/>",
+        self.add(format!(
+            "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" style=\"{}\"/>",
             center.x,
             center.y,
             radius,
@@ -71,8 +71,8 @@ impl Renderer for SvgBuilder {
     }
 
     fn render_rectangle(&mut self, aabb: &AABB, style: &RenderStyle) {
-        self.lines.push(format!(
-            "  <rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" style=\"{}\"/>",
+        self.add(format!(
+            "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" style=\"{}\"/>",
             aabb.start().x,
             aabb.start().y,
             aabb.size().width(),
