@@ -17,6 +17,7 @@ fn main() {
 
     builder.render_rectangle(&AABB::with_size(size), &RenderStyle::only_border(Black, 1));
     builder.render_rectangle(&AABB::simple(10, 20, 100, 200), &style);
+    builder.link("https://github.com/Orchaldir/rpg_tools");
     builder.render_circle(&Point2d::new(300, 300), 100, &style);
 
     let svg = builder.finish();

@@ -10,6 +10,7 @@ use rpg_tools_core::model::math::size2d::Size2d;
 #[derive(Debug, PartialEq, Eq)]
 pub struct SvgBuilder {
     lines: Vec<String>,
+    elements: Vec<String>,
 }
 
 impl SvgBuilder {
@@ -22,10 +23,36 @@ impl SvgBuilder {
             size.height()
         ));
 
-        Self { lines }
+        Self {
+            lines,
+            elements: Vec::new(),
+        }
+    }
+
+    fn add(&mut self, line: String) {
+        self.lines.push(format!("{}{}", self.indent(), line));
+    }
+
+    fn indent(&self) -> String {
+        "  ".repeat(self.elements.len() + 1)
+    }
+
+    pub fn link(&mut self, link: &str) {
+        self.add(format!("<a href=\"{}\">", link));
+        self.elements.push("a".to_string());
+    }
+
+    pub fn close(&mut self) {
+        if let Some(element) = self.elements.pop() {
+            self.add(format!("</{}>", element));
+        }
     }
 
     pub fn finish(mut self) -> Svg {
+        while !self.elements.is_empty() {
+            self.close();
+        }
+
         self.lines.push("</svg>".to_string());
 
         Svg { lines: self.lines }
