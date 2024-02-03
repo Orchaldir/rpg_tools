@@ -91,6 +91,16 @@ mod tests {
     use crate::utils::storage::DeleteElementResult::*;
 
     #[test]
+    fn test_create() {
+        let mut storage: Storage<TownId, Town> = Storage::default();
+
+        let id = storage.create();
+
+        assert_eq!(1, storage.get_all().len());
+        assert_element(&storage, id, "Town 0");
+    }
+
+    #[test]
     fn test_delete_element_in_empty_storage() {
         let mut storage: Storage<TownId, Town> = Storage::default();
 
@@ -116,8 +126,8 @@ mod tests {
         assert_eq!(SwappedAndRemoved { id_to_update: id2 }, storage.delete(id0));
 
         assert_eq!(2, storage.get_all().len());
-        assert_element(storage.get(id0).unwrap(), id0, "Town 2");
-        assert_element(storage.get(id1).unwrap(), id1, "Town 1");
+        assert_element(&storage, id0, "Town 2");
+        assert_element(&storage, id1, "Town 1");
     }
 
     #[test]
@@ -127,10 +137,12 @@ mod tests {
 
         assert_eq!(NotFound, storage.delete(TownId::new(5)));
         assert_eq!(1, storage.get_all().len());
-        assert_element(storage.get(id).unwrap(), id, "Town 0");
+        assert_element(&storage, id, "Town 0");
     }
 
-    fn assert_element(element: &Town, id: TownId, name: &str) {
+    fn assert_element(storage: &Storage<TownId, Town>, id: TownId, name: &str) {
+        let element = storage.get(id).unwrap();
+
         assert_eq!(id, element.id());
         assert_eq!(name, element.name());
     }
