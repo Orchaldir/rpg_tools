@@ -155,16 +155,34 @@ mod tests {
     }
 
     #[test]
+    fn test_get_invalid_tile() {
+        let size = Size2d::new(2, 3);
+        let mut map = BorderMap::simple(size, 0, 0);
+
+        assert_eq!(map.get_tile(6), None);
+        assert_eq!(map.get_tile_mut(6), None);
+    }
+
+    #[test]
     fn test_tiles() {
         let size = Size2d::new(2, 3);
-        let mut tilemap = BorderMap::simple(size, 0, 0);
+        let mut map = BorderMap::simple(size, 0, 0);
 
-        *tilemap.get_tile_mut(0).unwrap() = 1;
-        *tilemap.get_tile_mut(2).unwrap() = 3;
-        *tilemap.get_tile_mut(4).unwrap() = 4;
+        *map.get_tile_mut(0).unwrap() = 1;
+        *map.get_tile_mut(2).unwrap() = 3;
+        *map.get_tile_mut(4).unwrap() = 4;
 
-        assert_eq!(tilemap.get_size(), size);
-        assert_eq!(tilemap.get_tiles(), &vec![1, 0, 3, 0, 4, 0]);
+        assert_eq!(map.get_size(), size);
+        assert_eq!(map.get_tiles(), &vec![1, 0, 3, 0, 4, 0]);
+    }
+
+    #[test]
+    fn test_get_border_with_invalid_tile() {
+        let size = Size2d::new(2, 3);
+        let mut map = BorderMap::simple(size, 0, 0);
+
+        assert_eq!(map.get_border(6, Top), None);
+        assert_eq!(map.get_border_mut(6, Top), None);
     }
 
     #[test]
