@@ -14,7 +14,7 @@ impl Id for MountainId {
     }
 }
 
-/// A mountain in the game.
+/// A mountain or hill in the game.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Mountain {
     id: MountainId,

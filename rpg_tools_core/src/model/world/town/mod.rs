@@ -1,3 +1,5 @@
+pub mod terrain;
+
 use crate::utils::storage::{Element, Id};
 
 /// The unique identifier of a [`town`](Town).
