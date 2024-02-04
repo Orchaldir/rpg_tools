@@ -18,6 +18,14 @@ use std::ops::{Div, Mul};
 ///   v
 /// y-axis
 /// ```
+///
+/// The min size for any axis is 1.
+///
+/// ```
+///# use rpg_tools_core::model::math::size2d::Size2d;
+/// assert_eq!(Size2d::new(2, 0), Size2d::new(2, 1));
+/// assert_eq!(Size2d::new(0, 3), Size2d::new(1, 3));
+/// ```
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Size2d {
@@ -27,8 +35,11 @@ pub struct Size2d {
 
 impl Size2d {
     /// Returns a new size.
-    pub const fn new(width: u32, height: u32) -> Self {
-        Size2d { width, height }
+    pub fn new(width: u32, height: u32) -> Self {
+        Size2d {
+            width: width.max(1),
+            height: height.max(1),
+        }
     }
 
     /// Returns a size with equal width & height.
@@ -37,7 +48,7 @@ impl Size2d {
     ///# use rpg_tools_core::model::math::size2d::Size2d;
     /// assert_eq!(Size2d::square(2), Size2d::new(2, 2));
     /// ```
-    pub const fn square(size: u32) -> Self {
+    pub fn square(size: u32) -> Self {
         Size2d::new(size, size)
     }
 
