@@ -2,7 +2,7 @@ use crate::model::math::side2d::Side2d;
 use crate::model::math::size2d::Size2d;
 
 /// The border map is a 2d grid of tiles with borders around each.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BorderMap<Tile, Border> {
     /// The size of the tile map.
     size: Size2d,

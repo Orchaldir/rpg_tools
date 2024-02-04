@@ -1,5 +1,10 @@
+pub mod cell;
 pub mod terrain;
 
+use crate::model::math::size2d::Size2d;
+use crate::model::world::town::cell::TownCell;
+use crate::model::world::town::terrain::Terrain;
+use crate::utils::map::border::BorderMap;
 use crate::utils::storage::{Element, Id};
 
 /// The unique identifier of a [`town`](Town).
@@ -17,10 +22,11 @@ impl Id for TownId {
 }
 
 /// A town in the game.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Town {
     id: TownId,
     name: String,
+    pub map: BorderMap<TownCell, bool>,
 }
 
 impl Town {
@@ -38,6 +44,7 @@ impl Element<TownId> for Town {
         Town {
             id,
             name: format!("Town {}", id.0),
+            map: BorderMap::simple(Size2d::square(1), TownCell::new(Terrain::Plain), false),
         }
     }
 
