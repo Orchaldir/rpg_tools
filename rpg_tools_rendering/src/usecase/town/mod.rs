@@ -21,7 +21,7 @@ impl TownRenderer {
     }
 
     pub fn calculate_size(&self, town: &Town) -> Size2d {
-        town.map.get_size() * self.border_size as f32
+        town.map.get_size() * self.cell_size as f32
     }
 
     pub fn render(&self, renderer: &mut dyn Renderer, start: &Point2d, town: &Town) {

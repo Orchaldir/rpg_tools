@@ -14,7 +14,7 @@ fn main() {
     let mut town = Town::new(TownId::default());
     town.map = BorderMap::simple(Size2d::new(2, 3), TownCell::new(Terrain::Plain), true);
 
-    let mut renderer = TownRenderer::new(100, 5);
+    let renderer = TownRenderer::new(100, 5);
 
     let size = renderer.calculate_size(&town);
     let mut builder = SvgBuilder::new(size);
