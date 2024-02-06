@@ -4,7 +4,7 @@ use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
-use rpg_tools_core::model::world::town::Town;
+use rpg_tools_core::utils::map::border::BorderMap;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TownRenderer {
@@ -20,12 +20,20 @@ impl TownRenderer {
         }
     }
 
-    pub fn calculate_size(&self, town: &Town) -> Size2d {
-        town.map.get_size() * self.cell_size as f32
+    pub fn calculate_size<Tile: Clone, Border: Clone>(
+        &self,
+        map: &BorderMap<Tile, Border>,
+    ) -> Size2d {
+        map.get_size() * self.cell_size as f32
     }
 
-    pub fn render(&self, renderer: &mut dyn Renderer, start: &Point2d, town: &Town) {
-        let size = town.map.get_size();
+    pub fn render<Tile: Clone, Border: Clone>(
+        &self,
+        renderer: &mut dyn Renderer,
+        start: &Point2d,
+        map: &BorderMap<Tile, Border>,
+    ) {
+        let size = map.get_size();
         let cell_size = Size2d::square(self.cell_size);
         let style = RenderStyle::with_border(Color::Blue, Color::Green, self.border_size);
         let mut index = 0;
