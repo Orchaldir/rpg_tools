@@ -1,1 +1,1 @@
-pub mod town;
+pub mod map;

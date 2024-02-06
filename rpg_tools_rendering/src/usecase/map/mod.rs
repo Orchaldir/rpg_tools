@@ -7,12 +7,12 @@ use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::utils::map::border::BorderMap;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct TownRenderer {
+pub struct BorderMapRenderer {
     pub cell_size: u32,
     pub border_size: u32,
 }
 
-impl TownRenderer {
+impl BorderMapRenderer {
     pub fn new(cell_size: u32, border_size: u32) -> Self {
         Self {
             cell_size,
@@ -27,7 +27,7 @@ impl TownRenderer {
         map.get_size() * self.cell_size as f32
     }
 
-    pub fn render<Tile: Clone, Border: Clone>(
+    pub fn render_tiles<Tile: Clone, Border: Clone>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
