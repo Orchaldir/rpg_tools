@@ -27,22 +27,27 @@ impl BorderMapRenderer {
         map.get_size() * self.cell_size as f32
     }
 
-    pub fn render_tiles<Tile: Clone, Border: Clone>(
+    pub fn render_tiles<Tile: Clone, Border: Clone, F: Fn(&Tile) -> Color>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
         map: &BorderMap<Tile, Border>,
+        lookup: F,
     ) {
         let size = map.get_size();
         let cell_size = Size2d::square(self.cell_size);
-        let style = RenderStyle::with_border(Color::Blue, Color::Green, self.border_size);
         let mut index = 0;
 
         for y in 0..size.height() {
             for x in 0..size.width() {
-                let position =
-                    *start + Point2d::new((x * self.cell_size) as i32, (y * self.cell_size) as i32);
-                renderer.render_rectangle(&AABB::new(position, cell_size), &style);
+                if let Some(tile) = map.get_tile(index) {
+                    let position = *start
+                        + Point2d::new((x * self.cell_size) as i32, (y * self.cell_size) as i32);
+                    let color = lookup(tile);
+                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+                    renderer.render_rectangle(&AABB::new(position, cell_size), &style);
+                }
+
                 index += 1;
             }
         }
