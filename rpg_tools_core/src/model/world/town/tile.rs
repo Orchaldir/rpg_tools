@@ -1,12 +1,12 @@
 use crate::model::world::town::terrain::Terrain;
 
-/// A cell of the [`town`](crate::model::world::town::Town) map.
+/// A tile of the [`town`](crate::model::world::town::Town) map.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct TownCell {
+pub struct TownTile {
     pub terrain: Terrain,
 }
 
-impl TownCell {
+impl TownTile {
     pub fn new(terrain: Terrain) -> Self {
         Self { terrain }
     }

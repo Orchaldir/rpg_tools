@@ -3,8 +3,8 @@ use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
-use rpg_tools_core::model::world::town::cell::TownCell;
 use rpg_tools_core::model::world::town::terrain::Terrain;
+use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::utils::map::border::BorderMap;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::BorderMapRenderer;
@@ -12,7 +12,7 @@ use rpg_tools_rendering::usecase::map::BorderMapRenderer;
 fn main() {
     println!("A town example!");
 
-    let mut map = BorderMap::simple(Size2d::new(2, 3), TownCell::new(Terrain::Plain), true);
+    let mut map = BorderMap::simple(Size2d::new(2, 3), TownTile::new(Terrain::Plain), true);
     map.get_tile_mut(0).unwrap().terrain = Terrain::River {
         id: RiverId::default(),
     };

@@ -1,9 +1,9 @@
-pub mod cell;
 pub mod terrain;
+pub mod tile;
 
 use crate::model::math::size2d::Size2d;
-use crate::model::world::town::cell::TownCell;
 use crate::model::world::town::terrain::Terrain;
+use crate::model::world::town::tile::TownTile;
 use crate::utils::map::border::BorderMap;
 use crate::utils::storage::{Element, Id};
 
@@ -26,7 +26,7 @@ impl Id for TownId {
 pub struct Town {
     id: TownId,
     name: String,
-    pub map: BorderMap<TownCell, bool>,
+    pub map: BorderMap<TownTile, bool>,
 }
 
 impl Town {
@@ -44,7 +44,7 @@ impl Element<TownId> for Town {
         Town {
             id,
             name: format!("Town {}", id.0),
-            map: BorderMap::simple(Size2d::square(1), TownCell::new(Terrain::Plain), false),
+            map: BorderMap::simple(Size2d::square(1), TownTile::new(Terrain::Plain), false),
         }
     }
 
