@@ -7,7 +7,7 @@ use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::utils::map::edge::EdgeMap;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::BorderMapRenderer;
+use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
 fn main() {
     println!("A town example!");
@@ -20,7 +20,7 @@ fn main() {
         id: MountainId::default(),
     };
 
-    let renderer = BorderMapRenderer::new(100, 1);
+    let renderer = EdgeMapRenderer::new(100, 1);
 
     let size = renderer.calculate_size(&map);
     let mut builder = SvgBuilder::new(size);

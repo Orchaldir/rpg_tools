@@ -7,31 +7,28 @@ use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::utils::map::edge::EdgeMap;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct BorderMapRenderer {
+pub struct EdgeMapRenderer {
     pub cell_size: u32,
-    pub border_size: u32,
+    pub edge_size: u32,
 }
 
-impl BorderMapRenderer {
-    pub fn new(cell_size: u32, border_size: u32) -> Self {
+impl EdgeMapRenderer {
+    pub fn new(cell_size: u32, edge_size: u32) -> Self {
         Self {
             cell_size,
-            border_size,
+            edge_size,
         }
     }
 
-    pub fn calculate_size<Tile: Clone, Border: Clone>(
-        &self,
-        map: &EdgeMap<Tile, Border>,
-    ) -> Size2d {
+    pub fn calculate_size<Tile: Clone, Edge: Clone>(&self, map: &EdgeMap<Tile, Edge>) -> Size2d {
         map.get_size() * self.cell_size as f32
     }
 
-    pub fn render_tiles<Tile: Clone, Border: Clone, F: Fn(&Tile) -> Color>(
+    pub fn render_tiles<Tile: Clone, Edge: Clone, F: Fn(&Tile) -> Color>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
-        map: &EdgeMap<Tile, Border>,
+        map: &EdgeMap<Tile, Edge>,
         lookup: F,
     ) {
         let size = map.get_size();
@@ -44,7 +41,7 @@ impl BorderMapRenderer {
                     let position = *start
                         + Point2d::new((x * self.cell_size) as i32, (y * self.cell_size) as i32);
                     let color = lookup(tile);
-                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+                    let style = RenderStyle::with_border(color, Color::Black, self.edge_size);
                     renderer.render_rectangle(&AABB::new(position, cell_size), &style);
                 }
 
