@@ -8,22 +8,22 @@ use rpg_tools_core::utils::map::edge::{get_horizontal_edges_size, EdgeMap};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EdgeMapRenderer {
-    pub cell_size: u32,
+    pub tile_size: u32,
     pub edge_size: u32,
     pub border_size: u32,
 }
 
 impl EdgeMapRenderer {
-    pub fn new(cell_size: u32, edge_size: u32, border_size: u32) -> Self {
+    pub fn new(tile_size: u32, edge_size: u32, border_size: u32) -> Self {
         Self {
-            cell_size,
+            tile_size,
             edge_size,
             border_size,
         }
     }
 
     pub fn calculate_size<Tile: Clone, Edge: Clone>(&self, map: &EdgeMap<Tile, Edge>) -> Size2d {
-        map.get_size() * self.cell_size as f32
+        map.get_size() * self.tile_size as f32
     }
 
     pub fn render_tiles<Tile: Clone, Edge: Clone, F: Fn(&Tile) -> Color>(
@@ -34,7 +34,7 @@ impl EdgeMapRenderer {
         lookup: F,
     ) {
         let size = map.get_size();
-        let tile_size = Size2d::square(self.cell_size);
+        let tile_size = Size2d::square(self.tile_size);
         let mut index = 0;
 
         for y in 0..size.height() {
@@ -69,7 +69,7 @@ impl EdgeMapRenderer {
         lookup: F,
     ) {
         let size = get_horizontal_edges_size(map.get_size());
-        let edge_size = Size2d::new(self.cell_size, self.edge_size);
+        let edge_size = Size2d::new(self.tile_size, self.edge_size);
         let offset = Point2d::new(0, -(self.edge_size as i32 / 2));
         let edges = map.get_horizontal_edges();
         let mut index = 0;
@@ -90,6 +90,6 @@ impl EdgeMapRenderer {
     }
 
     fn calculate_position(&self, start: &Point2d, x: u32, y: u32) -> Point2d {
-        *start + Point2d::new((x * self.cell_size) as i32, (y * self.cell_size) as i32)
+        *start + Point2d::new((x * self.tile_size) as i32, (y * self.tile_size) as i32)
     }
 }
