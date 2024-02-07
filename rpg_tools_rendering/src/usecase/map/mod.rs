@@ -4,7 +4,7 @@ use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
-use rpg_tools_core::utils::map::border::BorderMap;
+use rpg_tools_core::utils::map::edge::EdgeMap;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct BorderMapRenderer {
@@ -22,7 +22,7 @@ impl BorderMapRenderer {
 
     pub fn calculate_size<Tile: Clone, Border: Clone>(
         &self,
-        map: &BorderMap<Tile, Border>,
+        map: &EdgeMap<Tile, Border>,
     ) -> Size2d {
         map.get_size() * self.cell_size as f32
     }
@@ -31,7 +31,7 @@ impl BorderMapRenderer {
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
-        map: &BorderMap<Tile, Border>,
+        map: &EdgeMap<Tile, Border>,
         lookup: F,
     ) {
         let size = map.get_size();
