@@ -1,4 +1,6 @@
+use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
+use std::collections::HashSet;
 
 /// The unique identifier of a [`street`](Street).
 #[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
@@ -19,6 +21,7 @@ impl Id for StreetId {
 pub struct Street {
     id: StreetId,
     name: String,
+    towns: HashSet<TownId>,
 }
 
 impl Street {
@@ -36,6 +39,7 @@ impl Element<StreetId> for Street {
         Street {
             id,
             name: format!("Street {}", id.0),
+            towns: HashSet::new(),
         }
     }
 
