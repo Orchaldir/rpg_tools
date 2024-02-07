@@ -3,6 +3,7 @@ use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
+use rpg_tools_core::model::world::town::edge::TownEdge;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::utils::map::edge::EdgeMap;
@@ -12,7 +13,11 @@ use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 fn main() {
     println!("A town example!");
 
-    let mut map = EdgeMap::simple(Size2d::new(2, 3), TownTile::new(Terrain::Plain), true);
+    let mut map = EdgeMap::simple(
+        Size2d::new(2, 3),
+        TownTile::new(Terrain::Plain),
+        TownEdge::None,
+    );
     map.get_tile_mut(0).unwrap().terrain = Terrain::River {
         id: RiverId::default(),
     };
@@ -20,7 +25,7 @@ fn main() {
         id: MountainId::default(),
     };
 
-    let renderer = EdgeMapRenderer::new(100, 1);
+    let renderer = EdgeMapRenderer::new(100, 10, 1);
 
     let size = renderer.calculate_size(&map);
     let mut builder = SvgBuilder::new(size);
