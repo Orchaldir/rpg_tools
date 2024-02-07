@@ -3,6 +3,7 @@ use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
+use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::edge::TownEdge;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
@@ -16,7 +17,9 @@ fn main() {
     let mut map = EdgeMap::simple(
         Size2d::new(2, 3),
         TownTile::new(Terrain::Plain),
-        TownEdge::None,
+        TownEdge::Street {
+            id: StreetId::default(),
+        },
     );
     map.get_tile_mut(0).unwrap().terrain = Terrain::River {
         id: RiverId::default(),
@@ -25,7 +28,7 @@ fn main() {
         id: MountainId::default(),
     };
 
-    let renderer = EdgeMapRenderer::new(100, 10, 1);
+    let renderer = EdgeMapRenderer::new(100, 10, 0);
 
     let size = renderer.calculate_size(&map);
     let mut builder = SvgBuilder::new(size);
@@ -37,6 +40,11 @@ fn main() {
             Terrain::Plain => Color::Green,
             Terrain::River { .. } => Color::Blue,
         }
+    });
+
+    renderer.render_edges(&mut builder, &Point2d::default(), &map, |tile| match tile {
+        TownEdge::None => None,
+        TownEdge::Street { .. } => Some(Color::White),
     });
 
     let svg = builder.finish();

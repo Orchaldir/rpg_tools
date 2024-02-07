@@ -51,7 +51,7 @@ impl EdgeMapRenderer {
         }
     }
 
-    pub fn render_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Color>(
+    pub fn render_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
@@ -61,7 +61,7 @@ impl EdgeMapRenderer {
         self.render_horizontal_edges(renderer, start, map, lookup);
     }
 
-    fn render_horizontal_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Color>(
+    fn render_horizontal_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
@@ -77,10 +77,11 @@ impl EdgeMapRenderer {
         for y in 0..size.height() {
             for x in 0..size.width() {
                 if let Some(edge) = edges.get(index) {
-                    let position = self.calculate_position(start, x, y) + offset;
-                    let color = lookup(edge);
-                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
-                    renderer.render_rectangle(&AABB::new(position, edge_size), &style);
+                    if let Some(color) = lookup(edge) {
+                        let position = self.calculate_position(start, x, y) + offset;
+                        let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+                        renderer.render_rectangle(&AABB::new(position, edge_size), &style);
+                    }
                 }
 
                 index += 1;
