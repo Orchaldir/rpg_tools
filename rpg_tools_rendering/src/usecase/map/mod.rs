@@ -75,9 +75,7 @@ impl EdgeMapRenderer {
         let edge_size = Size2d::new(self.tile_size + self.edge_size, self.edge_size);
         let edges = map.get_horizontal_edges();
 
-        self.render_internal_edges::<Tile, Edge, F>(
-            renderer, start, lookup, size, edge_size, edges,
-        );
+        self.render_internal_edges::<Edge, F>(renderer, start, lookup, size, edge_size, edges);
     }
 
     fn render_vertical_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
@@ -91,19 +89,17 @@ impl EdgeMapRenderer {
         let edge_size = Size2d::new(self.edge_size, self.tile_size + self.edge_size);
         let edges = map.get_vertical_edges();
 
-        self.render_internal_edges::<Tile, Edge, F>(
-            renderer, start, lookup, size, edge_size, edges,
-        );
+        self.render_internal_edges::<Edge, F>(renderer, start, lookup, size, edge_size, edges);
     }
 
-    fn render_internal_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
+    fn render_internal_edges<Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
         lookup: F,
         size: Size2d,
         edge_size: Size2d,
-        edges: &Vec<Edge>,
+        edges: &[Edge],
     ) {
         let half = -(self.edge_size as i32 / 2);
         let offset = Point2d::new(half, half);
