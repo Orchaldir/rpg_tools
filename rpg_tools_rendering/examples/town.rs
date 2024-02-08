@@ -1,5 +1,6 @@
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::math::side2d::Side2d;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
@@ -17,15 +18,19 @@ fn main() {
     let mut map = EdgeMap::simple(
         Size2d::new(2, 3),
         TownTile::new(Terrain::Plain),
-        TownEdge::Street {
-            id: StreetId::default(),
-        },
+        TownEdge::None,
     );
     map.get_tile_mut(0).unwrap().terrain = Terrain::River {
         id: RiverId::default(),
     };
     map.get_tile_mut(5).unwrap().terrain = Terrain::Mountain {
         id: MountainId::default(),
+    };
+    *map.get_edge_mut(0, Side2d::Bottom).unwrap() = TownEdge::Street {
+        id: StreetId::default(),
+    };
+    *map.get_edge_mut(1, Side2d::Bottom).unwrap() = TownEdge::Street {
+        id: StreetId::default(),
     };
 
     let renderer = EdgeMapRenderer::new(100, 10, 1);
