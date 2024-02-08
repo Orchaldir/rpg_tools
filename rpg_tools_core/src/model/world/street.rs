@@ -2,11 +2,11 @@ use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 use std::collections::HashSet;
 
-/// The unique identifier of a [`river`](River).
+/// The unique identifier of a [`street`](Street).
 #[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
-pub struct RiverId(usize);
+pub struct StreetId(usize);
 
-impl Id for RiverId {
+impl Id for StreetId {
     fn new(id: usize) -> Self {
         Self(id)
     }
@@ -16,15 +16,15 @@ impl Id for RiverId {
     }
 }
 
-/// A river in the game.
+/// A street in the game.
 #[derive(Clone, Debug, PartialEq)]
-pub struct River {
-    id: RiverId,
+pub struct Street {
+    id: StreetId,
     name: String,
     towns: HashSet<TownId>,
 }
 
-impl River {
+impl Street {
     pub fn name(&self) -> &str {
         &self.name
     }
@@ -34,20 +34,20 @@ impl River {
     }
 }
 
-impl Element<RiverId> for River {
-    fn new(id: RiverId) -> Self {
-        River {
+impl Element<StreetId> for Street {
+    fn new(id: StreetId) -> Self {
+        Street {
             id,
-            name: format!("River {}", id.0),
+            name: format!("Street {}", id.0),
             towns: HashSet::new(),
         }
     }
 
-    fn id(&self) -> RiverId {
+    fn id(&self) -> StreetId {
         self.id
     }
 
-    fn with_id(self, id: RiverId) -> Self {
-        River { id, ..self }
+    fn with_id(self, id: StreetId) -> Self {
+        Street { id, ..self }
     }
 }
