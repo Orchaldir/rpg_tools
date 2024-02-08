@@ -26,10 +26,13 @@ fn main() {
     map.get_tile_mut(5).unwrap().terrain = Terrain::Mountain {
         id: MountainId::default(),
     };
-    *map.get_edge_mut(0, Side2d::Bottom).unwrap() = TownEdge::Street {
+    *map.get_edge_mut(2, Side2d::Top).unwrap() = TownEdge::Street {
         id: StreetId::default(),
     };
-    *map.get_edge_mut(1, Side2d::Bottom).unwrap() = TownEdge::Street {
+    *map.get_edge_mut(2, Side2d::Right).unwrap() = TownEdge::Street {
+        id: StreetId::default(),
+    };
+    *map.get_edge_mut(3, Side2d::Top).unwrap() = TownEdge::Street {
         id: StreetId::default(),
     };
 

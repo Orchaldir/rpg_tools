@@ -4,7 +4,9 @@ use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
-use rpg_tools_core::utils::map::edge::{get_horizontal_edges_size, EdgeMap};
+use rpg_tools_core::utils::map::edge::{
+    get_horizontal_edges_size, get_vertical_edges_size, EdgeMap,
+};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct EdgeMapRenderer {
@@ -58,7 +60,8 @@ impl EdgeMapRenderer {
         map: &EdgeMap<Tile, Edge>,
         lookup: F,
     ) {
-        self.render_horizontal_edges(renderer, start, map, lookup);
+        self.render_horizontal_edges(renderer, start, map, &lookup);
+        self.render_vertical_edges(renderer, start, map, &lookup);
     }
 
     fn render_horizontal_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
@@ -72,6 +75,34 @@ impl EdgeMapRenderer {
         let edge_size = Size2d::new(self.tile_size, self.edge_size);
         let offset = Point2d::new(0, -(self.edge_size as i32 / 2));
         let edges = map.get_horizontal_edges();
+        let mut index = 0;
+
+        for y in 0..size.height() {
+            for x in 0..size.width() {
+                if let Some(edge) = edges.get(index) {
+                    if let Some(color) = lookup(edge) {
+                        let position = self.calculate_position(start, x, y) + offset;
+                        let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+                        renderer.render_rectangle(&AABB::new(position, edge_size), &style);
+                    }
+                }
+
+                index += 1;
+            }
+        }
+    }
+
+    fn render_vertical_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
+        &self,
+        renderer: &mut dyn Renderer,
+        start: &Point2d,
+        map: &EdgeMap<Tile, Edge>,
+        lookup: F,
+    ) {
+        let size = get_vertical_edges_size(map.get_size());
+        let edge_size = Size2d::new(self.edge_size, self.tile_size);
+        let offset = Point2d::new(-(self.edge_size as i32 / 2), 0);
+        let edges = map.get_vertical_edges();
         let mut index = 0;
 
         for y in 0..size.height() {
