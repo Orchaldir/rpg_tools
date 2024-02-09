@@ -2,6 +2,7 @@
 extern crate rocket;
 
 use crate::init::init;
+use rocket::fs::FileServer;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::WorldData;
@@ -29,6 +30,7 @@ fn hello(data: &State<EditorData>) -> Template {
 fn rocket() -> _ {
     rocket::build()
         .manage(EditorData { data: init() })
+        .mount("/static", FileServer::from("rpg_tools_editor/static/"))
         .mount("/", routes![hello])
         .attach(Template::fairing())
 }
