@@ -2,12 +2,14 @@
 extern crate rocket;
 
 use crate::init::init;
+use crate::route::mountain::get_all_mountains;
 use rocket::fs::FileServer;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::WorldData;
 
 mod init;
+mod route;
 
 pub struct EditorData {
     data: WorldData,
@@ -31,6 +33,6 @@ fn rocket() -> _ {
     rocket::build()
         .manage(EditorData { data: init() })
         .mount("/static", FileServer::from("rpg_tools_editor/static/"))
-        .mount("/", routes![hello])
+        .mount("/", routes![hello, get_all_mountains,])
         .attach(Template::fairing())
 }

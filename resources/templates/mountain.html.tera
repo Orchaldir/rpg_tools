@@ -1,0 +1,15 @@
+{% extends "base" %}
+
+{% block content %}
+    <p><h1>Mountains</h1></p>
+    <div class="text">
+        <p><b>Count:</b> {{ mountains | length }}</p>
+      <ul>
+      {% for m in mountains %}
+        <li><a href="/mountain/details/{{ m.0 }}">{{ m.1 }}</a></li>
+      {% endfor %}
+      </ul>
+      <p><a href="/mountain/new">Add</a></p>
+      <p><a href="/">Back</a></p>
+    </div>
+{% endblock content %}
