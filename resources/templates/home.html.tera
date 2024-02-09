@@ -1,0 +1,9 @@
+{% extends "base" %}
+
+{% block content %}
+    <p><h1>RPG Tools - Editor</h1></p>
+    <h2>Overview</h2>
+    <div class="text">
+      <p><b>Mountains:</b> <a href="/mountain/all">{{ mountains }}</a></p>
+    </div>
+{% endblock content %}
