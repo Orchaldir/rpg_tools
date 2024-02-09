@@ -3,6 +3,7 @@ extern crate rocket;
 
 use crate::init::init;
 use crate::route::mountain::get_all_mountains;
+use crate::route::rivers::get_all_rivers;
 use rocket::fs::FileServer;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
@@ -33,6 +34,6 @@ fn rocket() -> _ {
     rocket::build()
         .manage(EditorData { data: init() })
         .mount("/static", FileServer::from("rpg_tools_editor/static/"))
-        .mount("/", routes![hello, get_all_mountains,])
+        .mount("/", routes![hello, get_all_mountains, get_all_rivers,])
         .attach(Template::fairing())
 }
