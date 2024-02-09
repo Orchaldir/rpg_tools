@@ -1,2 +1,2 @@
 pub mod mountain;
-pub mod rivers;
+pub mod river;
