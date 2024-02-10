@@ -34,28 +34,26 @@ mod tests {
 
     #[test]
     fn update_empty_name() {
-        let mut data = WorldData::default();
-
-        assert!(update_mountain_name(&mut data, MountainId::new(0), "").is_err());
+        test_invalid_name("");
     }
 
     #[test]
     fn update_name_contains_only_whitespaces() {
-        let mut data = WorldData::default();
-
-        assert!(update_mountain_name(&mut data, MountainId::new(0), "  ").is_err());
+        test_invalid_name("  ");
     }
+
+    const VALID_NAME: &'static str = "Test";
 
     #[test]
     fn update_name_of_non_existing_mountain() {
         let mut data = WorldData::default();
 
-        assert!(update_mountain_name(&mut data, MountainId::new(0), "Test").is_err());
+        assert!(update_mountain_name(&mut data, MountainId::new(0), VALID_NAME).is_err());
     }
 
     #[test]
     fn update_valid_name() {
-        test_update_name("Test", "Test");
+        test_update_name(VALID_NAME, VALID_NAME);
     }
 
     #[test]
@@ -69,8 +67,15 @@ mod tests {
         let id0 = data.mountain_manager.create();
         let id1 = data.mountain_manager.create();
 
-        assert!(update_mountain_name(&mut data, id0, "Test").is_ok());
-        assert!(update_mountain_name(&mut data, id1, "Test").is_err());
+        assert!(update_mountain_name(&mut data, id0, VALID_NAME).is_ok());
+        assert!(update_mountain_name(&mut data, id1, VALID_NAME).is_err());
+    }
+
+    fn test_invalid_name(name: &str) {
+        let mut data = WorldData::default();
+        let id = data.mountain_manager.create();
+
+        assert!(update_mountain_name(&mut data, id, name).is_err());
     }
 
     fn test_update_name(input: &str, result: &str) {
