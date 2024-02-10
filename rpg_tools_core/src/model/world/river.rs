@@ -28,6 +28,9 @@ impl River {
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
+    pub fn towns(&self) -> &HashSet<TownId> {
+        &self.towns
+    }
 }
 
 impl Element<RiverId> for River {

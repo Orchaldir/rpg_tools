@@ -17,11 +17,19 @@ pub fn get_river_details(data: &State<EditorData>, id: usize) -> Option<Template
 
 fn get_details_template(data: &EditorData, id: RiverId) -> Option<Template> {
     data.data.river_manager.get(id).map(|river| {
+        let towns: Vec<(usize, &str)> = river
+            .towns()
+            .iter()
+            .flat_map(|id| data.data.town_manager.get(*id))
+            .map(|c| (c.id().id(), c.name()))
+            .collect();
+
         Template::render(
             "river/details",
             context! {
                 name: river.name(),
                 id: id.id(),
+                towns: towns,
             },
         )
     })
