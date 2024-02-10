@@ -13,6 +13,8 @@ pub trait Element<I: Id> {
     fn id(&self) -> I;
 
     fn with_id(self, id: I) -> Self;
+
+    fn name(&self) -> &str;
 }
 
 #[derive(Debug, PartialEq, Eq)]

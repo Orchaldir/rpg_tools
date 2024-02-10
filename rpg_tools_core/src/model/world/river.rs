@@ -25,10 +25,6 @@ pub struct River {
 }
 
 impl River {
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
@@ -49,5 +45,9 @@ impl Element<RiverId> for River {
 
     fn with_id(self, id: RiverId) -> Self {
         River { id, ..self }
+    }
+
+    fn name(&self) -> &str {
+        &self.name
     }
 }

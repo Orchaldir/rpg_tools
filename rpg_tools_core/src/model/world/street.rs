@@ -25,10 +25,6 @@ pub struct Street {
 }
 
 impl Street {
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
@@ -49,5 +45,9 @@ impl Element<StreetId> for Street {
 
     fn with_id(self, id: StreetId) -> Self {
         Street { id, ..self }
+    }
+
+    fn name(&self) -> &str {
+        &self.name
     }
 }

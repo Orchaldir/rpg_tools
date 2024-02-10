@@ -22,10 +22,6 @@ pub struct Mountain {
 }
 
 impl Mountain {
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
@@ -45,5 +41,9 @@ impl Element<MountainId> for Mountain {
 
     fn with_id(self, id: MountainId) -> Self {
         Mountain { id, ..self }
+    }
+
+    fn name(&self) -> &str {
+        &self.name
     }
 }

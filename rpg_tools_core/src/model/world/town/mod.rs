@@ -32,10 +32,6 @@ pub struct Town {
 }
 
 impl Town {
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
     pub fn set_name(&mut self, name: String) {
         self.name = name;
     }
@@ -60,5 +56,9 @@ impl Element<TownId> for Town {
 
     fn with_id(self, id: TownId) -> Self {
         Town { id, ..self }
+    }
+
+    fn name(&self) -> &str {
+        &self.name
     }
 }
