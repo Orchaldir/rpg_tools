@@ -1,5 +1,6 @@
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::river::{River, RiverId};
+use rpg_tools_core::model::world::street::{Street, StreetId};
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::Storage;
@@ -19,6 +20,13 @@ pub fn init() -> WorldData {
         .unwrap()
         .set_name("Miskatonic River".to_string());
 
+    let mut street_manager: Storage<StreetId, Street> = Storage::default();
+    let street_id = street_manager.create();
+    street_manager
+        .get_mut(street_id)
+        .unwrap()
+        .set_name("Armitage Street".to_string());
+
     let mut town_manager: Storage<TownId, Town> = Storage::default();
     let town_id = town_manager.create();
     town_manager
@@ -31,11 +39,16 @@ pub fn init() -> WorldData {
         .unwrap()
         .towns
         .insert(town_id);
+    street_manager
+        .get_mut(street_id)
+        .unwrap()
+        .towns
+        .insert(town_id);
 
     WorldData {
         mountain_manager,
         river_manager,
-        street_manager: Default::default(),
+        street_manager,
         town_manager,
     }
 }
