@@ -9,20 +9,20 @@ use rpg_tools_core::usecase::edit::mountain::update_mountain_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/mountain/all")]
-pub fn get_all_mountains(data: &State<EditorData>) -> Template {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_all_mountains(state: &State<EditorData>) -> Template {
+    let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.mountain_manager, "mountain", "Mountains")
 }
 
 #[get("/mountain/details/<id>")]
-pub fn get_mountain_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+    let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, MountainId::new(id))
 }
 
 #[get("/mountain/edit/<id>")]
-pub fn edit_mountain(data: &State<EditorData>, id: usize) -> Option<Template> {
-    let data = data.data.lock().expect("lock shared data");
+pub fn edit_mountain(state: &State<EditorData>, id: usize) -> Option<Template> {
+    let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, MountainId::new(id), "")
 }
 
@@ -33,12 +33,12 @@ pub struct MountainUpdate<'r> {
 
 #[post("/mountain/update/<id>", data = "<update>")]
 pub fn update_mountain(
-    data: &State<EditorData>,
+    state: &State<EditorData>,
     id: usize,
     update: Form<MountainUpdate<'_>>,
 ) -> Option<Template> {
     println!("Update mountain {} with {:?}", id, update);
-    let mut data = data.data.lock().expect("lock shared data");
+    let mut data = state.data.lock().expect("lock shared data");
 
     let mountain_id = MountainId::new(id);
 

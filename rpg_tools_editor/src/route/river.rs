@@ -7,14 +7,14 @@ use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/river/all")]
-pub fn get_all_rivers(data: &State<EditorData>) -> Template {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_all_rivers(state: &State<EditorData>) -> Template {
+    let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.river_manager, "river", "Rivers")
 }
 
 #[get("/river/details/<id>")]
-pub fn get_river_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+    let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, RiverId::new(id))
 }
 

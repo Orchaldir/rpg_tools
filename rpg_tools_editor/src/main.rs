@@ -25,8 +25,8 @@ pub struct EditorData {
 }
 
 #[get("/")]
-fn hello(data: &State<EditorData>) -> Template {
-    let data = data.data.lock().expect("lock shared data");
+fn hello(state: &State<EditorData>) -> Template {
+    let data = state.data.lock().expect("lock shared data");
 
     Template::render(
         "home",

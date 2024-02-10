@@ -7,14 +7,14 @@ use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/street/all")]
-pub fn get_all_streets(data: &State<EditorData>) -> Template {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_all_streets(state: &State<EditorData>) -> Template {
+    let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.street_manager, "street", "Streets")
 }
 
 #[get("/street/details/<id>")]
-pub fn get_street_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+    let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, StreetId::new(id))
 }
 

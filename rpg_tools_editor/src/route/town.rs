@@ -14,14 +14,14 @@ use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
 #[get("/town/all")]
-pub fn get_all_towns(data: &State<EditorData>) -> Template {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_all_towns(state: &State<EditorData>) -> Template {
+    let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.town_manager, "town", "Towns")
 }
 
 #[get("/town/details/<id>")]
-pub fn get_town_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    let data = data.data.lock().expect("lock shared data");
+pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+    let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, TownId::new(id))
 }
 
@@ -33,8 +33,8 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_to_svg(&state.town_renderer, town))
 }
 
-fn get_details_template(data: &WorldData, id: TownId) -> Option<Template> {
-    data.town_manager.get(id).map(|town| {
+fn get_details_template(state: &WorldData, id: TownId) -> Option<Template> {
+    state.town_manager.get(id).map(|town| {
         Template::render(
             "town/details",
             context! {
