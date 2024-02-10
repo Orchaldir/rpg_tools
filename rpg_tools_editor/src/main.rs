@@ -7,7 +7,7 @@ use crate::route::mountain::{
 };
 use crate::route::river::{edit_river, get_all_rivers, get_river_details, update_river};
 use crate::route::street::{edit_street, get_all_streets, get_street_details, update_street};
-use crate::route::town::{get_all_towns, get_town_details, get_town_map};
+use crate::route::town::{edit_town, get_all_towns, get_town_details, get_town_map, update_town};
 use rocket::fs::FileServer;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
@@ -65,6 +65,8 @@ fn rocket() -> _ {
                 update_street,
                 get_all_towns,
                 get_town_details,
+                edit_town,
+                update_town,
                 get_town_map,
             ],
         )
