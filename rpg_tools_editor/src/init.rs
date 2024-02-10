@@ -1,8 +1,13 @@
+use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::street::{Street, StreetId};
+use rpg_tools_core::model::world::town::edge::TownEdge;
+use rpg_tools_core::model::world::town::terrain::Terrain;
+use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::utils::map::edge::EdgeMap;
 use rpg_tools_core::utils::storage::Storage;
 
 pub fn init() -> WorldData {
@@ -33,6 +38,11 @@ pub fn init() -> WorldData {
         .get_mut(town_id)
         .unwrap()
         .set_name("Arkham".to_string());
+    town_manager.get_mut(town_id).unwrap().map = EdgeMap::simple(
+        Size2d::new(18, 20),
+        TownTile::new(Terrain::Plain),
+        TownEdge::None,
+    );
 
     river_manager
         .get_mut(river_id)
