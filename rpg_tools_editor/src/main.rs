@@ -5,7 +5,7 @@ use crate::init::init;
 use crate::route::mountain::{get_all_mountains, get_mountain_details};
 use crate::route::river::{get_all_rivers, get_river_details};
 use crate::route::street::{get_all_streets, get_street_details};
-use crate::route::town::get_all_towns;
+use crate::route::town::{get_all_towns, get_town_details};
 use rocket::fs::FileServer;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
@@ -46,7 +46,8 @@ fn rocket() -> _ {
                 get_river_details,
                 get_all_streets,
                 get_street_details,
-                get_all_towns
+                get_all_towns,
+                get_town_details,
             ],
         )
         .attach(Template::fairing())
