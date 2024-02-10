@@ -1,0 +1,14 @@
+{% extends "base" %}
+
+{% block content %}
+<div class="left_right_container">
+  <p><h1>Mountain: {{ name }}</h1></p>
+  <p><h2>Data</h2></p>
+  <div class="text">
+    <p><b>Id:</b> {{ id }}</p>
+    <p><a href="/mountain/edit/{{ id }}">Edit Data</a></p>
+    <p><a href="/mountain/delete/{{ id }}">Delete</a></p>
+    <p><a href="/mountain/all">Back</a></p>
+  </div>
+</div>
+{% endblock content %}
