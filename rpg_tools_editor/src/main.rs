@@ -2,7 +2,9 @@
 extern crate rocket;
 
 use crate::init::init;
-use crate::route::mountain::{get_all_mountains, get_mountain_details};
+use crate::route::mountain::{
+    edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
+};
 use crate::route::river::{get_all_rivers, get_river_details};
 use crate::route::street::{get_all_streets, get_street_details};
 use crate::route::town::{get_all_towns, get_town_details, get_town_map};
@@ -48,6 +50,8 @@ fn rocket() -> _ {
                 hello,
                 get_all_mountains,
                 get_mountain_details,
+                edit_mountain,
+                update_mountain,
                 get_all_rivers,
                 get_river_details,
                 get_all_streets,
