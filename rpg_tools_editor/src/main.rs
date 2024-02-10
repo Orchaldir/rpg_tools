@@ -13,25 +13,28 @@ use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
+use std::sync::Mutex;
 
 mod init;
 mod route;
 mod svg;
 
 pub struct EditorData {
-    data: WorldData,
+    data: Mutex<WorldData>,
     town_renderer: EdgeMapRenderer,
 }
 
 #[get("/")]
 fn hello(data: &State<EditorData>) -> Template {
+    let data = data.data.lock().expect("lock shared data");
+
     Template::render(
         "home",
         context! {
-            mountains: data.data.mountain_manager.get_all().len(),
-            rivers: data.data.river_manager.get_all().len(),
-            streets: data.data.street_manager.get_all().len(),
-            towns: data.data.town_manager.get_all().len(),
+            mountains: data.mountain_manager.get_all().len(),
+            rivers: data.river_manager.get_all().len(),
+            streets: data.street_manager.get_all().len(),
+            towns: data.town_manager.get_all().len(),
         },
     )
 }
@@ -40,7 +43,7 @@ fn hello(data: &State<EditorData>) -> Template {
 fn rocket() -> _ {
     rocket::build()
         .manage(EditorData {
-            data: init(),
+            data: Mutex::new(init()),
             town_renderer: EdgeMapRenderer::new(100, 10, 1),
         })
         .mount("/static", FileServer::from("rpg_tools_editor/static/"))

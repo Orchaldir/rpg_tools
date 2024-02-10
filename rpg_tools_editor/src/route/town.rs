@@ -8,30 +8,33 @@ use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::town::edge::TownEdge;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::{Town, TownId};
+use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
 #[get("/town/all")]
 pub fn get_all_towns(data: &State<EditorData>) -> Template {
-    get_all_template(&data.data.town_manager, "town", "Towns")
+    let data = data.data.lock().expect("lock shared data");
+    get_all_template(&data.town_manager, "town", "Towns")
 }
 
 #[get("/town/details/<id>")]
 pub fn get_town_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    get_details_template(data, TownId::new(id))
+    let data = data.data.lock().expect("lock shared data");
+    get_details_template(&data, TownId::new(id))
 }
 
 #[get("/town/map/<id>/map.svg")]
-pub fn get_town_map(data: &State<EditorData>, id: usize) -> Option<RawSvg> {
-    data.data
-        .town_manager
+pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
+    let data = state.data.lock().expect("lock shared data");
+    data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_to_svg(&data.town_renderer, town))
+        .map(|town| render_to_svg(&state.town_renderer, town))
 }
 
-fn get_details_template(data: &EditorData, id: TownId) -> Option<Template> {
-    data.data.town_manager.get(id).map(|town| {
+fn get_details_template(data: &WorldData, id: TownId) -> Option<Template> {
+    data.town_manager.get(id).map(|town| {
         Template::render(
             "town/details",
             context! {

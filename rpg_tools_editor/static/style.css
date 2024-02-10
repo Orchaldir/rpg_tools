@@ -7,3 +7,7 @@ h1 {
   font-size: 20px;
   padding-left: 20px;
 }
+
+.error {
+  color: red;
+}

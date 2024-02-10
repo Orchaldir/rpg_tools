@@ -4,21 +4,26 @@ use rocket::form::Form;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::mountain::MountainId;
+use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::usecase::edit::mountain::update_mountain_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/mountain/all")]
 pub fn get_all_mountains(data: &State<EditorData>) -> Template {
-    get_all_template(&data.data.mountain_manager, "mountain", "Mountains")
+    let data = data.data.lock().expect("lock shared data");
+    get_all_template(&data.mountain_manager, "mountain", "Mountains")
 }
 
 #[get("/mountain/details/<id>")]
 pub fn get_mountain_details(data: &State<EditorData>, id: usize) -> Option<Template> {
-    get_details_template(data, MountainId::new(id))
+    let data = data.data.lock().expect("lock shared data");
+    get_details_template(&data, MountainId::new(id))
 }
 
 #[get("/mountain/edit/<id>")]
 pub fn edit_mountain(data: &State<EditorData>, id: usize) -> Option<Template> {
-    get_edit_template(data, MountainId::new(id), "")
+    let data = data.data.lock().expect("lock shared data");
+    get_edit_template(&data, MountainId::new(id), "")
 }
 
 #[derive(FromForm, Debug)]
@@ -33,21 +38,19 @@ pub fn update_mountain(
     update: Form<MountainUpdate<'_>>,
 ) -> Option<Template> {
     println!("Update mountain {} with {:?}", id, update);
+    let mut data = data.data.lock().expect("lock shared data");
 
     let mountain_id = MountainId::new(id);
 
-    /*
     if let Err(e) = update_mountain_name(&mut data, mountain_id, update.name) {
-        return get_edit_template(data, mountain_id, &e.to_string());
+        return get_edit_template(&data, mountain_id, &e.to_string());
     }
 
-    get_details_template(data, mountain_id)
-    */
-    get_edit_template(data, mountain_id, "test error!")
+    get_details_template(&data, mountain_id)
 }
 
-fn get_details_template(data: &EditorData, id: MountainId) -> Option<Template> {
-    data.data.mountain_manager.get(id).map(|mountain| {
+fn get_details_template(data: &WorldData, id: MountainId) -> Option<Template> {
+    data.mountain_manager.get(id).map(|mountain| {
         Template::render(
             "mountain/details",
             context! {
@@ -58,8 +61,8 @@ fn get_details_template(data: &EditorData, id: MountainId) -> Option<Template> {
     })
 }
 
-fn get_edit_template(data: &EditorData, id: MountainId, name_error: &str) -> Option<Template> {
-    data.data.mountain_manager.get(id).map(|mountain| {
+fn get_edit_template(data: &WorldData, id: MountainId, name_error: &str) -> Option<Template> {
+    data.mountain_manager.get(id).map(|mountain| {
         Template::render(
             "mountain/edit",
             context! {
