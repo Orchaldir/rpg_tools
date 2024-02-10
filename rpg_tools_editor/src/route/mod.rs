@@ -3,6 +3,8 @@ use rpg_tools_core::utils::storage::{Element, Id, Storage};
 
 pub mod mountain;
 pub mod river;
+pub mod street;
+pub mod town;
 
 pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(
     storage: &Storage<ID, ELEMENT>,
