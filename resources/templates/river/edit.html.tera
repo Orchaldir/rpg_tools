@@ -1,0 +1,17 @@
+{% extends "base" %}
+
+{% block content %}
+    <p><h1>Edit River: {{ name }}</h1></p>
+    <div class="text">
+      <p><b>Id:</b> {{ id }}</p>
+      <form action="/river/update/{{ id }}" method="post">
+        <b><label for="name">Name:</label></b>
+        <input type="text" id="name" name="name" value="{{ name }}">
+        {% if name_error %}<br><label class="error">{{ name_error }}</label>{% endif %}
+        <br>
+        <br>
+        <input type="submit" value="Submit">
+      </form>
+      <p><a href="/river/details/{{ id }}">Back</a></p>
+    </div>
+{% endblock content %}

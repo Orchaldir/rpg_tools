@@ -5,7 +5,7 @@ use crate::init::init;
 use crate::route::mountain::{
     edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
-use crate::route::river::{get_all_rivers, get_river_details};
+use crate::route::river::{edit_river, get_all_rivers, get_river_details, update_river};
 use crate::route::street::{get_all_streets, get_street_details};
 use crate::route::town::{get_all_towns, get_town_details, get_town_map};
 use rocket::fs::FileServer;
@@ -57,6 +57,8 @@ fn rocket() -> _ {
                 update_mountain,
                 get_all_rivers,
                 get_river_details,
+                edit_river,
+                update_river,
                 get_all_streets,
                 get_street_details,
                 get_all_towns,

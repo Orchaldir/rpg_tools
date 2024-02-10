@@ -1,8 +1,8 @@
 use crate::utils::storage::{Element, Id, Storage};
 use anyhow::{bail, Context, Result};
 
-/// Tries to update the name of a [`mountain`](crate::model::mountain::Mountain).
-pub fn update_mountain_name<ID: Id, ELEMENT: Element<ID>>(
+/// Tries to update the name of an [`element`](Element).
+pub fn update_name<ID: Id, ELEMENT: Element<ID>>(
     storage: &mut Storage<ID, ELEMENT>,
     id: ID,
     name: &str,
@@ -50,7 +50,7 @@ mod tests {
     fn update_name_of_non_existing_mountain() {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
 
-        assert!(update_mountain_name(&mut storage, MountainId::new(0), VALID_NAME).is_err());
+        assert!(update_name(&mut storage, MountainId::new(0), VALID_NAME).is_err());
     }
 
     #[test]
@@ -69,22 +69,22 @@ mod tests {
         let id0 = storage.create();
         let id1 = storage.create();
 
-        assert!(update_mountain_name(&mut storage, id0, VALID_NAME).is_ok());
-        assert!(update_mountain_name(&mut storage, id1, VALID_NAME).is_err());
+        assert!(update_name(&mut storage, id0, VALID_NAME).is_ok());
+        assert!(update_name(&mut storage, id1, VALID_NAME).is_err());
     }
 
     fn test_invalid_name(name: &str) {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
         let id = storage.create();
 
-        assert!(update_mountain_name(&mut storage, id, name).is_err());
+        assert!(update_name(&mut storage, id, name).is_err());
     }
 
     fn test_update_name(input: &str, result: &str) {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
         let id = storage.create();
 
-        assert!(update_mountain_name(&mut storage, id, input).is_ok());
+        assert!(update_name(&mut storage, id, input).is_ok());
 
         assert_eq!(result, storage.get(id).map(|r| r.name()).unwrap());
     }

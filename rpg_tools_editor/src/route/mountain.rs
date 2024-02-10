@@ -5,7 +5,7 @@ use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::WorldData;
-use rpg_tools_core::usecase::edit::name::update_mountain_name;
+use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/mountain/all")]
@@ -42,7 +42,7 @@ pub fn update_mountain(
 
     let mountain_id = MountainId::new(id);
 
-    if let Err(e) = update_mountain_name(&mut data.mountain_manager, mountain_id, update.name) {
+    if let Err(e) = update_name(&mut data.mountain_manager, mountain_id, update.name) {
         return get_edit_template(&data, mountain_id, &e.to_string());
     }
 
