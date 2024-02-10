@@ -10,5 +10,9 @@
     <p><a href="/town/delete/{{ id }}">Delete</a></p>
     <p><a href="/town/all">Back</a></p>
   </div>
+  <p><h2>Map</h2></p>
+  <center>
+    <img src = "/town/map/{{ id }}/map.svg" alt="Town Map" width="75%"/>
+  </center>
 </div>
 {% endblock content %}
