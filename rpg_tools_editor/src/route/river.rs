@@ -1,4 +1,4 @@
-use crate::route::get_all_template;
+use crate::route::{get_all_template, get_elements};
 use crate::EditorData;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
@@ -17,12 +17,7 @@ pub fn get_river_details(data: &State<EditorData>, id: usize) -> Option<Template
 
 fn get_details_template(data: &EditorData, id: RiverId) -> Option<Template> {
     data.data.river_manager.get(id).map(|river| {
-        let towns: Vec<(usize, &str)> = river
-            .towns
-            .iter()
-            .flat_map(|id| data.data.town_manager.get(*id))
-            .map(|c| (c.id().id(), c.name()))
-            .collect();
+        let towns = get_elements(&data.data.town_manager, &river.towns);
 
         Template::render(
             "river/details",
