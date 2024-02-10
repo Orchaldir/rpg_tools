@@ -26,6 +26,12 @@ pub fn init() -> WorldData {
         .unwrap()
         .set_name("Arkham".to_string());
 
+    river_manager
+        .get_mut(river_id)
+        .unwrap()
+        .towns
+        .insert(town_id);
+
     WorldData {
         mountain_manager,
         river_manager,

@@ -21,15 +21,12 @@ impl Id for RiverId {
 pub struct River {
     id: RiverId,
     name: String,
-    towns: HashSet<TownId>,
+    pub towns: HashSet<TownId>,
 }
 
 impl River {
     pub fn set_name(&mut self, name: String) {
         self.name = name;
-    }
-    pub fn towns(&self) -> &HashSet<TownId> {
-        &self.towns
     }
 }
 
