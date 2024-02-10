@@ -24,12 +24,6 @@ pub struct Street {
     pub towns: HashSet<TownId>,
 }
 
-impl Street {
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-}
-
 impl Element<StreetId> for Street {
     fn new(id: StreetId) -> Self {
         Street {
@@ -49,5 +43,9 @@ impl Element<StreetId> for Street {
 
     fn name(&self) -> &str {
         &self.name
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 }

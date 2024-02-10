@@ -24,12 +24,6 @@ pub struct River {
     pub towns: HashSet<TownId>,
 }
 
-impl River {
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-}
-
 impl Element<RiverId> for River {
     fn new(id: RiverId) -> Self {
         River {
@@ -49,5 +43,9 @@ impl Element<RiverId> for River {
 
     fn name(&self) -> &str {
         &self.name
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 }

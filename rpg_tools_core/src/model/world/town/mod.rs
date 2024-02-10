@@ -31,12 +31,6 @@ pub struct Town {
     pub map: EdgeMap<TownTile, TownEdge>,
 }
 
-impl Town {
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
-}
-
 impl Element<TownId> for Town {
     fn new(id: TownId) -> Self {
         Town {
@@ -60,5 +54,9 @@ impl Element<TownId> for Town {
 
     fn name(&self) -> &str {
         &self.name
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 }

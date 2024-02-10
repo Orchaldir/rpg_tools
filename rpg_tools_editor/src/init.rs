@@ -8,7 +8,7 @@ use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::map::edge::EdgeMap;
-use rpg_tools_core::utils::storage::Storage;
+use rpg_tools_core::utils::storage::{Element, Storage};
 
 pub fn init() -> WorldData {
     let mut mountain_manager: Storage<MountainId, Mountain> = Storage::default();
