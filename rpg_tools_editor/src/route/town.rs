@@ -27,6 +27,17 @@ pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<Template
     get_details_template(&data, TownId::new(id))
 }
 
+#[get("/town/new")]
+pub fn add_town(data: &State<EditorData>) -> Option<Template> {
+    let mut data = data.data.lock().expect("lock shared data");
+
+    let id = data.town_manager.create();
+
+    println!("Create town {}", id.id());
+
+    get_edit_template(&data, id, "")
+}
+
 #[get("/town/edit/<id>")]
 pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");

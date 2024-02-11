@@ -20,6 +20,17 @@ pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<Templat
     get_details_template(&data, RiverId::new(id))
 }
 
+#[get("/river/new")]
+pub fn add_river(data: &State<EditorData>) -> Option<Template> {
+    let mut data = data.data.lock().expect("lock shared data");
+
+    let id = data.river_manager.create();
+
+    println!("Create river {}", id.id());
+
+    get_edit_template(&data, id, "")
+}
+
 #[get("/river/edit/<id>")]
 pub fn edit_river(state: &State<EditorData>, id: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");

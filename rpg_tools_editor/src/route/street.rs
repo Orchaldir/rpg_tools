@@ -20,6 +20,17 @@ pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<Templa
     get_details_template(&data, StreetId::new(id))
 }
 
+#[get("/street/new")]
+pub fn add_street(data: &State<EditorData>) -> Option<Template> {
+    let mut data = data.data.lock().expect("lock shared data");
+
+    let id = data.street_manager.create();
+
+    println!("Create street {}", id.id());
+
+    get_edit_template(&data, id, "")
+}
+
 #[get("/street/edit/<id>")]
 pub fn edit_street(state: &State<EditorData>, id: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");
