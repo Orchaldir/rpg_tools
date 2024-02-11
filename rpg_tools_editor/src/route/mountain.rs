@@ -20,6 +20,17 @@ pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<Temp
     get_details_template(&data, MountainId::new(id))
 }
 
+#[get("/mountain/new")]
+pub fn add_mountain(data: &State<EditorData>) -> Option<Template> {
+    let mut data = data.data.lock().expect("lock shared data");
+
+    let id = data.mountain_manager.create();
+
+    println!("Create mountain {}", id.id());
+
+    get_details_template(&data, id)
+}
+
 #[get("/mountain/edit/<id>")]
 pub fn edit_mountain(state: &State<EditorData>, id: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");
