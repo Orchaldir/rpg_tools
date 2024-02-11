@@ -28,7 +28,7 @@ pub fn add_mountain(data: &State<EditorData>) -> Option<Template> {
 
     println!("Create mountain {}", id.id());
 
-    get_details_template(&data, id)
+    get_edit_template(&data, id, "")
 }
 
 #[get("/mountain/edit/<id>")]
