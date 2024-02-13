@@ -21,7 +21,7 @@ impl Id for StreetId {
 pub struct Street {
     id: StreetId,
     name: String,
-    pub towns: HahSet<TownId>,
+    pub towns: HashSet<TownId>,
 }
 
 impl Element<StreetId> for Street {
