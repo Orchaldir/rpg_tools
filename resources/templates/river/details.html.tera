@@ -13,7 +13,6 @@
       {% endfor %}
     </ul>
     <p><a href="/river/edit/{{ id }}">Edit</a></p>
-    <p><a href="/river/delete/{{ id }}">Delete</a></p>
     <p><a href="/river/all">Back</a></p>
   </div>
 </div>

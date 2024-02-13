@@ -13,7 +13,6 @@
       {% endfor %}
     </ul>
     <p><a href="/street/edit/{{ id }}">Edit</a></p>
-    <p><a href="/street/delete/{{ id }}">Delete</a></p>
     <p><a href="/street/all">Back</a></p>
   </div>
 </div>

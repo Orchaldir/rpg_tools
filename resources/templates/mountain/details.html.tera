@@ -7,7 +7,6 @@
   <div class="text">
     <p><b>Id:</b> {{ id }}</p>
     <p><a href="/mountain/edit/{{ id }}">Edit</a></p>
-    <p><a href="/mountain/delete/{{ id }}">Delete</a></p>
     <p><a href="/mountain/all">Back</a></p>
   </div>
 </div>
