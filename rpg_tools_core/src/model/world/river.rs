@@ -21,17 +21,7 @@ impl Id for RiverId {
 pub struct River {
     id: RiverId,
     name: String,
-    towns: HashSet<TownId>,
-}
-
-impl River {
-    pub fn name(&self) -> &str {
-        &self.name
-    }
-
-    pub fn set_name(&mut self, name: String) {
-        self.name = name;
-    }
+    pub towns: HashSet<TownId>,
 }
 
 impl Element<RiverId> for River {
@@ -49,5 +39,13 @@ impl Element<RiverId> for River {
 
     fn with_id(self, id: RiverId) -> Self {
         River { id, ..self }
+    }
+
+    fn name(&self) -> &str {
+        &self.name
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.name = name;
     }
 }

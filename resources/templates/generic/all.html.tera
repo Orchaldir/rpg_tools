@@ -1,0 +1,15 @@
+{% extends "base" %}
+
+{% block content %}
+    <p><h1>{{ title }}</h1></p>
+    <div class="text">
+        <p><b>Count:</b> {{ values | length }}</p>
+      <ul>
+      {% for v in values %}
+        <li><a href="/{{ name }}/details/{{ v.0 }}">{{ v.1 }}</a></li>
+      {% endfor %}
+      </ul>
+      <p><a href="/{{ name }}/new">Add</a></p>
+      <p><a href="/">Back</a></p>
+    </div>
+{% endblock content %}

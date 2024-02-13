@@ -1,0 +1,17 @@
+{% extends "base" %}
+
+{% block content %}
+<div class="left_right_container">
+  <p><h1>Town: {{ name }}</h1></p>
+  <p><h2>Data</h2></p>
+  <div class="text">
+    <p><b>Id:</b> {{ id }}</p>
+    <p><a href="/town/edit/{{ id }}">Edit</a></p>
+    <p><a href="/town/all">Back</a></p>
+  </div>
+  <p><h2>Map</h2></p>
+  <center>
+    <img src = "/town/map/{{ id }}/map.svg" alt="Town Map" width="75%"/>
+  </center>
+</div>
+{% endblock content %}

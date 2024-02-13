@@ -1,0 +1,19 @@
+{% extends "base" %}
+
+{% block content %}
+<div class="left_right_container">
+  <p><h1>River: {{ name }}</h1></p>
+  <p><h2>Data</h2></p>
+  <div class="text">
+    <p><b>Id:</b> {{ id }}</p>
+    <p><b>Towns:</b> {{ towns | length }}</p>
+    <ul>
+      {% for t in towns %}
+      <li><a href="/town/details/{{ t.0 }}">{{ t.1 }}</a></li>
+      {% endfor %}
+    </ul>
+    <p><a href="/river/edit/{{ id }}">Edit</a></p>
+    <p><a href="/river/all">Back</a></p>
+  </div>
+</div>
+{% endblock content %}
