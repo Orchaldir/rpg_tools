@@ -157,13 +157,13 @@ pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
 
 fn resize<T: Clone>(size: &Size2d, tiles: &Vec<T>, new_size: &Size2d, default: T) -> Vec<T> {
     let mut new_tiles = vec![];
-    let mut index = 0;
 
     for y in 0..new_size.height() {
         for x in 0..new_size.width() {
             if x < size.width() && y < size.height() {
-                new_tiles.push(tiles[index].clone());
-                index += 1;
+                if let Some(index) = size.to_index(x, y) {
+                    new_tiles.push(tiles[index].clone());
+                }
             } else {
                 new_tiles.push(default.clone());
             }
@@ -202,6 +202,23 @@ mod tests {
             vec![11, 12, 13, 9, 9, 9, 9, 9],
         )
         .unwrap();
+
+        assert_eq!(new_map, old_map.resize(new_size, 0, 9));
+    }
+
+    #[test]
+    fn test_resize_to_smaller() {
+        let old_size = Size2d::new(3, 2);
+        let new_size = Size2d::new(2, 1);
+        let old_map = EdgeMap::new(
+            old_size,
+            vec![10, 20, 30, 40, 50, 60],
+            vec![1, 2, 3, 4, 5, 6, 7, 8, 9],
+            vec![11, 12, 13, 14, 14, 15, 17, 18],
+        )
+        .unwrap();
+        let new_map =
+            EdgeMap::new(new_size, vec![10, 20], vec![1, 2, 4, 5], vec![11, 12, 13]).unwrap();
 
         assert_eq!(new_map, old_map.resize(new_size, 0, 9));
     }
