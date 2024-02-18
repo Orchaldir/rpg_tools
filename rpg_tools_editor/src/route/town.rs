@@ -11,6 +11,7 @@ use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
+use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
@@ -63,6 +64,9 @@ pub fn update_town(
     let town_id = TownId::new(id);
 
     if let Err(e) = update_name(&mut data.town_manager, town_id, update.name) {
+        return get_edit_template(&data, town_id, &e.to_string());
+    }
+    if let Err(e) = resize_town(&mut data, town_id, update.width, update.height) {
         return get_edit_template(&data, town_id, &e.to_string());
     }
 
