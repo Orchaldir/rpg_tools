@@ -50,29 +50,21 @@ impl<Tile: Clone, Edge: Clone> EdgeMap<Tile, Edge> {
 
     /// Resizes an edge map.
     pub fn resize(&self, size: Size2d, tile: Tile, edge: Edge) -> EdgeMap<Tile, Edge> {
-        let tiles = self.resize_tiles(&size, tile);
-        let horizontal_edges = vec![edge.clone(); get_horizontal_edges_size(size).len()];
-        let vertical_edges = vec![edge; get_vertical_edges_size(size).len()];
+        let tiles = resize(&self.size, &self.tiles, &size, tile);
+        let horizontal_edges = resize(
+            &get_horizontal_edges_size(self.size),
+            &self.horizontal_edges,
+            &get_horizontal_edges_size(size),
+            edge.clone(),
+        );
+        let vertical_edges = resize(
+            &get_vertical_edges_size(self.size),
+            &self.vertical_edges,
+            &get_vertical_edges_size(size),
+            edge.clone(),
+        );
 
         Self::new(size, tiles, horizontal_edges, vertical_edges).unwrap()
-    }
-
-    fn resize_tiles(&self, size: &Size2d, tile: Tile) -> Vec<Tile> {
-        let mut tiles = vec![];
-        let mut index = 0;
-
-        for y in 0..size.height() {
-            for x in 0..size.width() {
-                if x < self.size.width() && y < self.size.height() {
-                    tiles.push(self.tiles[index].clone());
-                    index += 1;
-                } else {
-                    tiles.push(tile.clone());
-                }
-            }
-        }
-
-        tiles
     }
 
     pub fn get_size(&self) -> Size2d {
@@ -161,6 +153,24 @@ pub fn below_tile(size: Size2d, tile_index: usize) -> usize {
 /// Returns the index of the vertical edge to the right of the tile.
 pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
     left_of_tile(size, tile_index) + 1
+}
+
+fn resize<T: Clone>(size: &Size2d, tiles: &Vec<T>, new_size: &Size2d, default: T) -> Vec<T> {
+    let mut new_tiles = vec![];
+    let mut index = 0;
+
+    for y in 0..new_size.height() {
+        for x in 0..new_size.width() {
+            if x < size.width() && y < size.height() {
+                new_tiles.push(tiles[index].clone());
+                index += 1;
+            } else {
+                new_tiles.push(default.clone());
+            }
+        }
+    }
+
+    new_tiles
 }
 
 #[cfg(test)]
