@@ -1,5 +1,6 @@
 use crate::model::math::side2d::Side2d;
 use crate::model::math::size2d::Size2d;
+use anyhow::{bail, Result};
 
 /// The edge map is a 2d grid of tiles with edges around each.
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -24,26 +25,54 @@ impl<Tile: Clone, Edge: Clone> EdgeMap<Tile, Edge> {
         Self::new(size, tiles, horizontal_edges, vertical_edges).unwrap()
     }
 
-    /// Creates am edge map.
+    /// Creates an edge map.
     pub fn new(
         size: Size2d,
         tiles: Vec<Tile>,
         horizontal_edges: Vec<Edge>,
         vertical_edges: Vec<Edge>,
-    ) -> Option<EdgeMap<Tile, Edge>> {
-        if size.len() != tiles.len()
-            || get_horizontal_edges_size(size).len() != horizontal_edges.len()
-            || get_vertical_edges_size(size).len() != vertical_edges.len()
-        {
-            return None;
+    ) -> Result<EdgeMap<Tile, Edge>> {
+        if size.len() != tiles.len() {
+            bail!("Tiles don't match size")
+        } else if get_horizontal_edges_size(size).len() != horizontal_edges.len() {
+            bail!("Horizontal edges don't match size")
+        } else if get_vertical_edges_size(size).len() != vertical_edges.len() {
+            bail!("Vertical edges don't match size")
         }
 
-        Some(EdgeMap {
+        Ok(EdgeMap {
             size,
             tiles,
             horizontal_edges,
             vertical_edges,
         })
+    }
+
+    /// Resizes an edge map.
+    pub fn resize(&self, size: Size2d, tile: Tile, edge: Edge) -> EdgeMap<Tile, Edge> {
+        let tiles = self.resize_tiles(&size, tile);
+        let horizontal_edges = vec![edge.clone(); get_horizontal_edges_size(size).len()];
+        let vertical_edges = vec![edge; get_vertical_edges_size(size).len()];
+
+        Self::new(size, tiles, horizontal_edges, vertical_edges).unwrap()
+    }
+
+    fn resize_tiles(&self, size: &Size2d, tile: Tile) -> Vec<Tile> {
+        let mut tiles = vec![];
+        let mut index = 0;
+
+        for y in 0..size.height() {
+            for x in 0..size.width() {
+                if x < self.size.width() && y < self.size.height() {
+                    tiles.push(self.tiles[index].clone());
+                    index += 1;
+                } else {
+                    tiles.push(tile.clone());
+                }
+            }
+        }
+
+        tiles
     }
 
     pub fn get_size(&self) -> Size2d {
@@ -148,6 +177,23 @@ mod tests {
         assert_eq!(map.get_tiles(), &vec![2; 6]);
         assert_eq!(map.get_horizontal_edges(), &vec![3; 8]);
         assert_eq!(map.get_vertical_edges(), &vec![3; 9]);
+    }
+
+    #[test]
+    fn test_resize_to_larger() {
+        let old_size = Size2d::new(2, 1);
+        let new_size = Size2d::new(3, 2);
+        let old_map =
+            EdgeMap::new(old_size, vec![10, 30], vec![1, 2, 3, 4], vec![11, 12, 13]).unwrap();
+        let new_map = EdgeMap::new(
+            new_size,
+            vec![10, 30, 0, 0, 0, 0],
+            vec![1, 2, 9, 3, 4, 9, 9, 9, 9],
+            vec![11, 12, 13, 9, 9, 9, 9, 9],
+        )
+        .unwrap();
+
+        assert_eq!(new_map, old_map.resize(new_size, 0, 9));
     }
 
     #[test]
