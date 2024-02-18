@@ -47,6 +47,8 @@ pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<Template> {
 #[derive(FromForm, Debug)]
 pub struct TownUpdate<'r> {
     name: &'r str,
+    width: u32,
+    height: u32,
 }
 
 #[post("/town/update/<id>", data = "<update>")]
@@ -125,6 +127,8 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<T
                 name: town.name(),
                 id: id.id(),
                 name_error: name_error,
+                width: town.map.get_size().width(),
+                height: town.map.get_size().height(),
             },
         )
     })

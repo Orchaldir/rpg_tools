@@ -10,6 +10,14 @@
         {% if name_error %}<br><label class="error">{{ name_error }}</label>{% endif %}
         <br>
         <br>
+        <b>Width:</b>
+        <input type="number" step="1" id="width" name="width" value="{{ width }}" min="1" max="1000" >
+        <br>
+        <br>
+        <b>Height:</b>
+        <input type="number" step="1" id="height" name="height" value="{{ height }}" min="1" max="1000" >
+        <br>
+        <br>
         <input type="submit" value="Submit">
       </form>
       <p><a href="/town/details/{{ id }}">Back</a></p>
