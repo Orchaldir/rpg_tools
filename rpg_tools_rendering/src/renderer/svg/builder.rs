@@ -37,17 +37,6 @@ impl SvgBuilder {
         "  ".repeat(self.elements.len() + 1)
     }
 
-    pub fn link(&mut self, link: &str) {
-        self.add(format!("<a href=\"{}\">", link));
-        self.elements.push("a".to_string());
-    }
-
-    pub fn close(&mut self) {
-        if let Some(element) = self.elements.pop() {
-            self.add(format!("</{}>", element));
-        }
-    }
-
     pub fn finish(mut self) -> Svg {
         while !self.elements.is_empty() {
             self.close();
@@ -60,6 +49,17 @@ impl SvgBuilder {
 }
 
 impl Renderer for SvgBuilder {
+    fn link(&mut self, link: &str) {
+        self.add(format!("<a href=\"{}\">", link));
+        self.elements.push("a".to_string());
+    }
+
+    fn close(&mut self) {
+        if let Some(element) = self.elements.pop() {
+            self.add(format!("</{}>", element));
+        }
+    }
+
     fn render_circle(&mut self, center: &Point2d, radius: u32, style: &RenderStyle) {
         self.add(format!(
             "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" style=\"{}\"/>",

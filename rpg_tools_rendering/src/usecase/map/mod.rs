@@ -53,6 +53,41 @@ impl EdgeMapRenderer {
         }
     }
 
+    pub fn render_tiles_with_link<
+        Tile: Clone,
+        Edge: Clone,
+        C: Fn(&Tile) -> Color,
+        L: Fn(usize, &Tile) -> String,
+    >(
+        &self,
+        renderer: &mut dyn Renderer,
+        start: &Point2d,
+        map: &EdgeMap<Tile, Edge>,
+        color_lookup: C,
+        link_lookup: L,
+    ) {
+        let size = map.get_size();
+        let tile_size = Size2d::square(self.tile_size);
+        let mut index = 0;
+
+        for y in 0..size.height() {
+            for x in 0..size.width() {
+                if let Some(tile) = map.get_tile(index) {
+                    let position = self.calculate_position(start, x, y);
+                    let color = color_lookup(tile);
+                    let link = link_lookup(index, tile);
+                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+
+                    renderer.link(&link);
+                    renderer.render_rectangle(&AABB::new(position, tile_size), &style);
+                    renderer.close();
+                }
+
+                index += 1;
+            }
+        }
+    }
+
     pub fn render_edges<Tile: Clone, Edge: Clone, F: Fn(&Edge) -> Option<Color>>(
         &self,
         renderer: &mut dyn Renderer,

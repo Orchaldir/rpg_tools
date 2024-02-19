@@ -10,13 +10,13 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
-#[get("/town/terrain/edit/<id>")]
+#[get("/town/terrain/all/<id>")]
 pub fn edit_terrain(state: &State<EditorData>, id: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id))
 }
 
-#[get("/town/terrain/edit/<id>/map.svg")]
+#[get("/town/terrain/all/<id>/map.svg")]
 pub fn get_terrain_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
@@ -28,11 +28,12 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(
+    renderer.render_tiles_with_link(
         &mut builder,
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
+        |index, _tile| format!("../../edit/{}/{}", town.id().id(), index),
     );
 
     let svg = builder.finish();
