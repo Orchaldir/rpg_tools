@@ -9,7 +9,7 @@ use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::town::edge::TownEdge;
-use rpg_tools_core::model::world::town::terrain::Terrain;
+use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
@@ -95,7 +95,7 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<Template> {
     })
 }
 
-pub fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
+fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
@@ -103,12 +103,7 @@ pub fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
         &mut builder,
         &Point2d::default(),
         &town.map,
-        |tile| match tile.terrain {
-            Terrain::Hill { .. } => Color::SaddleBrown,
-            Terrain::Mountain { .. } => Color::Gray,
-            Terrain::Plain => Color::Green,
-            Terrain::River { .. } => Color::Blue,
-        },
+        TownTile::get_color,
     );
 
     renderer.render_edges(

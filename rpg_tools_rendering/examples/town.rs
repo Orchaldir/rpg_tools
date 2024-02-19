@@ -41,14 +41,7 @@ fn main() {
     let size = renderer.calculate_size(&map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(&mut builder, &Point2d::default(), &map, |tile| {
-        match tile.terrain {
-            Terrain::Hill { .. } => Color::SaddleBrown,
-            Terrain::Mountain { .. } => Color::Gray,
-            Terrain::Plain => Color::Green,
-            Terrain::River { .. } => Color::Blue,
-        }
-    });
+    renderer.render_tiles(&mut builder, &Point2d::default(), &map, TownTile::get_color);
 
     renderer.render_edges(&mut builder, &Point2d::default(), &map, |tile| match tile {
         TownEdge::None => None,
