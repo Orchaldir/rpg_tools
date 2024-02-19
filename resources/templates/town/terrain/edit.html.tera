@@ -4,7 +4,8 @@
 <div class="left_right_container">
   <p><h1>Edit Terrain of Town {{ name }}</h1></p>
   <center>
-    <img src = "/town/terrain/all/{{ id }}/map.svg" alt="Town Map" width="75%"/>
+    <object data="/town/terrain/all/{{ id }}/map.svg" type="image/svg+xml" width="800" height="800">
+    </object>
   </center>
   <div class="text">
     <p><a href="/town/details/{{ id }}">Back</a></p>
