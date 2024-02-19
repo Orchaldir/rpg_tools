@@ -1,3 +1,5 @@
+pub mod terrain;
+
 use crate::route::get_all_template;
 use crate::svg::RawSvg;
 use crate::EditorData;

@@ -6,7 +6,8 @@
   <p><h2>Data</h2></p>
   <div class="text">
     <p><b>Id:</b> {{ id }}</p>
-    <p><a href="/town/edit/{{ id }}">Edit</a></p>
+    <p><a href="/town/edit/{{ id }}">Edit Data</a></p>
+    <p><a href="/town/terrain/edit/{{ id }}">Edit Terrain</a></p>
     <p><a href="/town/all">Back</a></p>
   </div>
   <p><h2>Map</h2></p>
