@@ -48,8 +48,16 @@ impl HtmlBuilder {
         self
     }
 
-    pub fn h1(mut self, title: &str) -> Self {
-        self.add(format!("<h1>{}</h1>", title));
+    fn inline_tag(mut self, tag: &str, value: &str) -> Self {
+        self.add(format!("<{0}>{1}</{0}>", tag, value));
         self
+    }
+
+    pub fn h1(mut self, title: &str) -> Self {
+        self.inline_tag("h1", title)
+    }
+
+    pub fn h2(mut self, title: &str) -> Self {
+        self.inline_tag("h2", title)
     }
 }

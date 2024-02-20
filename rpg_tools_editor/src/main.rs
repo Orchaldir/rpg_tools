@@ -38,7 +38,12 @@ pub struct EditorData {
 fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
-    RawHtml(HtmlBuilder::new().h1("RPG Tools - Editor").finish())
+    RawHtml(
+        HtmlBuilder::new()
+            .h1("RPG Tools - Editor")
+            .h2("Overview")
+            .finish(),
+    )
 }
 
 #[launch]
