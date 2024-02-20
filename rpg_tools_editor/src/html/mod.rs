@@ -60,4 +60,17 @@ impl HtmlBuilder {
     pub fn h2(mut self, title: &str) -> Self {
         self.inline_tag("h2", title)
     }
+
+    pub fn p(mut self) -> Self {
+        self.open_tag("p")
+    }
+
+    pub fn b(mut self, text: &str) -> Self {
+        self.inline_tag("b", text)
+    }
+
+    pub fn text(mut self, text: &str) -> Self {
+        self.add(text.to_string());
+        self
+    }
 }
