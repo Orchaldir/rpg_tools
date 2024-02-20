@@ -77,4 +77,8 @@ impl HtmlBuilder {
         self.add(text.to_string());
         self
     }
+
+    pub fn usize(mut self, number: usize) -> Self {
+        self.text(&number.to_string())
+    }
 }

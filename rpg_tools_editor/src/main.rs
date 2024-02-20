@@ -45,7 +45,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
             .p(|builder| {
                 builder
                     .b("Mountains:")
-                    .text(&data.mountain_manager.get_all().len().to_string())
+                    .usize(data.mountain_manager.get_all().len())
             })
             .finish(),
     )
