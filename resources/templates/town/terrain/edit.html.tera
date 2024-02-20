@@ -5,11 +5,11 @@
     <div class="text">
       <form action="/town/terrain/update/{{ id }}" method="post">
         <b><label for="terrain">Terrain:</label></b>
-        {{ macros::add_select(name="terrain", options=terrains, selected=terrain) }}
+        {{ macros::add_select(name="terrain", options=terrains, selected=tile.terrain.type) }}
         <br>
         <br>
         <input type="submit" value="Submit">
       </form>
-      <p><a href="/town/details/{{ id }}">Back</a></p>
+      <p><a href="/town/terrain/all/{{ id }}">Back</a></p>
     </div>
 {% endblock content %}

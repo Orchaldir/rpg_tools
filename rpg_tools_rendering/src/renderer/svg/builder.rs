@@ -50,7 +50,7 @@ impl SvgBuilder {
 
 impl Renderer for SvgBuilder {
     fn link(&mut self, link: &str) {
-        self.add(format!("<a href=\"{}\">", link));
+        self.add(format!("<a href=\"{}\" target=\"_parent\">", link));
         self.elements.push("a".to_string());
     }
 

@@ -67,7 +67,7 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<Templ
                 id: id.id(),
                 index: index,
                 terrains: vec!["Hill", "Mountain", "Plain", "River"],
-                terrain: town.map.get_tile(index),
+                tile: town.map.get_tile(index),
             },
         )
     })
