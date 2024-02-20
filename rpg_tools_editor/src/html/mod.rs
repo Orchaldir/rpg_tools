@@ -4,7 +4,7 @@ pub struct HtmlBuilder {
 }
 
 impl HtmlBuilder {
-    pub fn new() -> Self {
+    pub fn new(title: &str) -> Self {
         let mut lines = Vec::new();
 
         lines.push("<!DOCTYPE html>".to_string());
@@ -15,6 +15,8 @@ impl HtmlBuilder {
         }
         .open_tag("html")
         .open_tag("head")
+        .text(r#"<link rel="stylesheet" href="/static/style.css">"#)
+        .inline_tag("title", title)
         .close_tag()
         .open_tag("body")
     }

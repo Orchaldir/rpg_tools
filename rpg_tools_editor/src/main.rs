@@ -55,7 +55,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
     RawHtml(
-        HtmlBuilder::new()
+        HtmlBuilder::new("RPG Tools - Editor")
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
