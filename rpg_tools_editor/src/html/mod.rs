@@ -1,6 +1,3 @@
-use rpg_tools_core::model::math::size2d::Size2d;
-use rpg_tools_rendering::renderer::svg::Svg;
-
 pub struct HtmlBuilder {
     lines: Vec<String>,
     elements: Vec<String>,
@@ -27,8 +24,6 @@ impl HtmlBuilder {
             self = self.close_tag();
         }
 
-        self.lines.push("</svg>".to_string());
-
         self.lines.join("\n")
     }
 
@@ -42,7 +37,7 @@ impl HtmlBuilder {
 
     fn open_tag(mut self, tag: &str) -> Self {
         self.add(format!("<{}>", tag));
-        self.elements.push("tag".to_string());
+        self.elements.push(tag.to_string());
         self
     }
 
