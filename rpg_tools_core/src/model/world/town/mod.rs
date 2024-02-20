@@ -8,9 +8,10 @@ use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::utils::map::edge::EdgeMap;
 use crate::utils::storage::{Element, Id};
+use serde::{Deserialize, Serialize};
 
 /// The unique identifier of a [`town`](Town).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct TownId(usize);
 
 impl Id for TownId {

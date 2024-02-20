@@ -1,0 +1,15 @@
+{% extends "base" %}
+
+{% block content %}
+    <p><h1>Edit Town Tile {{ index }} of {{ name }}</h1></p>
+    <div class="text">
+      <form action="/town/terrain/update/{{ id }}" method="post">
+        <b><label for="terrain">Terrain:</label></b>
+        {{ macros::add_select(name="terrain", options=terrains, selected=terrain) }}
+        <br>
+        <br>
+        <input type="submit" value="Submit">
+      </form>
+      <p><a href="/town/details/{{ id }}">Back</a></p>
+    </div>
+{% endblock content %}

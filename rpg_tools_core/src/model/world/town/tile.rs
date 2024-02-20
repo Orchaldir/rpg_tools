@@ -1,8 +1,9 @@
 use crate::model::color::Color;
 use crate::model::world::town::terrain::Terrain;
+use serde::{Deserialize, Serialize};
 
 /// A tile of the [`town`](crate::model::world::town::Town) map.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct TownTile {
     pub terrain: Terrain,
 }

@@ -1,7 +1,8 @@
 use crate::utils::storage::{Element, Id};
+use serde::{Deserialize, Serialize};
 
 /// The unique identifier of a [`mountain`](Mountain).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct MountainId(usize);
 
 impl Id for MountainId {
