@@ -61,8 +61,12 @@ impl HtmlBuilder {
         self.inline_tag("h2", title)
     }
 
-    pub fn p(mut self) -> Self {
-        self.open_tag("p")
+    pub fn p<F: FnOnce(Self) -> Self>(mut self, f: F) -> Self {
+        self = self.open_tag("p");
+
+        self = f(self);
+
+        self.close_tag()
     }
 
     pub fn b(mut self, text: &str) -> Self {

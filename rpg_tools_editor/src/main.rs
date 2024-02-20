@@ -42,8 +42,11 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
         HtmlBuilder::new()
             .h1("RPG Tools - Editor")
             .h2("Overview")
-            .p()
-            .b("Mountains:")
+            .p(|builder| {
+                builder
+                    .b("Mountains:")
+                    .text(&data.mountain_manager.get_all().len().to_string())
+            })
             .finish(),
     )
 }
