@@ -44,6 +44,14 @@ pub fn init() -> WorldData {
         TownEdge::None,
     );
 
+    town_manager
+        .get_mut(town_id)
+        .unwrap()
+        .map
+        .get_tile_mut(0)
+        .unwrap()
+        .terrain = Terrain::Hill { id: hill_id };
+
     river_manager
         .get_mut(river_id)
         .unwrap()

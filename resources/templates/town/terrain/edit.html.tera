@@ -6,6 +6,13 @@
       <form action="/town/terrain/update/{{ id }}/{{ index }}" method="post">
         <b><label for="terrain">Terrain:</label></b>
         {{ macros::add_select(name="terrain", options=terrains, selected=tile.terrain.type) }}
+        {% if tile.terrain.type == "Hill" %}
+          <br>
+          <br>
+          <b><label for="id">Mountain Id:</label></b>
+          {{ macros::add_select(name="id", options=mountains, selected=tile.terrain.id) }}
+        {% elif tile.terrain.type == "River" %}
+        {% endif %}
         <br>
         <br>
         <input type="submit" value="Submit">

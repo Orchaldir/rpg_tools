@@ -1,3 +1,4 @@
+use crate::route::get_all_elements;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
@@ -33,7 +34,7 @@ pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Optio
 
 #[derive(FromForm, Debug)]
 pub struct TileUpdate<'r> {
-    terrain_type: &'r str,
+    terrain: &'r str,
     id: u32,
 }
 
@@ -81,6 +82,9 @@ fn get_all_template(data: &WorldData, id: TownId) -> Option<Template> {
 }
 
 fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<Template> {
+    let mountains = get_all_elements(&data.mountain_manager);
+    let rivers = get_all_elements(&data.river_manager);
+
     data.town_manager.get(id).map(|town| {
         Template::render(
             "town/terrain/edit",
@@ -88,6 +92,8 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<Templ
                 name: town.name(),
                 id: id.id(),
                 index: index,
+                mountains: mountains,
+                rivers: rivers,
                 terrains: vec!["Hill", "Mountain", "Plain", "River"],
                 tile: town.map.get_tile(index),
             },
