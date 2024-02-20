@@ -21,6 +21,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 use std::sync::Mutex;
 
@@ -34,6 +35,21 @@ pub struct EditorData {
     town_renderer: EdgeMapRenderer,
 }
 
+impl HtmlBuilder {
+    pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
+        mut self,
+        title: &str,
+        link: &str,
+        storage: &Storage<ID, ELEMENT>,
+    ) -> Self {
+        self.p(|builder| {
+            builder
+                .b(title)
+                .a(link, |a| a.usize(storage.get_all().len()))
+        })
+    }
+}
+
 #[get("/")]
 fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
@@ -42,11 +58,10 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
         HtmlBuilder::new()
             .h1("RPG Tools - Editor")
             .h2("Overview")
-            .p(|builder| {
-                builder.b("Mountains:").a("/mountain/all", |a| {
-                    a.usize(data.mountain_manager.get_all().len())
-                })
-            })
+            .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
+            .add_storage_link("Rivers:", "/river/all", &data.river_manager)
+            .add_storage_link("Streets:", "/street/all", &data.street_manager)
+            .add_storage_link("Towns:", "/town/all", &data.town_manager)
             .finish(),
     )
 }
