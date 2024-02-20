@@ -19,7 +19,7 @@ use crate::route::town::{
 use rocket::fs::FileServer;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::{context, Template};
+use rocket_dyn_templates::Template;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
@@ -37,7 +37,7 @@ pub struct EditorData {
 
 impl HtmlBuilder {
     pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
-        mut self,
+        self,
         title: &str,
         link: &str,
         storage: &Storage<ID, ELEMENT>,

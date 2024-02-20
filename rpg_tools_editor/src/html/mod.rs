@@ -59,11 +59,11 @@ impl HtmlBuilder {
         self
     }
 
-    pub fn h1(mut self, title: &str) -> Self {
+    pub fn h1(self, title: &str) -> Self {
         self.inline_tag("h1", title)
     }
 
-    pub fn h2(mut self, title: &str) -> Self {
+    pub fn h2(self, title: &str) -> Self {
         self.inline_tag("h2", title)
     }
 
@@ -83,7 +83,7 @@ impl HtmlBuilder {
         self.close_tag()
     }
 
-    pub fn b(mut self, text: &str) -> Self {
+    pub fn b(self, text: &str) -> Self {
         self.inline_tag("b", text)
     }
 
@@ -92,7 +92,7 @@ impl HtmlBuilder {
         self
     }
 
-    pub fn usize(mut self, number: usize) -> Self {
+    pub fn usize(self, number: usize) -> Self {
         self.text(&number.to_string())
     }
 }
