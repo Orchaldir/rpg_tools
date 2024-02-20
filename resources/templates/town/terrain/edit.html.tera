@@ -3,7 +3,7 @@
 {% block content %}
     <p><h1>Edit Town Tile {{ index }} of {{ name }}</h1></p>
     <div class="text">
-      <form action="/town/terrain/update/{{ id }}" method="post">
+      <form action="/town/terrain/update/{{ id }}/{{ index }}" method="post">
         <b><label for="terrain">Terrain:</label></b>
         {{ macros::add_select(name="terrain", options=terrains, selected=tile.terrain.type) }}
         <br>

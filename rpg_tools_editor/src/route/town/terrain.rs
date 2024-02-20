@@ -1,5 +1,6 @@
 use crate::svg::RawSvg;
 use crate::EditorData;
+use rocket::form::Form;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -28,6 +29,27 @@ pub fn get_terrain_edit_map(state: &State<EditorData>, id: usize) -> Option<RawS
 pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Option<Template> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id), index)
+}
+
+#[derive(FromForm, Debug)]
+pub struct TileUpdate<'r> {
+    terrain_type: &'r str,
+    id: u32,
+}
+
+#[post("/town/terrain/update/<id>/<index>", data = "<update>")]
+pub fn update_tile(
+    state: &State<EditorData>,
+    id: usize,
+    index: usize,
+    update: Form<TileUpdate<'_>>,
+) -> Option<Template> {
+    println!("Update tile {} of town {} with {:?}", index, id, update);
+    let mut data = state.data.lock().expect("lock shared data");
+
+    let town_id = TownId::new(id);
+
+    get_all_template(&data, town_id)
 }
 
 fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
