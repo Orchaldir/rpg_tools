@@ -41,6 +41,12 @@ impl HtmlBuilder {
         self
     }
 
+    fn open_tag_with_attribute(mut self, tag: &str, attribute: &str, value: &str) -> Self {
+        self.add(format!(r#"<{} {}="{}">"#, tag, attribute, value));
+        self.elements.push(tag.to_string());
+        self
+    }
+
     fn close_tag(mut self) -> Self {
         if let Some(element) = self.elements.pop() {
             self.add(format!("</{}>", element));
@@ -63,6 +69,14 @@ impl HtmlBuilder {
 
     pub fn p<F: FnOnce(Self) -> Self>(mut self, f: F) -> Self {
         self = self.open_tag("p");
+
+        self = f(self);
+
+        self.close_tag()
+    }
+
+    pub fn a<F: FnOnce(Self) -> Self>(mut self, link: &str, f: F) -> Self {
+        self = self.open_tag_with_attribute("a", "href", link);
 
         self = f(self);
 

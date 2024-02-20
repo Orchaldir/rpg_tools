@@ -43,9 +43,9 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .p(|builder| {
-                builder
-                    .b("Mountains:")
-                    .usize(data.mountain_manager.get_all().len())
+                builder.b("Mountains:").a("/mountain/all", |a| {
+                    a.usize(data.mountain_manager.get_all().len())
+                })
             })
             .finish(),
     )
