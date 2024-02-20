@@ -43,7 +43,7 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
 fn get_edit_template(data: &WorldData, id: TownId) -> Option<Template> {
     data.town_manager.get(id).map(|town| {
         Template::render(
-            "town/terrain/edit",
+            "town/terrain/all",
             context! {
                 name: town.name(),
                 id: id.id(),
