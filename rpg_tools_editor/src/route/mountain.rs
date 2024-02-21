@@ -4,7 +4,6 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
@@ -84,6 +83,7 @@ fn get_edit_template(
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", mountain.id().id())
+            .form(&format!("/mountain/update/{}", mountain.id().id()), |b| b)
             .p(|b| b.link(&format!("/mountain/details/{}", mountain.id().id()), "Back"));
 
         RawHtml(builder.finish())

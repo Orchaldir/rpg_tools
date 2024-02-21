@@ -1,3 +1,7 @@
+use crate::html::form::FormBuilder;
+
+pub mod form;
+
 pub struct HtmlBuilder {
     lines: Vec<String>,
     elements: Vec<String>,
@@ -45,6 +49,22 @@ impl HtmlBuilder {
 
     fn open_tag_with_attribute(mut self, tag: &str, attribute: &str, value: &str) -> Self {
         self.add(format!(r#"<{} {}="{}">"#, tag, attribute, value));
+        self.elements.push(tag.to_string());
+        self
+    }
+
+    fn open_tag_with_2_attributes(
+        mut self,
+        tag: &str,
+        attribute0: &str,
+        value0: &str,
+        attribute1: &str,
+        value1: &str,
+    ) -> Self {
+        self.add(format!(
+            r#"<{} {}="{}" {}="{}">"#,
+            tag, attribute0, value0, attribute1, value1
+        ));
         self.elements.push(tag.to_string());
         self
     }
@@ -112,5 +132,14 @@ impl HtmlBuilder {
 
     pub fn usize(self, number: usize) -> Self {
         self.text(&number.to_string())
+    }
+
+    pub fn form<F: FnOnce(FormBuilder) -> FormBuilder>(mut self, action: &str, f: F) -> Self {
+        self = self.open_tag_with_2_attributes("form", "action", action, "method", "post");
+
+        f(FormBuilder::new(self))
+            .finish()
+            .text(r#"<input type="submit" value="Submit">"#)
+            .close_tag()
     }
 }
