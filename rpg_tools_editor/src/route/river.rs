@@ -1,3 +1,4 @@
+use crate::html::HtmlBuilder;
 use crate::route::{get_all_template, get_elements};
 use crate::EditorData;
 use rocket::form::Form;
@@ -16,13 +17,13 @@ pub fn get_all_rivers(state: &State<EditorData>) -> RawHtml<String> {
 }
 
 #[get("/river/details/<id>")]
-pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, RiverId::new(id))
 }
 
 #[get("/river/new")]
-pub fn add_river(data: &State<EditorData>) -> Option<Template> {
+pub fn add_river(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
     let id = data.river_manager.create();
@@ -33,7 +34,7 @@ pub fn add_river(data: &State<EditorData>) -> Option<Template> {
 }
 
 #[get("/river/edit/<id>")]
-pub fn edit_river(state: &State<EditorData>, id: usize) -> Option<Template> {
+pub fn edit_river(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, RiverId::new(id), "")
 }
@@ -48,7 +49,7 @@ pub fn update_river(
     state: &State<EditorData>,
     id: usize,
     update: Form<RiverUpdate<'_>>,
-) -> Option<Template> {
+) -> Option<RawHtml<String>> {
     println!("Update river {} with {:?}", id, update);
     let mut data = state.data.lock().expect("lock shared data");
 
@@ -61,30 +62,35 @@ pub fn update_river(
     get_details_template(&data, river_id)
 }
 
-fn get_details_template(data: &WorldData, id: RiverId) -> Option<Template> {
+fn get_details_template(data: &WorldData, id: RiverId) -> Option<RawHtml<String>> {
     data.river_manager.get(id).map(|river| {
         let towns = get_elements(&data.town_manager, &river.towns);
 
-        Template::render(
-            "river/details",
-            context! {
-                name: river.name(),
-                id: id.id(),
-                towns: towns,
-            },
-        )
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("River: {}", river.name()))
+            .h2("Data")
+            .field_usize("Id:", river.id().id())
+            .field_usize("Towns:", towns.len())
+            .list(data.town_manager.get_all(), |b, e| {
+                b.link(&format!("/town/details/{}", e.id().id()), e.name())
+            })
+            .p(|b| b.link(&format!("/river/edit/{}", river.id().id()), "Edit"))
+            .p(|b| b.link("/river/all", "Back"));
+
+        RawHtml(builder.finish())
     })
 }
 
-fn get_edit_template(data: &WorldData, id: RiverId, name_error: &str) -> Option<Template> {
+fn get_edit_template(data: &WorldData, id: RiverId, name_error: &str) -> Option<RawHtml<String>> {
     data.river_manager.get(id).map(|river| {
-        Template::render(
-            "river/edit",
-            context! {
-                name: river.name(),
-                id: id.id(),
-                name_error: name_error,
-            },
-        )
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("Edit River: {}", river.name()))
+            .field_usize("Id:", river.id().id())
+            .form(&format!("/river/update/{}", river.id().id()), |b| {
+                b.text_input("Name", "name", river.name()).error(name_error)
+            })
+            .p(|b| b.link(&format!("/river/details/{}", river.id().id()), "Back"));
+
+        RawHtml(builder.finish())
     })
 }
