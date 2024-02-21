@@ -89,6 +89,18 @@ impl HtmlBuilder {
         self.close_tag()
     }
 
+    pub fn list<T, F: FnMut(Self, &T) -> Self>(mut self, list: &[T], mut f: F) -> Self {
+        self = self.open_tag("ul");
+
+        for element in list {
+            self = self.open_tag("li");
+            self = f(self, element);
+            self = self.close_tag();
+        }
+
+        self.close_tag()
+    }
+
     pub fn bold(self, text: &str) -> Self {
         self.inline_tag("b", text)
     }
