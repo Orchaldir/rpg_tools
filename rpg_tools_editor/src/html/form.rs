@@ -9,7 +9,16 @@ impl FormBuilder {
         Self { html }
     }
 
-    pub fn finish(mut self) -> HtmlBuilder {
+    pub fn text_input(self, name: &str, value: &str) -> Self {
+        Self {
+            html: self.html.text(&format!(
+                r#"<input type="text" id="{0}" name="{0}" value="{1}">"#,
+                name, value
+            )),
+        }
+    }
+
+    pub fn finish(self) -> HtmlBuilder {
         self.html
     }
 }

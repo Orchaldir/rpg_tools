@@ -46,7 +46,7 @@ pub fn update_tile(
     update: Form<TileUpdate<'_>>,
 ) -> Option<Template> {
     println!("Update tile {} of town {} with {:?}", index, id, update);
-    let mut data = state.data.lock().expect("lock shared data");
+    let data = state.data.lock().expect("lock shared data");
 
     let town_id = TownId::new(id);
 

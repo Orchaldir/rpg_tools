@@ -83,7 +83,9 @@ fn get_edit_template(
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", mountain.id().id())
-            .form(&format!("/mountain/update/{}", mountain.id().id()), |b| b)
+            .form(&format!("/mountain/update/{}", mountain.id().id()), |b| {
+                b.text_input("name", mountain.name())
+            })
             .p(|b| b.link(&format!("/mountain/details/{}", mountain.id().id()), "Back"));
 
         RawHtml(builder.finish())
