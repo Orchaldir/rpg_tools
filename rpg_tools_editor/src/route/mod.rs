@@ -1,4 +1,5 @@
-use rocket_dyn_templates::{context, Template};
+use crate::html::HtmlBuilder;
+use rocket::response::content::RawHtml;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use std::collections::HashSet;
 
@@ -31,13 +32,13 @@ pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(
     storage: &Storage<ID, ELEMENT>,
     name: &str,
     title: &str,
-) -> Template {
-    Template::render(
-        "generic/all",
-        context! {
-            name: name,
-            title: title,
-            values: get_all_elements(storage),
-        },
+) -> RawHtml<String> {
+    RawHtml(
+        HtmlBuilder::editor()
+            .h1(title)
+            .field("Count:", &storage.get_all().len().to_string())
+            .p(|b| b.a(&format!("/{}/new", name), |a| a.text("Add")))
+            .p(|b| b.a("/", |a| a.text("Back")))
+            .finish(),
     )
 }

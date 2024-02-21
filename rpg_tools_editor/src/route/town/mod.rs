@@ -4,6 +4,7 @@ use crate::route::get_all_template;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
+use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::color::Color;
@@ -19,7 +20,7 @@ use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
 #[get("/town/all")]
-pub fn get_all_towns(state: &State<EditorData>) -> Template {
+pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.town_manager, "town", "Towns")
 }

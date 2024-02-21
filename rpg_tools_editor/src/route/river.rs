@@ -1,6 +1,7 @@
 use crate::route::{get_all_template, get_elements};
 use crate::EditorData;
 use rocket::form::Form;
+use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::river::RiverId;
@@ -9,7 +10,7 @@ use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/river/all")]
-pub fn get_all_rivers(state: &State<EditorData>) -> Template {
+pub fn get_all_rivers(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.river_manager, "river", "Rivers")
 }

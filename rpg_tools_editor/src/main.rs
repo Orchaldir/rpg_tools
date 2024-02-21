@@ -36,6 +36,14 @@ pub struct EditorData {
 }
 
 impl HtmlBuilder {
+    pub fn editor() -> Self {
+        Self::new("RPG Tools - Editor")
+    }
+
+    pub fn field(self, name: &str, value: &str) -> Self {
+        self.p(|builder| builder.b(name).text(value))
+    }
+
     pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
         self,
         title: &str,
@@ -55,7 +63,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
     RawHtml(
-        HtmlBuilder::new("RPG Tools - Editor")
+        HtmlBuilder::editor()
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)

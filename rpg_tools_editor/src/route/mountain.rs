@@ -1,6 +1,7 @@
 use crate::route::get_all_template;
 use crate::EditorData;
 use rocket::form::Form;
+use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::mountain::MountainId;
@@ -9,7 +10,7 @@ use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/mountain/all")]
-pub fn get_all_mountains(state: &State<EditorData>) -> Template {
+pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
     get_all_template(&data.mountain_manager, "mountain", "Mountains")
 }
