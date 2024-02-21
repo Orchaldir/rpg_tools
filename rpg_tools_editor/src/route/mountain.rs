@@ -85,6 +85,7 @@ fn get_edit_template(
             .field_usize("Id:", mountain.id().id())
             .form(&format!("/mountain/update/{}", mountain.id().id()), |b| {
                 b.text_input("Name", "name", mountain.name())
+                    .error(name_error)
             })
             .p(|b| b.link(&format!("/mountain/details/{}", mountain.id().id()), "Back"));
 

@@ -23,6 +23,20 @@ impl FormBuilder {
         }
     }
 
+    pub fn error(self, error: &str) -> Self {
+        if error.is_empty() {
+            self
+        } else {
+            Self {
+                html: self.html.p(|b| {
+                    b.open_tag_with_attribute("label", "class", "error")
+                        .text(error)
+                        .close_tag()
+                }),
+            }
+        }
+    }
+
     pub fn finish(self) -> HtmlBuilder {
         self.html
     }
