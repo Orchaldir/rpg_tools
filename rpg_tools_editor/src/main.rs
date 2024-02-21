@@ -44,6 +44,10 @@ impl HtmlBuilder {
         self.p(|builder| builder.bold(name).text(value))
     }
 
+    pub fn field_usize(self, name: &str, value: usize) -> Self {
+        self.p(|builder| builder.bold(name).usize(value))
+    }
+
     pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
         self,
         title: &str,
