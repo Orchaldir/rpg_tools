@@ -77,7 +77,11 @@ impl HtmlBuilder {
         self.close_tag()
     }
 
-    pub fn a<F: FnOnce(Self) -> Self>(mut self, link: &str, f: F) -> Self {
+    pub fn link(self, link: &str, text: &str) -> Self {
+        self.complex_link(link, |b| b.text(text))
+    }
+
+    pub fn complex_link<F: FnOnce(Self) -> Self>(mut self, link: &str, f: F) -> Self {
         self = self.open_tag_with_attribute("a", "href", link);
 
         self = f(self);
@@ -85,7 +89,7 @@ impl HtmlBuilder {
         self.close_tag()
     }
 
-    pub fn b(self, text: &str) -> Self {
+    pub fn bold(self, text: &str) -> Self {
         self.inline_tag("b", text)
     }
 

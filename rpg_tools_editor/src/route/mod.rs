@@ -37,8 +37,8 @@ pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(
         HtmlBuilder::editor()
             .h1(title)
             .field("Count:", &storage.get_all().len().to_string())
-            .p(|b| b.a(&format!("/{}/new", name), |a| a.text("Add")))
-            .p(|b| b.a("/", |a| a.text("Back")))
+            .p(|b| b.link(&format!("/{}/new", name), "Add"))
+            .p(|b| b.link("/", "Back"))
             .finish(),
     )
 }

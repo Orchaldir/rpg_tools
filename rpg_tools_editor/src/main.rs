@@ -41,7 +41,7 @@ impl HtmlBuilder {
     }
 
     pub fn field(self, name: &str, value: &str) -> Self {
-        self.p(|builder| builder.b(name).text(value))
+        self.p(|builder| builder.bold(name).text(value))
     }
 
     pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
@@ -52,8 +52,8 @@ impl HtmlBuilder {
     ) -> Self {
         self.p(|builder| {
             builder
-                .b(title)
-                .a(link, |a| a.usize(storage.get_all().len()))
+                .bold(title)
+                .complex_link(link, |a| a.usize(storage.get_all().len()))
         })
     }
 }
