@@ -182,4 +182,16 @@ impl HtmlBuilder {
     pub fn image(self, source: &str, text: &str, width: &str) -> Self {
         self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width)
     }
+
+    pub fn svg(self, source: &str, width: &str) -> Self {
+        self.add_tag_with_3_attributes(
+            "object",
+            "data",
+            source,
+            "type",
+            "image/svg+xml",
+            "width",
+            width,
+        )
+    }
 }

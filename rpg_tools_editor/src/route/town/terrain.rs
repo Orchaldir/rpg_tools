@@ -75,6 +75,7 @@ fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Terrain of Town {}", town.name()))
+            .center(|b| b.svg(&format!("/town/terrain/all/{}/map.svg", id.id()), "800"))
             .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
 
         RawHtml(builder.finish())
