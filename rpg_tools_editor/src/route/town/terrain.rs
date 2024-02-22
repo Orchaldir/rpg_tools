@@ -6,6 +6,8 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::world::mountain::MountainId;
+use rpg_tools_core::model::world::river::RiverId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
@@ -37,7 +39,7 @@ pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Optio
 #[derive(FromForm, Debug)]
 pub struct TileUpdate<'r> {
     terrain: &'r str,
-    id: Option<u32>,
+    id: Option<usize>,
 }
 
 #[post("/town/<id>/tile/<index>/preview", data = "<update>")]
@@ -51,8 +53,23 @@ pub fn preview_tile(
     let data = state.data.lock().expect("lock shared data");
 
     let town_id = TownId::new(id);
+    let terrain_id = update.id.unwrap_or(0);
+    let tile = TownTile::new(match update.terrain {
+        "Hill" => Terrain::Hill {
+            id: MountainId::new(terrain_id),
+        },
+        "Mountain" => Terrain::Mountain {
+            id: MountainId::new(terrain_id),
+        },
+        "River" => Terrain::River {
+            id: RiverId::new(terrain_id),
+        },
+        _ => Terrain::Plain,
+    });
 
-    get_all_template(&data, town_id)
+    data.town_manager
+        .get(town_id)
+        .map(|town| get_form_template(&data, town_id, index, town, &tile))
 }
 
 #[post("/town/<id>/terrain/<index>/update", data = "<update>")]
