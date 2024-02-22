@@ -155,7 +155,7 @@ pub fn right_of_tile(size: Size2d, tile_index: usize) -> usize {
     left_of_tile(size, tile_index) + 1
 }
 
-fn resize<T: Clone>(size: &Size2d, tiles: &Vec<T>, new_size: &Size2d, default: T) -> Vec<T> {
+fn resize<T: Clone>(size: &Size2d, tiles: &[T], new_size: &Size2d, default: T) -> Vec<T> {
     let mut new_tiles = vec![];
 
     for y in 0..new_size.height() {

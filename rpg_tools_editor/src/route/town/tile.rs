@@ -62,7 +62,7 @@ pub fn preview_tile(
 
 fn parse_tile(update: Form<TileUpdate>) -> TownTile {
     let terrain_id = update.id.unwrap_or(0);
-    let tile = TownTile::new(match update.terrain {
+    TownTile::new(match update.terrain {
         "Hill" => Terrain::Hill {
             id: MountainId::new(terrain_id),
         },
@@ -73,8 +73,7 @@ fn parse_tile(update: Form<TileUpdate>) -> TownTile {
             id: RiverId::new(terrain_id),
         },
         _ => Terrain::Plain,
-    });
-    tile
+    })
 }
 
 #[post("/town/<id>/tile/<index>/update", data = "<update>")]
@@ -158,7 +157,7 @@ fn get_form_template(
             b = b.select(
                 "Terrain",
                 "terrain",
-                &vec!["Hill", "Mountain", "Plain", "River"],
+                &["Hill", "Mountain", "Plain", "River"],
                 terrain,
             );
 

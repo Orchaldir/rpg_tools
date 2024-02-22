@@ -9,12 +9,8 @@ pub struct HtmlBuilder {
 
 impl HtmlBuilder {
     pub fn new(title: &str) -> Self {
-        let mut lines = Vec::new();
-
-        lines.push("<!DOCTYPE html>".to_string());
-
         Self {
-            lines,
+            lines: vec!["<!DOCTYPE html>".to_string()],
             elements: Vec::new(),
         }
         .open_tag("html")
