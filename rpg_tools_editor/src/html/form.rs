@@ -58,6 +58,31 @@ impl FormBuilder {
         }
     }
 
+    pub fn select(self, label: &str, name: &str, values: &[&str], selected: &str) -> Self {
+        Self {
+            html: self.html.p(|mut b| {
+                b = b
+                    .open_tag_with_attribute("label", "for", name)
+                    .bold(label)
+                    .close_tag()
+                    .open_tag_with_2_attributes("select", "id", name, "name", name);
+
+                for &value in values {
+                    if value.eq(selected) {
+                        b.add(format!(
+                            r#"<option value="{0}" selected>{0}</option>"#,
+                            value
+                        ));
+                    } else {
+                        b.add(format!(r#"<option value="{0}">{0}</option>"#, value));
+                    }
+                }
+
+                b.close_tag()
+            }),
+        }
+    }
+
     pub fn finish(self) -> HtmlBuilder {
         self.html
     }

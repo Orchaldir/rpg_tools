@@ -7,6 +7,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -74,7 +75,7 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
 fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
-            .h1(&format!("Terrain of Town {}", town.name()))
+            .h1(&format!("Edit Terrain of Town {}", town.name()))
             .center(|b| b.svg(&format!("/town/terrain/all/{}/map.svg", id.id()), "800"))
             .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
 
@@ -86,7 +87,7 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHt
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
 
-    data.town_manager.get(id).map(|town| {
+    data.town_manager.get(id).and_then(|town| {
         Template::render(
             "town/terrain/edit",
             context! {
@@ -100,12 +101,30 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHt
             },
         );
 
-        let builder = HtmlBuilder::editor()
-            .h1(&format!("Edit Town: {}", town.name()))
-            .field_usize("Id:", town.id().id())
-            .form(&format!("/town/terrain/update/{}", town.id().id()), |b| b)
-            .p(|b| b.link(&format!("/town/terrain/all/{}", town.id().id()), "Back"));
+        town.map.get_tile(index).map(|tile| {
+            let builder = HtmlBuilder::editor()
+                .h1(&format!("Edit Town Tile {} of {}", id.id(), town.name()))
+                .field_usize("Id:", id.id())
+                .form(
+                    &format!("/town/terrain/update/{}/{}", id.id(), index),
+                    |b| {
+                        let terrain = match tile.terrain {
+                            Terrain::Hill { .. } => "Hill",
+                            Terrain::Mountain { .. } => "Mountain",
+                            Terrain::Plain => "Plain",
+                            Terrain::River { .. } => "River",
+                        };
+                        b.select(
+                            "Terrain",
+                            "terrain",
+                            &vec!["Hill", "Mountain", "Plain", "River"],
+                            terrain,
+                        )
+                    },
+                )
+                .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Back"));
 
-        RawHtml(builder.finish())
+            RawHtml(builder.finish())
+        })
     })
 }
