@@ -52,7 +52,7 @@ impl HtmlBuilder {
     }
 
     fn add_tag_with_3_attributes(
-        &mut self,
+        mut self,
         tag: &str,
         attribute0: &str,
         value0: &str,
@@ -60,11 +60,12 @@ impl HtmlBuilder {
         value1: &str,
         attribute2: &str,
         value2: &str,
-    ) {
+    ) -> Self {
         self.add(format!(
             r#"<{} {}="{}" {}="{}" {}="{}">"#,
             tag, attribute0, value0, attribute1, value1, attribute2, value2
         ));
+        self
     }
 
     fn indent(&self) -> String {
@@ -178,8 +179,7 @@ impl HtmlBuilder {
             .close_tag()
     }
 
-    pub fn image(mut self, source: &str, text: &str, width: &str) -> Self {
-        self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width);
-        self
+    pub fn image(self, source: &str, text: &str, width: &str) -> Self {
+        self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width)
     }
 }

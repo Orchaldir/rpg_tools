@@ -7,7 +7,6 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::town::edge::TownEdge;
@@ -128,21 +127,26 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
 
 fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
-        Template::render(
-            "town/edit",
-            context! {
-                name: town.name(),
-                id: id.id(),
-                name_error: name_error,
-                width: town.map.get_size().width(),
-                height: town.map.get_size().height(),
-            },
-        );
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", town.id().id())
             .form(&format!("/town/update/{}", town.id().id()), |b| {
-                b.text_input("Name", "name", town.name()).error(name_error)
+                b.text_input("Name", "name", town.name())
+                    .error(name_error)
+                    .number_input(
+                        "Width",
+                        "width",
+                        town.map.get_size().width() as usize,
+                        1,
+                        100,
+                    )
+                    .number_input(
+                        "Height",
+                        "height",
+                        town.map.get_size().height() as usize,
+                        1,
+                        100,
+                    )
             })
             .p(|b| b.link(&format!("/town/details/{}", town.id().id()), "Back"));
 

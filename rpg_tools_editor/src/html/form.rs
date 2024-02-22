@@ -12,12 +12,33 @@ impl FormBuilder {
     pub fn text_input(self, label: &str, name: &str, value: &str) -> Self {
         Self {
             html: self.html.p(|b| {
-                b.open_tag_with_attribute("label", "for", "name")
+                b.open_tag_with_attribute("label", "for", name)
                     .bold(label)
                     .close_tag()
                     .text(&format!(
                         r#"<input type="text" id="{0}" name="{0}" value="{1}">"#,
                         name, value
+                    ))
+            }),
+        }
+    }
+
+    pub fn number_input(
+        self,
+        label: &str,
+        name: &str,
+        value: usize,
+        min: usize,
+        max: usize,
+    ) -> Self {
+        Self {
+            html: self.html.p(|b| {
+                b.open_tag_with_attribute("label", "for", name)
+                    .bold(label)
+                    .close_tag()
+                    .text(&format!(
+                        r#"<input type="number" id="{0}" name="{0}" value="{1}" step="1" min="{2}" max="{3}">"#,
+                        name, value, min, max
                     ))
             }),
         }
