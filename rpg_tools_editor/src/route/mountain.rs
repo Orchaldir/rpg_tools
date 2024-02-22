@@ -66,8 +66,8 @@ fn get_details_template(data: &WorldData, id: MountainId) -> Option<RawHtml<Stri
         let builder = HtmlBuilder::editor()
             .h1(&format!("Mountain: {}", mountain.name()))
             .h2("Data")
-            .field_usize("Id:", mountain.id().id())
-            .p(|b| b.link(&format!("/mountain/edit/{}", mountain.id().id()), "Edit"))
+            .field_usize("Id:", id.id())
+            .p(|b| b.link(&format!("/mountain/edit/{}", id.id()), "Edit"))
             .p(|b| b.link("/mountain/all", "Back"));
 
         RawHtml(builder.finish())
@@ -82,12 +82,12 @@ fn get_edit_template(
     data.mountain_manager.get(id).map(|mountain| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
-            .field_usize("Id:", mountain.id().id())
-            .form(&format!("/mountain/update/{}", mountain.id().id()), |b| {
+            .field_usize("Id:", id.id())
+            .form(&format!("/mountain/update/{}", id.id()), |b| {
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/mountain/details/{}", mountain.id().id()), "Back"));
+            .p(|b| b.link(&format!("/mountain/details/{}", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

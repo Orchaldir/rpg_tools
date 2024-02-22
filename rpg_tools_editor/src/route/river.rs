@@ -68,12 +68,12 @@ fn get_details_template(data: &WorldData, id: RiverId) -> Option<RawHtml<String>
         let builder = HtmlBuilder::editor()
             .h1(&format!("River: {}", river.name()))
             .h2("Data")
-            .field_usize("Id:", river.id().id())
+            .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
             .list(data.town_manager.get_all(), |b, e| {
                 b.link(&format!("/town/details/{}", e.id().id()), e.name())
             })
-            .p(|b| b.link(&format!("/river/edit/{}", river.id().id()), "Edit"))
+            .p(|b| b.link(&format!("/river/edit/{}", id.id()), "Edit"))
             .p(|b| b.link("/river/all", "Back"));
 
         RawHtml(builder.finish())
@@ -84,11 +84,11 @@ fn get_edit_template(data: &WorldData, id: RiverId, name_error: &str) -> Option<
     data.river_manager.get(id).map(|river| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit River: {}", river.name()))
-            .field_usize("Id:", river.id().id())
-            .form(&format!("/river/update/{}", river.id().id()), |b| {
+            .field_usize("Id:", id.id())
+            .form(&format!("/river/update/{}", id.id()), |b| {
                 b.text_input("Name", "name", river.name()).error(name_error)
             })
-            .p(|b| b.link(&format!("/river/details/{}", river.id().id()), "Back"));
+            .p(|b| b.link(&format!("/river/details/{}", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

@@ -68,12 +68,12 @@ fn get_details_template(data: &WorldData, id: StreetId) -> Option<RawHtml<String
         let builder = HtmlBuilder::editor()
             .h1(&format!("Street: {}", street.name()))
             .h2("Data")
-            .field_usize("Id:", street.id().id())
+            .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
             .list(data.town_manager.get_all(), |b, e| {
                 b.link(&format!("/town/details/{}", e.id().id()), e.name())
             })
-            .p(|b| b.link(&format!("/street/edit/{}", street.id().id()), "Edit"))
+            .p(|b| b.link(&format!("/street/edit/{}", id.id()), "Edit"))
             .p(|b| b.link("/street/all", "Back"));
 
         RawHtml(builder.finish())
@@ -84,12 +84,12 @@ fn get_edit_template(data: &WorldData, id: StreetId, name_error: &str) -> Option
     data.street_manager.get(id).map(|street| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Street: {}", street.name()))
-            .field_usize("Id:", street.id().id())
-            .form(&format!("/street/update/{}", street.id().id()), |b| {
+            .field_usize("Id:", id.id())
+            .form(&format!("/street/update/{}", id.id()), |b| {
                 b.text_input("Name", "name", street.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/street/details/{}", street.id().id()), "Back"));
+            .p(|b| b.link(&format!("/street/details/{}", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

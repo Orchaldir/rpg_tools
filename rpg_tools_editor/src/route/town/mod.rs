@@ -129,8 +129,8 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Town: {}", town.name()))
-            .field_usize("Id:", town.id().id())
-            .form(&format!("/town/update/{}", town.id().id()), |b| {
+            .field_usize("Id:", id.id())
+            .form(&format!("/town/update/{}", id.id()), |b| {
                 b.text_input("Name", "name", town.name())
                     .error(name_error)
                     .number_input(
@@ -148,7 +148,7 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
                         100,
                     )
             })
-            .p(|b| b.link(&format!("/town/details/{}", town.id().id()), "Back"));
+            .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })
