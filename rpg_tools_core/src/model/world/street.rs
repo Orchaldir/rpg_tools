@@ -1,10 +1,9 @@
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 /// The unique identifier of a [`street`](Street).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
 pub struct StreetId(usize);
 
 impl Id for StreetId {
