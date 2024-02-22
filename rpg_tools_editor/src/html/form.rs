@@ -65,7 +65,15 @@ impl FormBuilder {
                     .open_tag_with_attribute("label", "for", name)
                     .bold(label)
                     .close_tag()
-                    .open_tag_with_2_attributes("select", "id", name, "name", name);
+                    .open_tag_with_3_attributes(
+                        "select",
+                        "id",
+                        name,
+                        "name",
+                        name,
+                        "onchange",
+                        "updateEditor();",
+                    );
 
                 for &value in values {
                     if value.eq(selected) {
@@ -96,7 +104,15 @@ impl FormBuilder {
                     .open_tag_with_attribute("label", "for", name)
                     .bold(label)
                     .close_tag()
-                    .open_tag_with_2_attributes("select", "id", name, "name", name);
+                    .open_tag_with_3_attributes(
+                        "select",
+                        "id",
+                        name,
+                        "name",
+                        name,
+                        "onchange",
+                        "updateEditor();",
+                    );
 
                 for &(id, value) in values {
                     if id == selected {

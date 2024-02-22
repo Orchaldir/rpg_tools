@@ -37,10 +37,25 @@ pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Optio
 #[derive(FromForm, Debug)]
 pub struct TileUpdate<'r> {
     terrain: &'r str,
-    id: u32,
+    id: Option<u32>,
 }
 
-#[post("/town/terrain/update/<id>/<index>", data = "<update>")]
+#[post("/town/<id>/tile/<index>/preview", data = "<update>")]
+pub fn preview_tile(
+    state: &State<EditorData>,
+    id: usize,
+    index: usize,
+    update: Form<TileUpdate<'_>>,
+) -> Option<RawHtml<String>> {
+    println!("Preview tile {} of town {} with {:?}", index, id, update);
+    let data = state.data.lock().expect("lock shared data");
+
+    let town_id = TownId::new(id);
+
+    get_all_template(&data, town_id)
+}
+
+#[post("/town/<id>/terrain/<index>/update", data = "<update>")]
 pub fn update_tile(
     state: &State<EditorData>,
     id: usize,
@@ -83,43 +98,48 @@ fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
 }
 
 fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
+    data.town_manager.get(id).and_then(|town| {
+        town.map
+            .get_tile(index)
+            .map(|tile| get_form_template(data, id, index, town, tile))
+    })
+}
+
+fn get_form_template(
+    data: &WorldData,
+    id: TownId,
+    index: usize,
+    town: &Town,
+    tile: &TownTile,
+) -> RawHtml<String> {
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
 
-    data.town_manager.get(id).and_then(|town| {
-        town.map.get_tile(index).map(|tile| {
-            let builder = HtmlBuilder::editor()
-                .h1(&format!("Edit Town Tile {} of {}", id.id(), town.name()))
-                .field_usize("Id:", id.id())
-                .form(
-                    &format!("/town/terrain/update/{}/{}", id.id(), index),
-                    |mut b| {
-                        let terrain = match tile.terrain {
-                            Terrain::Hill { .. } => "Hill",
-                            Terrain::Mountain { .. } => "Mountain",
-                            Terrain::Plain => "Plain",
-                            Terrain::River { .. } => "River",
-                        };
-                        b = b.select(
-                            "Terrain",
-                            "terrain",
-                            &vec!["Hill", "Mountain", "Plain", "River"],
-                            terrain,
-                        );
+    let builder = HtmlBuilder::editor()
+        .h1(&format!("Edit Town Tile {} of {}", id.id(), town.name()))
+        .field_usize("Id:", id.id())
+        .form(&format!("/town/{}/tile/{}", id.id(), index), |mut b| {
+            let terrain = match tile.terrain {
+                Terrain::Hill { .. } => "Hill",
+                Terrain::Mountain { .. } => "Mountain",
+                Terrain::Plain => "Plain",
+                Terrain::River { .. } => "River",
+            };
+            b = b.select(
+                "Terrain",
+                "terrain",
+                &vec!["Hill", "Mountain", "Plain", "River"],
+                terrain,
+            );
 
-                        match tile.terrain {
-                            Terrain::Hill { id } => b.select_id("Hill", "id", &mountains, id.id()),
-                            Terrain::Mountain { id } => {
-                                b.select_id("Mountain", "id", &mountains, id.id())
-                            }
-                            Terrain::Plain => b,
-                            Terrain::River { id } => b.select_id("River", "id", &rivers, id.id()),
-                        }
-                    },
-                )
-                .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Back"));
-
-            RawHtml(builder.finish())
+            match tile.terrain {
+                Terrain::Hill { id } => b.select_id("Hill", "id", &mountains, id.id()),
+                Terrain::Mountain { id } => b.select_id("Mountain", "id", &mountains, id.id()),
+                Terrain::Plain => b,
+                Terrain::River { id } => b.select_id("River", "id", &rivers, id.id()),
+            }
         })
-    })
+        .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Back"));
+
+    RawHtml(builder.finish())
 }

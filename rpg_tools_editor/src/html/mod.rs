@@ -20,6 +20,7 @@ impl HtmlBuilder {
         .open_tag("html")
         .open_tag("head")
         .text(r#"<link rel="stylesheet" href="/static/style.css">"#)
+        .text(r#"<script src="/static/scripts.js" charset="utf-8" defer></script>"#)
         .inline_tag("title", title)
         .close_tag()
         .open_tag("body")
@@ -52,7 +53,7 @@ impl HtmlBuilder {
     }
 
     fn add_tag_with_3_attributes(
-        mut self,
+        &mut self,
         tag: &str,
         attribute0: &str,
         value0: &str,
@@ -60,12 +61,11 @@ impl HtmlBuilder {
         value1: &str,
         attribute2: &str,
         value2: &str,
-    ) -> Self {
+    ) {
         self.add(format!(
             r#"<{} {}="{}" {}="{}" {}="{}">"#,
             tag, attribute0, value0, attribute1, value1, attribute2, value2
         ));
-        self
     }
 
     fn indent(&self) -> String {
@@ -93,6 +93,23 @@ impl HtmlBuilder {
         value1: &str,
     ) -> Self {
         self.add_tag_with_2_attributes(tag, attribute0, value0, attribute1, value1);
+        self.elements.push(tag.to_string());
+        self
+    }
+
+    fn open_tag_with_3_attributes(
+        mut self,
+        tag: &str,
+        attribute0: &str,
+        value0: &str,
+        attribute1: &str,
+        value1: &str,
+        attribute2: &str,
+        value2: &str,
+    ) -> Self {
+        self.add_tag_with_3_attributes(
+            tag, attribute0, value0, attribute1, value1, attribute2, value2,
+        );
         self.elements.push(tag.to_string());
         self
     }
@@ -171,19 +188,27 @@ impl HtmlBuilder {
     }
 
     pub fn form<F: FnOnce(FormBuilder) -> FormBuilder>(mut self, action: &str, f: F) -> Self {
-        self = self.open_tag_with_2_attributes("form", "action", action, "method", "post");
+        let preview = format!("{}/preview", action);
+        let update = format!("{}/update", action);
+
+        self = self.open_tag_with_3_attributes(
+            "form", "id", "editor", "action", &preview, "method", "post",
+        );
 
         f(FormBuilder::new(self))
             .finish()
-            .text(r#"<input type="submit" value="Submit">"#)
+            .open_tag_with_2_attributes("button", "formaction", &update, "formmethod", "post")
+            .text("Update")
+            .close_tag()
             .close_tag()
     }
 
-    pub fn image(self, source: &str, text: &str, width: &str) -> Self {
-        self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width)
+    pub fn image(mut self, source: &str, text: &str, width: &str) -> Self {
+        self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width);
+        self
     }
 
-    pub fn svg(self, source: &str, width: &str) -> Self {
+    pub fn svg(mut self, source: &str, width: &str) -> Self {
         self.add_tag_with_3_attributes(
             "object",
             "data",
@@ -192,6 +217,7 @@ impl HtmlBuilder {
             "image/svg+xml",
             "width",
             width,
-        )
+        );
+        self
     }
 }
