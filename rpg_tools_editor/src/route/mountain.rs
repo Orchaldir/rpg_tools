@@ -15,12 +15,6 @@ pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.mountain_manager, "mountain", "Mountains")
 }
 
-#[get("/mountain/details/<id>")]
-pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
-    let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, MountainId::new(id))
-}
-
 #[get("/mountain/new")]
 pub fn add_mountain(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
@@ -32,7 +26,13 @@ pub fn add_mountain(data: &State<EditorData>) -> Option<RawHtml<String>> {
     get_edit_template(&data, id, "")
 }
 
-#[get("/mountain/edit/<id>")]
+#[get("/mountain/<id>/details")]
+pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+    let data = state.data.lock().expect("lock shared data");
+    get_details_template(&data, MountainId::new(id))
+}
+
+#[get("/mountain/<id>/edit")]
 pub fn edit_mountain(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, MountainId::new(id), "")
@@ -43,7 +43,7 @@ pub struct MountainUpdate<'r> {
     name: &'r str,
 }
 
-#[post("/mountain/update/<id>", data = "<update>")]
+#[post("/mountain/<id>/update", data = "<update>")]
 pub fn update_mountain(
     state: &State<EditorData>,
     id: usize,
@@ -67,7 +67,7 @@ fn get_details_template(data: &WorldData, id: MountainId) -> Option<RawHtml<Stri
             .h1(&format!("Mountain: {}", mountain.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
-            .p(|b| b.link(&format!("/mountain/edit/{}", id.id()), "Edit"))
+            .p(|b| b.link(&format!("/mountain/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/mountain/all", "Back"));
 
         RawHtml(builder.finish())
@@ -83,11 +83,11 @@ fn get_edit_template(
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/mountain/update/{}", id.id()), |b| {
+            .form(&format!("/mountain/{}", id.id()), |b| {
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/mountain/details/{}", id.id()), "Back"));
+            .p(|b| b.link(&format!("/mountain/{}/details", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

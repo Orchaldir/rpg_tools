@@ -25,12 +25,6 @@ pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.town_manager, "town", "Towns")
 }
 
-#[get("/town/<id>/details")]
-pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
-    let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, TownId::new(id))
-}
-
 #[get("/town/new")]
 pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
@@ -40,6 +34,12 @@ pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     println!("Create town {}", id.id());
 
     get_edit_template(&data, id, "")
+}
+
+#[get("/town/<id>/details")]
+pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+    let data = state.data.lock().expect("lock shared data");
+    get_details_template(&data, TownId::new(id))
 }
 
 #[get("/town/<id>/edit")]
@@ -130,7 +130,7 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/town/{}/update", id.id()), |b| {
+            .form(&format!("/town/{}", id.id()), |b| {
                 b.text_input("Name", "name", town.name())
                     .error(name_error)
                     .number_input(
