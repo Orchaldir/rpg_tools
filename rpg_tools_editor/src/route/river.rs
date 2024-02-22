@@ -15,12 +15,6 @@ pub fn get_all_rivers(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.river_manager, "river", "Rivers")
 }
 
-#[get("/river/details/<id>")]
-pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
-    let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, RiverId::new(id))
-}
-
 #[get("/river/new")]
 pub fn add_river(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
@@ -32,7 +26,13 @@ pub fn add_river(data: &State<EditorData>) -> Option<RawHtml<String>> {
     get_edit_template(&data, id, "")
 }
 
-#[get("/river/edit/<id>")]
+#[get("/river/<id>/details")]
+pub fn get_river_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+    let data = state.data.lock().expect("lock shared data");
+    get_details_template(&data, RiverId::new(id))
+}
+
+#[get("/river/<id>/edit")]
 pub fn edit_river(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, RiverId::new(id), "")
@@ -43,7 +43,7 @@ pub struct RiverUpdate<'r> {
     name: &'r str,
 }
 
-#[post("/river/update/<id>", data = "<update>")]
+#[post("/river/<id>/update", data = "<update>")]
 pub fn update_river(
     state: &State<EditorData>,
     id: usize,
@@ -70,10 +70,10 @@ fn get_details_template(data: &WorldData, id: RiverId) -> Option<RawHtml<String>
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
-            .list(data.town_manager.get_all(), |b, e| {
-                b.link(&format!("/town/details/{}", e.id().id()), e.name())
+            .list(&towns, |b, &(id, name)| {
+                b.link(&format!("/town/{}/details", id), name)
             })
-            .p(|b| b.link(&format!("/river/edit/{}", id.id()), "Edit"))
+            .p(|b| b.link(&format!("/river/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/river/all", "Back"));
 
         RawHtml(builder.finish())
@@ -85,10 +85,10 @@ fn get_edit_template(data: &WorldData, id: RiverId, name_error: &str) -> Option<
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit River: {}", river.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/river/update/{}", id.id()), |b| {
+            .form(&format!("/river/{}", id.id()), |b| {
                 b.text_input("Name", "name", river.name()).error(name_error)
             })
-            .p(|b| b.link(&format!("/river/details/{}", id.id()), "Back"));
+            .p(|b| b.link(&format!("/river/{}/details", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

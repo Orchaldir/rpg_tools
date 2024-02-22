@@ -70,8 +70,8 @@ fn get_details_template(data: &WorldData, id: StreetId) -> Option<RawHtml<String
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
-            .list(data.town_manager.get_all(), |b, e| {
-                b.link(&format!("/town/details/{}", e.id().id()), e.name())
+            .list(&towns, |b, &(id, name)| {
+                b.link(&format!("/town/{}/details", id), name)
             })
             .p(|b| b.link(&format!("/street/edit/{}", id.id()), "Edit"))
             .p(|b| b.link("/street/all", "Back"));
