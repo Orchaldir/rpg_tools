@@ -15,12 +15,6 @@ pub fn get_all_streets(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.street_manager, "street", "Streets")
 }
 
-#[get("/street/details/<id>")]
-pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
-    let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, StreetId::new(id))
-}
-
 #[get("/street/new")]
 pub fn add_street(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
@@ -32,7 +26,13 @@ pub fn add_street(data: &State<EditorData>) -> Option<RawHtml<String>> {
     get_edit_template(&data, id, "")
 }
 
-#[get("/street/edit/<id>")]
+#[get("/street/<id>/details")]
+pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+    let data = state.data.lock().expect("lock shared data");
+    get_details_template(&data, StreetId::new(id))
+}
+
+#[get("/street/<id>/edit")]
 pub fn edit_street(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, StreetId::new(id), "")
@@ -43,7 +43,7 @@ pub struct StreetUpdate<'r> {
     name: &'r str,
 }
 
-#[post("/street/update/<id>", data = "<update>")]
+#[post("/street/<id>/update", data = "<update>")]
 pub fn update_street(
     state: &State<EditorData>,
     id: usize,
@@ -73,7 +73,7 @@ fn get_details_template(data: &WorldData, id: StreetId) -> Option<RawHtml<String
             .list(&towns, |b, &(id, name)| {
                 b.link(&format!("/town/{}/details", id), name)
             })
-            .p(|b| b.link(&format!("/street/edit/{}", id.id()), "Edit"))
+            .p(|b| b.link(&format!("/street/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/street/all", "Back"));
 
         RawHtml(builder.finish())
@@ -85,11 +85,11 @@ fn get_edit_template(data: &WorldData, id: StreetId, name_error: &str) -> Option
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Street: {}", street.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/street/update/{}", id.id()), |b| {
+            .form(&format!("/street/{}", id.id()), |b| {
                 b.text_input("Name", "name", street.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/street/details/{}", id.id()), "Back"));
+            .p(|b| b.link(&format!("/street/{}/details", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })
