@@ -19,7 +19,6 @@ use crate::route::town::{
 use rocket::fs::FileServer;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::Template;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
@@ -117,5 +116,4 @@ fn rocket() -> _ {
                 update_tile,
             ],
         )
-        .attach(Template::fairing())
 }

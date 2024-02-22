@@ -5,7 +5,6 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
@@ -88,38 +87,34 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHt
     let rivers = get_all_elements(&data.river_manager);
 
     data.town_manager.get(id).and_then(|town| {
-        Template::render(
-            "town/terrain/edit",
-            context! {
-                name: town.name(),
-                id: id.id(),
-                index: index,
-                mountains: mountains,
-                rivers: rivers,
-                terrains: vec!["Hill", "Mountain", "Plain", "River"],
-                tile: town.map.get_tile(index),
-            },
-        );
-
         town.map.get_tile(index).map(|tile| {
             let builder = HtmlBuilder::editor()
                 .h1(&format!("Edit Town Tile {} of {}", id.id(), town.name()))
                 .field_usize("Id:", id.id())
                 .form(
                     &format!("/town/terrain/update/{}/{}", id.id(), index),
-                    |b| {
+                    |mut b| {
                         let terrain = match tile.terrain {
                             Terrain::Hill { .. } => "Hill",
                             Terrain::Mountain { .. } => "Mountain",
                             Terrain::Plain => "Plain",
                             Terrain::River { .. } => "River",
                         };
-                        b.select(
+                        b = b.select(
                             "Terrain",
                             "terrain",
                             &vec!["Hill", "Mountain", "Plain", "River"],
                             terrain,
-                        )
+                        );
+
+                        match tile.terrain {
+                            Terrain::Hill { id } => b.select_id("Hill", "id", &mountains, id.id()),
+                            Terrain::Mountain { id } => {
+                                b.select_id("Mountain", "id", &mountains, id.id())
+                            }
+                            Terrain::Plain => b,
+                            Terrain::River { id } => b.select_id("River", "id", &rivers, id.id()),
+                        }
                     },
                 )
                 .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Back"));
