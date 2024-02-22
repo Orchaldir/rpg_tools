@@ -1,7 +1,9 @@
+use crate::html::HtmlBuilder;
 use crate::route::get_all_elements;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
+use rocket::response::content::RawHtml;
 use rocket::State;
 use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -13,7 +15,7 @@ use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
 #[get("/town/terrain/all/<id>")]
-pub fn get_all_terrain(state: &State<EditorData>, id: usize) -> Option<Template> {
+pub fn get_all_terrain(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_all_template(&data, TownId::new(id))
 }
@@ -27,7 +29,7 @@ pub fn get_terrain_edit_map(state: &State<EditorData>, id: usize) -> Option<RawS
 }
 
 #[get("/town/terrain/edit/<id>/<index>")]
-pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Option<Template> {
+pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id), index)
 }
@@ -44,7 +46,7 @@ pub fn update_tile(
     id: usize,
     index: usize,
     update: Form<TileUpdate<'_>>,
-) -> Option<Template> {
+) -> Option<RawHtml<String>> {
     println!("Update tile {} of town {} with {:?}", index, id, update);
     let data = state.data.lock().expect("lock shared data");
 
@@ -69,19 +71,17 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
     RawSvg::new(svg.export())
 }
 
-fn get_all_template(data: &WorldData, id: TownId) -> Option<Template> {
+fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
-        Template::render(
-            "town/terrain/all",
-            context! {
-                name: town.name(),
-                id: id.id(),
-            },
-        )
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("Terrain of Town {}", town.name()))
+            .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
+
+        RawHtml(builder.finish())
     })
 }
 
-fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<Template> {
+fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
 
@@ -97,6 +97,14 @@ fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<Templ
                 terrains: vec!["Hill", "Mountain", "Plain", "River"],
                 tile: town.map.get_tile(index),
             },
-        )
+        );
+
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("Edit Town: {}", town.name()))
+            .field_usize("Id:", town.id().id())
+            .form(&format!("/town/terrain/update/{}", town.id().id()), |b| b)
+            .p(|b| b.link(&format!("/town/terrain/all/{}", town.id().id()), "Back"));
+
+        RawHtml(builder.finish())
     })
 }
