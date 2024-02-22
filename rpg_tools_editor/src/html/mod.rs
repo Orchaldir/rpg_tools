@@ -37,6 +37,36 @@ impl HtmlBuilder {
         self.lines.push(format!("{}{}", self.indent(), line));
     }
 
+    fn add_tag_with_2_attributes(
+        &mut self,
+        tag: &str,
+        attribute0: &str,
+        value0: &str,
+        attribute1: &str,
+        value1: &str,
+    ) {
+        self.add(format!(
+            r#"<{} {}="{}" {}="{}">"#,
+            tag, attribute0, value0, attribute1, value1
+        ));
+    }
+
+    fn add_tag_with_3_attributes(
+        &mut self,
+        tag: &str,
+        attribute0: &str,
+        value0: &str,
+        attribute1: &str,
+        value1: &str,
+        attribute2: &str,
+        value2: &str,
+    ) {
+        self.add(format!(
+            r#"<{} {}="{}" {}="{}" {}="{}">"#,
+            tag, attribute0, value0, attribute1, value1, attribute2, value2
+        ));
+    }
+
     fn indent(&self) -> String {
         "  ".repeat(self.elements.len())
     }
@@ -61,10 +91,7 @@ impl HtmlBuilder {
         attribute1: &str,
         value1: &str,
     ) -> Self {
-        self.add(format!(
-            r#"<{} {}="{}" {}="{}">"#,
-            tag, attribute0, value0, attribute1, value1
-        ));
+        self.add_tag_with_2_attributes(tag, attribute0, value0, attribute1, value1);
         self.elements.push(tag.to_string());
         self
     }
@@ -81,6 +108,14 @@ impl HtmlBuilder {
         self
     }
 
+    fn tag<F: FnOnce(Self) -> Self>(mut self, tag: &str, f: F) -> Self {
+        self = self.open_tag(tag);
+
+        self = f(self);
+
+        self.close_tag()
+    }
+
     pub fn h1(self, title: &str) -> Self {
         self.inline_tag("h1", title)
     }
@@ -89,12 +124,12 @@ impl HtmlBuilder {
         self.inline_tag("h2", title)
     }
 
-    pub fn p<F: FnOnce(Self) -> Self>(mut self, f: F) -> Self {
-        self = self.open_tag("p");
+    pub fn p<F: FnOnce(Self) -> Self>(self, f: F) -> Self {
+        self.tag("p", f)
+    }
 
-        self = f(self);
-
-        self.close_tag()
+    pub fn center<F: FnOnce(Self) -> Self>(self, f: F) -> Self {
+        self.tag("center", f)
     }
 
     pub fn link(self, link: &str, text: &str) -> Self {
@@ -141,5 +176,10 @@ impl HtmlBuilder {
             .finish()
             .text(r#"<input type="submit" value="Submit">"#)
             .close_tag()
+    }
+
+    pub fn image(mut self, source: &str, text: &str, width: &str) -> Self {
+        self.add_tag_with_3_attributes("img", "src", source, "alt", text, "width", width);
+        self
     }
 }

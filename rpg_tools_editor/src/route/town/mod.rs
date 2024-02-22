@@ -1,5 +1,6 @@
 pub mod terrain;
 
+use crate::html::HtmlBuilder;
 use crate::route::get_all_template;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -26,13 +27,13 @@ pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
 }
 
 #[get("/town/details/<id>")]
-pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<Template> {
+pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, TownId::new(id))
 }
 
 #[get("/town/new")]
-pub fn add_town(data: &State<EditorData>) -> Option<Template> {
+pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
     let id = data.town_manager.create();
@@ -43,7 +44,7 @@ pub fn add_town(data: &State<EditorData>) -> Option<Template> {
 }
 
 #[get("/town/edit/<id>")]
-pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<Template> {
+pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id), "")
 }
@@ -60,7 +61,7 @@ pub fn update_town(
     state: &State<EditorData>,
     id: usize,
     update: Form<TownUpdate<'_>>,
-) -> Option<Template> {
+) -> Option<RawHtml<String>> {
     println!("Update town {} with {:?}", id, update);
     let mut data = state.data.lock().expect("lock shared data");
 
@@ -84,15 +85,19 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_to_svg(&state.town_renderer, town))
 }
 
-fn get_details_template(state: &WorldData, id: TownId) -> Option<Template> {
+fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     state.town_manager.get(id).map(|town| {
-        Template::render(
-            "town/details",
-            context! {
-                name: town.name(),
-                id: id.id(),
-            },
-        )
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("Town: {}", town.name()))
+            .h2("Data")
+            .field_usize("Id:", id.id())
+            .p(|b| b.link(&format!("/town/edit/{}", id.id()), "Edit"))
+            .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Edit Terrain"))
+            .p(|b| b.link("/town/all", "Back"))
+            .h2("Map")
+            .center(|b| b.image(&format!("/town/map/{}/map.svg", id.id()), "Town Map", "75%"));
+
+        RawHtml(builder.finish())
     })
 }
 
@@ -121,7 +126,7 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
     RawSvg::new(svg.export())
 }
 
-fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<Template> {
+fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
         Template::render(
             "town/edit",
@@ -132,6 +137,15 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<T
                 width: town.map.get_size().width(),
                 height: town.map.get_size().height(),
             },
-        )
+        );
+        let builder = HtmlBuilder::editor()
+            .h1(&format!("Edit Town: {}", town.name()))
+            .field_usize("Id:", town.id().id())
+            .form(&format!("/town/update/{}", town.id().id()), |b| {
+                b.text_input("Name", "name", town.name()).error(name_error)
+            })
+            .p(|b| b.link(&format!("/town/details/{}", town.id().id()), "Back"));
+
+        RawHtml(builder.finish())
     })
 }

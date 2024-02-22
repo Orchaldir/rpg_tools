@@ -4,7 +4,6 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rocket_dyn_templates::{context, Template};
 use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
