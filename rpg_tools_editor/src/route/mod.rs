@@ -38,7 +38,7 @@ pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(
             .h1(title)
             .field("Count:", &storage.get_all().len().to_string())
             .list(storage.get_all(), |b, e| {
-                b.link(&format!("/{}/details/{}", name, e.id().id()), e.name())
+                b.link(&format!("/{}/{}/details", name, e.id().id()), e.name())
             })
             .p(|b| b.link(&format!("/{}/new", name), "Add"))
             .p(|b| b.link("/", "Back"))

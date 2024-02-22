@@ -1,4 +1,4 @@
-pub mod terrain;
+pub mod tile;
 
 use crate::html::HtmlBuilder;
 use crate::route::get_all_template;
@@ -25,7 +25,7 @@ pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.town_manager, "town", "Towns")
 }
 
-#[get("/town/details/<id>")]
+#[get("/town/<id>/details")]
 pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, TownId::new(id))
@@ -42,7 +42,7 @@ pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     get_edit_template(&data, id, "")
 }
 
-#[get("/town/edit/<id>")]
+#[get("/town/<id>/edit")]
 pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id), "")
@@ -55,7 +55,7 @@ pub struct TownUpdate<'r> {
     height: u32,
 }
 
-#[post("/town/update/<id>", data = "<update>")]
+#[post("/town/<id>/update", data = "<update>")]
 pub fn update_town(
     state: &State<EditorData>,
     id: usize,
@@ -76,7 +76,7 @@ pub fn update_town(
     get_details_template(&data, town_id)
 }
 
-#[get("/town/map/<id>/map.svg")]
+#[get("/town/<id>/map/map.svg")]
 pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
@@ -90,11 +90,11 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>
             .h1(&format!("Town: {}", town.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
-            .p(|b| b.link(&format!("/town/edit/{}", id.id()), "Edit"))
-            .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Edit Terrain"))
+            .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
+            .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
             .p(|b| b.link("/town/all", "Back"))
             .h2("Map")
-            .center(|b| b.image(&format!("/town/map/{}/map.svg", id.id()), "Town Map", "75%"));
+            .center(|b| b.image(&format!("/town/{}/map/map.svg", id.id()), "Town Map", "75%"));
 
         RawHtml(builder.finish())
     })
@@ -130,7 +130,7 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/town/update/{}", id.id()), |b| {
+            .form(&format!("/town/{}/update", id.id()), |b| {
                 b.text_input("Name", "name", town.name())
                     .error(name_error)
                     .number_input(
@@ -148,7 +148,7 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
                         100,
                     )
             })
-            .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
+            .p(|b| b.link(&format!("/town/{}/details", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })

@@ -16,22 +16,22 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
 
-#[get("/town/terrain/all/<id>")]
-pub fn get_all_terrain(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+#[get("/town/<id>/tile/all")]
+pub fn get_all_tiles(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_all_template(&data, TownId::new(id))
 }
 
-#[get("/town/terrain/all/<id>/map.svg")]
-pub fn get_terrain_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
+#[get("/town/<id>/tile/map.svg")]
+pub fn get_tile_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
         .map(|town| render_to_svg(&state.town_renderer, town))
 }
 
-#[get("/town/terrain/edit/<id>/<index>")]
-pub fn edit_terrain(state: &State<EditorData>, id: usize, index: usize) -> Option<RawHtml<String>> {
+#[get("/town/<id>/tile/<index>/edit")]
+pub fn edit_tile(state: &State<EditorData>, id: usize, index: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_edit_template(&data, TownId::new(id), index)
 }
@@ -115,11 +115,12 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
 }
 
 fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+    let map_uri = uri!(get_tile_edit_map(id = id.id())).to_string();
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Terrain of Town {}", town.name()))
-            .center(|b| b.svg(&format!("/town/terrain/all/{}/map.svg", id.id()), "800"))
-            .p(|b| b.link(&format!("/town/details/{}", id.id()), "Back"));
+            .center(|b| b.svg(&map_uri, "800"))
+            .p(|b| b.link(&format!("/town/{}/details", id.id()), "Back"));
 
         RawHtml(builder.finish())
     })
@@ -167,7 +168,7 @@ fn get_form_template(
                 Terrain::River { id } => b.select_id("River", "id", &rivers, id.id()),
             }
         })
-        .p(|b| b.link(&format!("/town/terrain/all/{}", id.id()), "Back"));
+        .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Back"));
 
     RawHtml(builder.finish())
 }
