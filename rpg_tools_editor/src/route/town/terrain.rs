@@ -53,6 +53,14 @@ pub fn preview_tile(
     let data = state.data.lock().expect("lock shared data");
 
     let town_id = TownId::new(id);
+    let tile = parse_tile(update);
+
+    data.town_manager
+        .get(town_id)
+        .map(|town| get_form_template(&data, town_id, index, town, &tile))
+}
+
+fn parse_tile(update: Form<TileUpdate>) -> TownTile {
     let terrain_id = update.id.unwrap_or(0);
     let tile = TownTile::new(match update.terrain {
         "Hill" => Terrain::Hill {
@@ -66,13 +74,10 @@ pub fn preview_tile(
         },
         _ => Terrain::Plain,
     });
-
-    data.town_manager
-        .get(town_id)
-        .map(|town| get_form_template(&data, town_id, index, town, &tile))
+    tile
 }
 
-#[post("/town/<id>/terrain/<index>/update", data = "<update>")]
+#[post("/town/<id>/tile/<index>/update", data = "<update>")]
 pub fn update_tile(
     state: &State<EditorData>,
     id: usize,
@@ -80,9 +85,15 @@ pub fn update_tile(
     update: Form<TileUpdate<'_>>,
 ) -> Option<RawHtml<String>> {
     println!("Update tile {} of town {} with {:?}", index, id, update);
-    let data = state.data.lock().expect("lock shared data");
+    let mut data = state.data.lock().expect("lock shared data");
 
     let town_id = TownId::new(id);
+
+    if let Some(town) = data.town_manager.get_mut(town_id) {
+        if let Some(old_tile) = town.map.get_tile_mut(index) {
+            *old_tile = parse_tile(update);
+        }
+    }
 
     get_all_template(&data, town_id)
 }
