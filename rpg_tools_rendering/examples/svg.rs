@@ -5,7 +5,7 @@ use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::Renderer;
+use rpg_tools_rendering::renderer::{LinkRenderer, Renderer};
 use Color::{Blue, Green};
 
 fn main() {
