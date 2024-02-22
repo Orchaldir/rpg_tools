@@ -147,8 +147,7 @@ fn get_form_template(
     let rivers = get_all_elements(&data.river_manager);
 
     let builder = HtmlBuilder::editor()
-        .h1(&format!("Edit Town Tile {} of {}", id.id(), town.name()))
-        .field_usize("Id:", id.id())
+        .h1(&format!("Edit Town Tile {} of {}", index, town.name()))
         .form(&format!("/town/{}/tile/{}", id.id(), index), |mut b| {
             let terrain = match tile.terrain {
                 Terrain::Hill { .. } => "Hill",
