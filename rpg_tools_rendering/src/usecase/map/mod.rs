@@ -1,5 +1,5 @@
 use crate::renderer::style::RenderStyle;
-use crate::renderer::Renderer;
+use crate::renderer::{LinkRenderer, Renderer};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -60,7 +60,7 @@ impl EdgeMapRenderer {
         L: Fn(usize, &Tile) -> String,
     >(
         &self,
-        renderer: &mut dyn Renderer,
+        renderer: &mut dyn LinkRenderer,
         start: &Point2d,
         map: &EdgeMap<Tile, Edge>,
         color_lookup: C,

@@ -1,6 +1,6 @@
 use crate::renderer::style::RenderStyle;
 use crate::renderer::svg::Svg;
-use crate::renderer::Renderer;
+use crate::renderer::{LinkRenderer, Renderer};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -49,17 +49,6 @@ impl SvgBuilder {
 }
 
 impl Renderer for SvgBuilder {
-    fn link(&mut self, link: &str) {
-        self.add(format!("<a href=\"{}\" target=\"_parent\">", link));
-        self.elements.push("a".to_string());
-    }
-
-    fn close(&mut self) {
-        if let Some(element) = self.elements.pop() {
-            self.add(format!("</{}>", element));
-        }
-    }
-
     fn render_circle(&mut self, center: &Point2d, radius: u32, style: &RenderStyle) {
         self.add(format!(
             "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" style=\"{}\"/>",
@@ -79,6 +68,19 @@ impl Renderer for SvgBuilder {
             aabb.size().height(),
             to_style(style),
         ));
+    }
+}
+
+impl LinkRenderer for SvgBuilder {
+    fn link(&mut self, link: &str) {
+        self.add(format!("<a href=\"{}\" target=\"_parent\">", link));
+        self.elements.push("a".to_string());
+    }
+
+    fn close(&mut self) {
+        if let Some(element) = self.elements.pop() {
+            self.add(format!("</{}>", element));
+        }
     }
 }
 
