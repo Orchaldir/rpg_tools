@@ -17,3 +17,11 @@ pub trait Renderer {
     /// Renders an axis aligned rectangle.
     fn render_rectangle(&mut self, aabb: &AABB, style: &RenderStyle);
 }
+
+pub trait LinkRenderer: Renderer {
+    /// Makes all sub elements a link.
+    fn link(&mut self, link: &str);
+
+    /// Closes the link.
+    fn close(&mut self);
+}

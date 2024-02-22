@@ -85,6 +85,19 @@ impl Size2d {
         (self.width * self.height) as usize
     }
 
+    /// Is the point inside?
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    ///
+    /// assert!(size.is_inside(1, 2));
+    /// assert!(!size.is_inside(4, 5));
+    /// ```
+    pub fn is_inside(&self, x: u32, y: u32) -> bool {
+        x < self.width && y < self.height
+    }
+
     /// Converts an index to the x-coordinate of the equivalent [`Point`].
     ///
     /// ```
@@ -105,6 +118,34 @@ impl Size2d {
     /// ```
     pub fn to_y(&self, index: usize) -> i32 {
         index as i32 / self.width as i32
+    }
+
+    /// Converts a point to the equivalent index, if it is inside.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    ///
+    /// assert_eq!(size.to_index(1, 2), Some(5));
+    /// assert_eq!(size.to_index(4, 5), None);
+    /// ```
+    pub fn to_index(&self, x: u32, y: u32) -> Option<usize> {
+        if self.is_inside(x, y) {
+            return Some(self.to_index_risky(x, y));
+        }
+
+        None
+    }
+
+    /// Converts a point to the equivalent index, but returns a wrong result if it is outside.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// let size = Size2d::new(2, 3);
+    /// assert_eq!(size.to_index_risky(1, 2), 5);
+    /// ```
+    pub fn to_index_risky(&self, x: u32, y: u32) -> usize {
+        (y * self.width + x) as usize
     }
 
     /// Scales the size.

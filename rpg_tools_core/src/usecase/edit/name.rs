@@ -23,9 +23,7 @@ pub fn update_name<ID: Id, ELEMENT: Element<ID>>(
     storage
         .get_mut(id)
         .map(|r| r.set_name(trimmed))
-        .context("Id doesn't exist")?;
-
-    Ok(())
+        .context("Id doesn't exist")
 }
 
 #[cfg(test)]

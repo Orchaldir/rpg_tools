@@ -9,7 +9,4 @@ edition = "2021"
 rocket = "0.5.0"
 rpg_tools_core = { path = "../rpg_tools_core" }
 rpg_tools_rendering = { path = "../rpg_tools_rendering" }
-
-[dependencies.rocket_dyn_templates]
-version = "0.1.0"
-features = ["tera"]
+log = "0.4.20"
