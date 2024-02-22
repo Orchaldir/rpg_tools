@@ -208,8 +208,8 @@ impl HtmlBuilder {
         self
     }
 
-    pub fn svg(mut self, source: &str, width: &str) -> Self {
-        self.add_tag_with_3_attributes(
+    pub fn svg(self, source: &str, width: &str) -> Self {
+        self.open_tag_with_3_attributes(
             "object",
             "data",
             source,
@@ -217,7 +217,7 @@ impl HtmlBuilder {
             "image/svg+xml",
             "width",
             width,
-        );
-        self
+        )
+        .close_tag()
     }
 }
