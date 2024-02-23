@@ -23,7 +23,7 @@ use rocket::State;
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
-use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
+use rpg_tools_rendering::usecase::map::TileMapRenderer;
 use std::sync::Mutex;
 
 mod html;
@@ -33,7 +33,7 @@ mod svg;
 
 pub struct EditorData {
     data: Mutex<WorldData>,
-    town_renderer: EdgeMapRenderer,
+    town_renderer: TileMapRenderer,
 }
 
 impl HtmlBuilder {
@@ -95,7 +95,7 @@ fn rocket() -> _ {
     rocket::build()
         .manage(EditorData {
             data: Mutex::new(init()),
-            town_renderer: EdgeMapRenderer::new(100, 10, 1),
+            town_renderer: TileMapRenderer::new(100, 10, 1),
         })
         .mount("/static", FileServer::from("rpg_tools_editor/static/"))
         .mount(

@@ -17,7 +17,7 @@ use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
+use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
 pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
@@ -108,7 +108,7 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>
     })
 }
 
-fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
+fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 

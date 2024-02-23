@@ -14,7 +14,7 @@ use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
+use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/tile/all")]
 pub fn get_all_tiles(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
@@ -97,7 +97,7 @@ pub fn update_tile(
     get_all_template(&data, town_id)
 }
 
-fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
+fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
