@@ -4,6 +4,7 @@ use crate::route::town::link_town_details;
 use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -41,7 +42,7 @@ fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<Stri
 
         builder = builder
             .field_usize("Tile:", building.lot().tile)
-            .field_size2d("Size:", &building.lot().size)
+            .field_size2d("Size:", &Size2d::square(1))
             .p(|b| b.link(&link_all_buildings(), "Back"));
 
         RawHtml(builder.finish())

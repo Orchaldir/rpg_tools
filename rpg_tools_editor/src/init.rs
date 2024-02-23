@@ -48,7 +48,6 @@ pub fn init() -> WorldData {
             BuildingLot {
                 town: town_id,
                 tile: 7,
-                size: Size2d::new(2, 3),
             },
         )
     });

@@ -28,7 +28,6 @@ pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<Buildin
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::math::size2d::Size2d;
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
 
@@ -72,7 +71,6 @@ mod tests {
         BuildingLot {
             town: TownId::default(),
             tile,
-            size: Size2d::square(1),
         }
     }
 
