@@ -29,7 +29,9 @@ fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<Stri
         let mut builder = HtmlBuilder::editor()
             .h1(&format!("Building: {}", building.name()))
             .h2("Data")
-            .field_usize("Id:", id.id());
+            .field_usize("Id:", id.id())
+            .field("Name:", building.name())
+            .h3("Lot");
 
         if let Some(town) = data.town_manager.get(building.lot().town) {
             builder = builder.complex_field("Town", |b| {

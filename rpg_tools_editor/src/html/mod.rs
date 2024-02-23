@@ -138,6 +138,10 @@ impl HtmlBuilder {
         self.inline_tag("h2", title)
     }
 
+    pub fn h3(self, title: &str) -> Self {
+        self.inline_tag("h3", title)
+    }
+
     pub fn p<F: FnOnce(Self) -> Self>(self, f: F) -> Self {
         self.tag("p", f)
     }
