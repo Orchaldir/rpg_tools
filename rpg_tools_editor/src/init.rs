@@ -1,4 +1,5 @@
 use rpg_tools_core::model::math::size2d::Size2d;
+use rpg_tools_core::model::world::building::{Building, BuildingId};
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::street::{Street, StreetId};
@@ -43,6 +44,12 @@ pub fn init() -> WorldData {
         TownTile::new(Terrain::Plain),
         TownEdge::None,
     );
+    let mut building_manager: Storage<BuildingId, Building> = Storage::default();
+    let building_id = building_manager.create();
+    building_manager
+        .get_mut(building_id)
+        .unwrap()
+        .set_name("Orne Library".to_string());
 
     town_manager
         .get_mut(town_id)
@@ -64,7 +71,7 @@ pub fn init() -> WorldData {
         .insert(town_id);
 
     WorldData {
-        building_manager: Storage::default(),
+        building_manager,
         mountain_manager,
         river_manager,
         street_manager,
