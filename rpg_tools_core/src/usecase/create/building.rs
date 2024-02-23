@@ -7,7 +7,11 @@ use anyhow::{bail, Result};
 /// Tries to a [`building`](Building).
 pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<BuildingId> {
     if let Some(town) = data.town_manager.get(lot.town) {
-        Ok(data.building_manager.create(|id| Building::new(id, lot)))
+        if let Some(tile) = town.map.get_tile(lot.tile) {
+            return Ok(data.building_manager.create(|id| Building::new(id, lot)));
+        }
+
+        bail!("Tile {} is outside town id {}!", lot.tile, lot.town.id());
     } else {
         bail!("Unknown town id {}!", lot.town.id());
     }
@@ -25,12 +29,12 @@ mod tests {
         let mut data = WorldData::default();
         data.town_manager.create(Town::new);
 
-        let id = create_building(&mut data, create_lot()).unwrap();
+        let id = create_building(&mut data, create_lot(0)).unwrap();
 
         assert_eq!(id.id(), 0);
         assert_eq!(
             data.building_manager.get(id).unwrap(),
-            &Building::new(id, create_lot())
+            &Building::new(id, create_lot(0))
         )
     }
 
@@ -38,15 +42,24 @@ mod tests {
     fn unknown_town() {
         let mut data = WorldData::default();
 
-        assert!(create_building(&mut data, create_lot()).is_err());
+        assert!(create_building(&mut data, create_lot(0)).is_err());
         assert!(data.building_manager.get_all().is_empty())
     }
 
-    fn create_lot() -> BuildingLot {
+    #[test]
+    fn outside_map() {
+        let mut data = WorldData::default();
+        data.town_manager.create(Town::new);
+
+        assert!(create_building(&mut data, create_lot(1)).is_err());
+        assert!(data.building_manager.get_all().is_empty())
+    }
+
+    fn create_lot(tile: usize) -> BuildingLot {
         BuildingLot {
             town: TownId::default(),
-            tile: 1,
-            size: Size2d::new(1, 2),
+            tile,
+            size: Size2d::square(1),
         }
     }
 }
