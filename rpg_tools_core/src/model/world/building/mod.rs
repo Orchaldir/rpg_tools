@@ -1,3 +1,4 @@
+use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 
 /// The unique identifier of a [`building`](Building).
@@ -19,6 +20,8 @@ impl Id for BuildingId {
 pub struct Building {
     id: BuildingId,
     name: String,
+    town: TownId,
+    tile: usize,
 }
 
 impl Element<BuildingId> for Building {
@@ -26,6 +29,8 @@ impl Element<BuildingId> for Building {
         Building {
             id,
             name: format!("Building {}", id.0),
+            town: TownId::default(),
+            tile: 0,
         }
     }
 

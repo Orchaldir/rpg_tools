@@ -64,6 +64,7 @@ pub fn init() -> WorldData {
         .insert(town_id);
 
     WorldData {
+        building_manager: Storage::default(),
         mountain_manager,
         river_manager,
         street_manager,
