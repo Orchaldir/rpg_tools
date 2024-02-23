@@ -64,8 +64,8 @@ mod tests {
     #[test]
     fn update_duplicate_name() {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
-        let id0 = storage.create();
-        let id1 = storage.create();
+        let id0 = storage.create(Mountain::new);
+        let id1 = storage.create(Mountain::new);
 
         assert!(update_name(&mut storage, id0, VALID_NAME).is_ok());
         assert!(update_name(&mut storage, id1, VALID_NAME).is_err());
@@ -73,14 +73,14 @@ mod tests {
 
     fn test_invalid_name(name: &str) {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
-        let id = storage.create();
+        let id = storage.create(Mountain::new);
 
         assert!(update_name(&mut storage, id, name).is_err());
     }
 
     fn test_update_name(input: &str, result: &str) {
         let mut storage: Storage<MountainId, Mountain> = Storage::default();
-        let id = storage.create();
+        let id = storage.create(Mountain::new);
 
         assert!(update_name(&mut storage, id, input).is_ok());
 
