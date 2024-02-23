@@ -3,6 +3,7 @@ extern crate rocket;
 
 use crate::html::HtmlBuilder;
 use crate::init::init;
+use crate::route::building::get_all_buildings;
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
@@ -69,6 +70,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
         HtmlBuilder::editor()
             .h1("RPG Tools - Editor")
             .h2("Overview")
+            .add_storage_link("Buildings:", "/building/all", &data.building_manager)
             .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
             .add_storage_link("Rivers:", "/river/all", &data.river_manager)
             .add_storage_link("Streets:", "/street/all", &data.street_manager)
@@ -115,6 +117,7 @@ fn rocket() -> _ {
                 edit_tile,
                 preview_tile,
                 update_tile,
+                get_all_buildings,
             ],
         )
 }

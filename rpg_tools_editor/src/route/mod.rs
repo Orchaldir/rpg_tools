@@ -3,6 +3,7 @@ use rocket::response::content::RawHtml;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use std::collections::HashSet;
 
+pub mod building;
 pub mod mountain;
 pub mod river;
 pub mod street;
