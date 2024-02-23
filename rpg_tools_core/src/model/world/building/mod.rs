@@ -33,6 +33,10 @@ impl Building {
             lot,
         }
     }
+
+    pub fn lot(&self) -> &BuildingLot {
+        &self.lot
+    }
 }
 
 impl Element<BuildingId> for Building {

@@ -3,7 +3,7 @@ extern crate rocket;
 
 use crate::html::HtmlBuilder;
 use crate::init::init;
-use crate::route::building::get_all_buildings;
+use crate::route::building::{get_all_buildings, get_building_details};
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
@@ -20,6 +20,7 @@ use crate::route::town::{
 use rocket::fs::FileServer;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
@@ -40,12 +41,22 @@ impl HtmlBuilder {
         Self::new("RPG Tools - Editor")
     }
 
+    pub fn complex_field<F: FnOnce(Self) -> Self>(mut self, name: &str, f: F) -> Self {
+        self.p(|builder| f(builder.bold(name)))
+    }
+
     pub fn field(self, name: &str, value: &str) -> Self {
-        self.p(|builder| builder.bold(name).text(value))
+        self.complex_field(name, |b| b.text(value))
     }
 
     pub fn field_usize(self, name: &str, value: usize) -> Self {
-        self.p(|builder| builder.bold(name).usize(value))
+        self.complex_field(name, |b| b.usize(value))
+    }
+
+    pub fn field_size2d(self, name: &str, size: &Size2d) -> Self {
+        self.complex_field(name, |b| {
+            b.text(&format!("{} x {}", size.width(), size.height()))
+        })
     }
 
     pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
@@ -118,6 +129,7 @@ fn rocket() -> _ {
                 preview_tile,
                 update_tile,
                 get_all_buildings,
+                get_building_details,
             ],
         )
 }
