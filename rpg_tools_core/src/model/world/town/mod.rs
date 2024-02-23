@@ -1,3 +1,4 @@
+pub mod construction;
 pub mod edge;
 pub mod terrain;
 pub mod tile;

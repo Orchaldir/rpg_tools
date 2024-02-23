@@ -1,24 +1,23 @@
-use crate::model::math::size2d::Size2d;
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::{Building, BuildingId};
-use crate::model::world::town::TownId;
 use crate::model::world::WorldData;
 use crate::utils::storage::Id;
 use anyhow::{bail, Result};
 
-/// Tries to update the name of an [`element`](Element).
+/// Tries to a [`building`](Building).
 pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<BuildingId> {
-    if data.town_manager.get(lot.town).is_none() {
+    if let Some(town) = data.town_manager.get(lot.town) {
+        Ok(data.building_manager.create(|id| Building::new(id, lot)))
+    } else {
         bail!("Unknown town id {}!", lot.town.id());
     }
-
-    Ok(data.building_manager.create(|id| Building::new(id, lot)))
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::world::town::Town;
+    use crate::model::math::size2d::Size2d;
+    use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
 
     #[test]
