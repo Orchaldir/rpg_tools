@@ -13,6 +13,10 @@ pub fn get_all_buildings(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.building_manager, "building", "Buildings")
 }
 
+pub fn link_all_buildings() -> String {
+    uri!(get_all_buildings()).to_string()
+}
+
 #[get("/building/<id>/details")]
 pub fn get_building_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
@@ -20,8 +24,6 @@ pub fn get_building_details(state: &State<EditorData>, id: usize) -> Option<RawH
 }
 
 fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
-    let back_uri = uri!(get_all_buildings()).to_string();
-
     data.building_manager.get(id).map(|building| {
         let mut builder = HtmlBuilder::editor()
             .h1(&format!("Building: {}", building.name()))
@@ -37,7 +39,7 @@ fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<Stri
         builder = builder
             .field_usize("Tile:", building.lot().tile)
             .field_size2d("Size:", &building.lot().size)
-            .p(|b| b.link(&back_uri, "Back"));
+            .p(|b| b.link(&link_all_buildings(), "Back"));
 
         RawHtml(builder.finish())
     })

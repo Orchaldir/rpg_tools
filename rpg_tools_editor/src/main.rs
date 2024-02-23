@@ -3,7 +3,7 @@ extern crate rocket;
 
 use crate::html::HtmlBuilder;
 use crate::init::init;
-use crate::route::building::{get_all_buildings, get_building_details};
+use crate::route::building::{get_all_buildings, get_building_details, link_all_buildings};
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
@@ -41,7 +41,7 @@ impl HtmlBuilder {
         Self::new("RPG Tools - Editor")
     }
 
-    pub fn complex_field<F: FnOnce(Self) -> Self>(mut self, name: &str, f: F) -> Self {
+    pub fn complex_field<F: FnOnce(Self) -> Self>(self, name: &str, f: F) -> Self {
         self.p(|builder| f(builder.bold(name)))
     }
 
@@ -81,7 +81,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
         HtmlBuilder::editor()
             .h1("RPG Tools - Editor")
             .h2("Overview")
-            .add_storage_link("Buildings:", "/building/all", &data.building_manager)
+            .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)
             .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
             .add_storage_link("Rivers:", "/river/all", &data.river_manager)
             .add_storage_link("Streets:", "/street/all", &data.street_manager)
