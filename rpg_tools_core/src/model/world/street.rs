@@ -24,15 +24,17 @@ pub struct Street {
     pub towns: HashSet<TownId>,
 }
 
-impl Element<StreetId> for Street {
-    fn new(id: StreetId) -> Self {
+impl Street {
+    pub fn new(id: StreetId) -> Self {
         Street {
             id,
             name: format!("Street {}", id.0),
             towns: HashSet::new(),
         }
     }
+}
 
+impl Element<StreetId> for Street {
     fn id(&self) -> StreetId {
         self.id
     }

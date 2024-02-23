@@ -31,8 +31,8 @@ pub struct Town {
     pub map: EdgeMap<TownTile, TownEdge>,
 }
 
-impl Element<TownId> for Town {
-    fn new(id: TownId) -> Self {
+impl Town {
+    pub fn new(id: TownId) -> Self {
         Town {
             id,
             name: format!("Town {}", id.0),
@@ -43,7 +43,9 @@ impl Element<TownId> for Town {
             ),
         }
     }
+}
 
+impl Element<TownId> for Town {
     fn id(&self) -> TownId {
         self.id
     }

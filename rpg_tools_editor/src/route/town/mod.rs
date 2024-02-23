@@ -29,7 +29,7 @@ pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
 pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
-    let id = data.town_manager.create();
+    let id = data.town_manager.create(Town::new);
 
     println!("Create town {}", id.id());
 

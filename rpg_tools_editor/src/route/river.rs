@@ -4,7 +4,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::world::river::RiverId;
+use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -19,7 +19,7 @@ pub fn get_all_rivers(state: &State<EditorData>) -> RawHtml<String> {
 pub fn add_river(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
-    let id = data.river_manager.create();
+    let id = data.river_manager.create(River::new);
 
     println!("Create river {}", id.id());
 

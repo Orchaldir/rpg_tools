@@ -4,7 +4,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::world::mountain::MountainId;
+use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -19,7 +19,7 @@ pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
 pub fn add_mountain(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
-    let id = data.mountain_manager.create();
+    let id = data.mountain_manager.create(Mountain::new);
 
     println!("Create mountain {}", id.id());
 

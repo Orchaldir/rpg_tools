@@ -21,14 +21,16 @@ pub struct Mountain {
     name: String,
 }
 
-impl Element<MountainId> for Mountain {
-    fn new(id: MountainId) -> Self {
+impl Mountain {
+    pub fn new(id: MountainId) -> Self {
         Mountain {
             id,
             name: format!("Mountain {}", id.0),
         }
     }
+}
 
+impl Element<MountainId> for Mountain {
     fn id(&self) -> MountainId {
         self.id
     }

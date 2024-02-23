@@ -1,8 +1,6 @@
 pub mod lot;
 
-use crate::model::math::size2d::Size2d;
 use crate::model::world::building::lot::BuildingLot;
-use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 
 /// The unique identifier of a [`building`](Building).
@@ -27,19 +25,17 @@ pub struct Building {
     lot: BuildingLot,
 }
 
-impl Element<BuildingId> for Building {
-    fn new(id: BuildingId) -> Self {
+impl Building {
+    pub fn new(id: BuildingId, lot: BuildingLot) -> Self {
         Building {
             id,
             name: format!("Building {}", id.0),
-            lot: BuildingLot {
-                town: TownId::default(),
-                tile: 0,
-                size: Size2d::square(1),
-            },
+            lot,
         }
     }
+}
 
+impl Element<BuildingId> for Building {
     fn id(&self) -> BuildingId {
         self.id
     }
