@@ -4,6 +4,7 @@ use crate::model::world::street::{Street, StreetId};
 use crate::model::world::town::{Town, TownId};
 use crate::utils::storage::Storage;
 
+pub mod building;
 pub mod mountain;
 pub mod river;
 pub mod street;
