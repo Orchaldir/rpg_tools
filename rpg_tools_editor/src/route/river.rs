@@ -1,4 +1,5 @@
 use crate::html::HtmlBuilder;
+use crate::route::town::link_town_details;
 use crate::route::{get_all_template, get_elements};
 use crate::EditorData;
 use rocket::form::Form;
@@ -70,8 +71,8 @@ fn get_details_template(data: &WorldData, id: RiverId) -> Option<RawHtml<String>
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
-            .list(&towns, |b, &(id, name)| {
-                b.link(&format!("/town/{}/details", id), name)
+            .list(&towns, |b, &town| {
+                b.link(&link_town_details(town.id()), town.name())
             })
             .p(|b| b.link(&format!("/river/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/river/all", "Back"));

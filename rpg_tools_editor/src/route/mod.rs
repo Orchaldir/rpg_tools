@@ -22,11 +22,8 @@ pub fn get_all_elements<ID: Id, ELEMENT: Element<ID>>(
 pub fn get_elements<'a, ID: Id, ELEMENT: Element<ID>>(
     storage: &'a Storage<ID, ELEMENT>,
     ids: &'a HashSet<ID>,
-) -> Vec<(usize, &'a str)> {
-    ids.iter()
-        .flat_map(|id| storage.get(*id))
-        .map(|c| (c.id().id(), c.name()))
-        .collect()
+) -> Vec<&'a ELEMENT> {
+    ids.iter().flat_map(|id| storage.get(*id)).collect()
 }
 
 pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(

@@ -15,7 +15,7 @@ use crate::route::town::tile::{
     edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
 };
 use crate::route::town::{
-    add_town, edit_town, get_all_towns, get_town_details, get_town_map, update_town,
+    add_town, edit_town, get_all_towns, get_town_details, get_town_map, link_all_towns, update_town,
 };
 use rocket::fs::FileServer;
 use rocket::response::content::RawHtml;
@@ -85,7 +85,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
             .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
             .add_storage_link("Rivers:", "/river/all", &data.river_manager)
             .add_storage_link("Streets:", "/street/all", &data.street_manager)
-            .add_storage_link("Towns:", "/town/all", &data.town_manager)
+            .add_storage_link("Towns:", &link_all_towns(), &data.town_manager)
             .finish(),
     )
 }

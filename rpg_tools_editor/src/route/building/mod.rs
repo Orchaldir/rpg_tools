@@ -1,5 +1,6 @@
 use crate::html::HtmlBuilder;
 use crate::route::get_all_template;
+use crate::route::town::link_town_details;
 use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
@@ -32,7 +33,7 @@ fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<Stri
 
         if let Some(town) = data.town_manager.get(building.lot().town) {
             builder = builder.complex_field("Town", |b| {
-                b.link(&format!("/town/{}/details", town.id().id()), town.name())
+                b.link(&link_town_details(town.id()), town.name())
             })
         }
 

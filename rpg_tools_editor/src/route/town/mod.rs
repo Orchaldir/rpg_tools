@@ -25,6 +25,10 @@ pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     get_all_template(&data.town_manager, "town", "Towns")
 }
 
+pub fn link_all_towns() -> String {
+    uri!(get_all_towns()).to_string()
+}
+
 #[get("/town/new")]
 pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
@@ -40,6 +44,10 @@ pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
 pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_template(&data, TownId::new(id))
+}
+
+pub fn link_town_details(id: TownId) -> String {
+    uri!(get_town_details(id = id.id())).to_string()
 }
 
 #[get("/town/<id>/edit")]
@@ -148,7 +156,7 @@ fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<R
                         100,
                     )
             })
-            .p(|b| b.link(&format!("/town/{}/details", id.id()), "Back"));
+            .p(|b| b.link(&link_town_details(id), "Back"));
 
         RawHtml(builder.finish())
     })
