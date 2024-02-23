@@ -1,3 +1,7 @@
+pub mod lot;
+
+use crate::model::math::size2d::Size2d;
+use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 
@@ -20,8 +24,7 @@ impl Id for BuildingId {
 pub struct Building {
     id: BuildingId,
     name: String,
-    town: TownId,
-    tile: usize,
+    lot: BuildingLot,
 }
 
 impl Element<BuildingId> for Building {
@@ -29,8 +32,11 @@ impl Element<BuildingId> for Building {
         Building {
             id,
             name: format!("Building {}", id.0),
-            town: TownId::default(),
-            tile: 0,
+            lot: BuildingLot {
+                town: TownId::default(),
+                tile: 0,
+                size: Size2d::square(1),
+            },
         }
     }
 
