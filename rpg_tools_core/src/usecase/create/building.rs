@@ -25,32 +25,28 @@ mod tests {
         let mut data = WorldData::default();
         data.town_manager.create(Town::new);
 
+        let id = create_building(&mut data, create_lot()).unwrap();
+
+        assert_eq!(id.id(), 0);
         assert_eq!(
-            create_building(
-                &mut data,
-                BuildingLot {
-                    town: TownId::default(),
-                    tile: 7,
-                    size: Size2d::new(2, 3),
-                }
-            )
-            .unwrap(),
-            BuildingId::default()
-        );
+            data.building_manager.get(id).unwrap(),
+            &Building::new(id, create_lot())
+        )
     }
 
     #[test]
     fn unknown_town() {
         let mut data = WorldData::default();
 
-        assert!(create_building(
-            &mut data,
-            BuildingLot {
-                town: TownId::default(),
-                tile: 7,
-                size: Size2d::new(2, 3),
-            }
-        )
-        .is_err());
+        assert!(create_building(&mut data, create_lot()).is_err());
+        assert!(data.building_manager.get_all().is_empty())
+    }
+
+    fn create_lot() -> BuildingLot {
+        BuildingLot {
+            town: TownId::default(),
+            tile: 1,
+            size: Size2d::new(1, 2),
+        }
     }
 }
