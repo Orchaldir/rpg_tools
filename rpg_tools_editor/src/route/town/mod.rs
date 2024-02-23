@@ -7,9 +7,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
-use rpg_tools_core::model::world::town::edge::TownEdge;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -117,16 +115,6 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
-    );
-
-    renderer.render_edges(
-        &mut builder,
-        &Point2d::default(),
-        &town.map,
-        |tile| match tile {
-            TownEdge::None => None,
-            TownEdge::Street { .. } => Some(Color::White),
-        },
     );
 
     let svg = builder.finish();
