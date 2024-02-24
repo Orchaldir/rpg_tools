@@ -26,12 +26,11 @@ impl TileMapRenderer {
         map.get_size() * self.tile_size as f32
     }
 
-    pub fn render_tiles<Tile: Clone, F: Fn(&Tile) -> Color>(
+    pub fn render<Tile: Clone, F: FnMut(usize, AABB, &Tile)>(
         &self,
-        renderer: &mut dyn Renderer,
         start: &Point2d,
         map: &TileMap<Tile>,
-        lookup: F,
+        mut rendering: F,
     ) {
         let size = map.get_size();
         let tile_size = Size2d::square(self.tile_size);
@@ -41,14 +40,26 @@ impl TileMapRenderer {
             for x in 0..size.width() {
                 if let Some(tile) = map.get_tile(index) {
                     let position = self.calculate_position(start, x, y);
-                    let color = lookup(tile);
-                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
-                    renderer.render_rectangle(&AABB::new(position, tile_size), &style);
+                    rendering(index, AABB::new(position, tile_size), tile);
                 }
 
                 index += 1;
             }
         }
+    }
+
+    pub fn render_tiles<Tile: Clone, F: Fn(&Tile) -> Color>(
+        &self,
+        renderer: &mut dyn Renderer,
+        start: &Point2d,
+        map: &TileMap<Tile>,
+        lookup: F,
+    ) {
+        self.render(start, map, |_index, aabb, tile| {
+            let color = lookup(tile);
+            let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+            renderer.render_rectangle(&aabb, &style);
+        });
     }
 
     pub fn render_tiles_with_link<
@@ -63,26 +74,15 @@ impl TileMapRenderer {
         color_lookup: C,
         link_lookup: L,
     ) {
-        let size = map.get_size();
-        let tile_size = Size2d::square(self.tile_size);
-        let mut index = 0;
+        self.render(start, map, |index, aabb, tile| {
+            let color = color_lookup(tile);
+            let link = link_lookup(index, tile);
+            let style = RenderStyle::with_border(color, Color::Black, self.border_size);
 
-        for y in 0..size.height() {
-            for x in 0..size.width() {
-                if let Some(tile) = map.get_tile(index) {
-                    let position = self.calculate_position(start, x, y);
-                    let color = color_lookup(tile);
-                    let link = link_lookup(index, tile);
-                    let style = RenderStyle::with_border(color, Color::Black, self.border_size);
-
-                    renderer.link(&link);
-                    renderer.render_rectangle(&AABB::new(position, tile_size), &style);
-                    renderer.close();
-                }
-
-                index += 1;
-            }
-        }
+            renderer.link(&link);
+            renderer.render_rectangle(&aabb, &style);
+            renderer.close();
+        });
     }
 
     fn calculate_position(&self, start: &Point2d, x: u32, y: u32) -> Point2d {
