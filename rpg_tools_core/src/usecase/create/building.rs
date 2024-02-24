@@ -32,7 +32,7 @@ mod tests {
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
     use crate::usecase::create::street::add_street_to_tile;
-    use crate::usecase::get::town::is_construction;
+    use crate::usecase::get::town::{is_building, is_street};
 
     #[test]
     fn create_successful() {
@@ -82,12 +82,7 @@ mod tests {
         assert!(create_building(&mut data, create_lot(0)).is_err());
 
         assert!(data.building_manager.get_all().is_empty());
-        assert!(is_construction(
-            &data,
-            town_id,
-            0,
-            Construction::Street { id: street_id }
-        ));
+        assert!(is_street(&data, town_id, 0, street_id));
     }
 
     fn create_lot(tile: usize) -> BuildingLot {
@@ -103,11 +98,6 @@ mod tests {
             data.building_manager.get(id).unwrap(),
             &Building::new(id, create_lot(0))
         );
-        assert!(is_construction(
-            &data,
-            town_id,
-            0,
-            Construction::Building { id }
-        ));
+        assert!(is_building(&data, town_id, 0, id));
     }
 }

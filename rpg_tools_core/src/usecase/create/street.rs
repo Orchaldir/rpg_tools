@@ -37,7 +37,7 @@ mod tests {
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
     use crate::usecase::create::building::create_building;
-    use crate::usecase::get::town::is_construction;
+    use crate::usecase::get::town::{is_building, is_construction, is_street};
 
     #[test]
     fn create_successful() {
@@ -46,12 +46,7 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
-        assert!(is_construction(
-            &data,
-            town_id,
-            0,
-            Construction::Street { id: street_id }
-        ));
+        assert!(is_street(&data, town_id, 0, street_id));
     }
 
     #[test]
@@ -80,12 +75,7 @@ mod tests {
         let building_id = create_building(&mut data, BuildingLot::new(town_id, 0)).unwrap();
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
-        assert!(is_construction(
-            &data,
-            town_id,
-            0,
-            Construction::Building { id: building_id }
-        ));
+        assert!(is_building(&data, town_id, 0, building_id));
     }
 
     #[test]
@@ -93,8 +83,10 @@ mod tests {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
+        let street_id1 = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
-        assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+        assert!(add_street_to_tile(&mut data, town_id, 0, street_id1).is_err());
+        assert!(is_street(&data, town_id, 0, street_id));
     }
 }
