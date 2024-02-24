@@ -90,11 +90,13 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
 }
 
 fn get_edit_html(data: &WorldData, id: BuildingId, name_error: &str) -> Option<RawHtml<String>> {
+    let submit = uri!(update_building(id.id())).to_string();
+
     data.building_manager.get(id).map(|mountain| {
         let builder = create_html()
             .h1(&format!("Edit Building: {}", mountain.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/building/{}", id.id()), |b| {
+            .form(&submit, |b| {
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })

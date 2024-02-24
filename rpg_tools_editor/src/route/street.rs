@@ -82,11 +82,13 @@ fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
 }
 
 fn get_edit_html(data: &WorldData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
+    let submit = uri!(update_street(id.id())).to_string();
+
     data.street_manager.get(id).map(|street| {
         let builder = create_html()
             .h1(&format!("Edit Street: {}", street.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/street/{}", id.id()), |b| {
+            .form(&submit, |b| {
                 b.text_input("Name", "name", street.name())
                     .error(name_error)
             })

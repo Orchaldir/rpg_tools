@@ -75,11 +75,13 @@ fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>>
 }
 
 fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
+    let submit = uri!(update_mountain(id.id())).to_string();
+
     data.mountain_manager.get(id).map(|mountain| {
         let builder = create_html()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/mountain/{}", id.id()), |b| {
+            .form(&submit, |b| {
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })
