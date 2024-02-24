@@ -8,8 +8,6 @@ pub trait Id: Copy + Hash + Eq {
 }
 
 pub trait Element<I: Id> {
-    fn new(id: I) -> Self;
-
     fn id(&self) -> I;
 
     fn with_id(self, id: I) -> Self;
@@ -40,9 +38,9 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
         }
     }
 
-    pub fn create(&mut self) -> I {
+    pub fn create<F: FnOnce(I) -> T>(&mut self, f: F) -> I {
         let id = Id::new(self.elements.len());
-        self.elements.push(T::new(id));
+        self.elements.push(f(id));
         id
     }
 
@@ -98,7 +96,7 @@ mod tests {
     fn test_create() {
         let mut storage: Storage<TownId, Town> = Storage::default();
 
-        let id = storage.create();
+        let id = storage.create(Town::new);
 
         assert_eq!(1, storage.get_all().len());
         assert_element(&storage, id, "Town 0");
@@ -114,7 +112,7 @@ mod tests {
     #[test]
     fn test_delete_only_element() {
         let mut storage: Storage<TownId, Town> = Storage::default();
-        let id = storage.create();
+        let id = storage.create(Town::new);
 
         assert_eq!(DeletedLastElement, storage.delete(id));
         assert!(storage.get_all().is_empty());
@@ -123,9 +121,9 @@ mod tests {
     #[test]
     fn test_delete() {
         let mut storage: Storage<TownId, Town> = Storage::default();
-        let id0 = storage.create();
-        let id1 = storage.create();
-        let id2 = storage.create();
+        let id0 = storage.create(Town::new);
+        let id1 = storage.create(Town::new);
+        let id2 = storage.create(Town::new);
 
         assert_eq!(SwappedAndRemoved { id_to_update: id2 }, storage.delete(id0));
 
@@ -137,7 +135,7 @@ mod tests {
     #[test]
     fn test_delete_unknown_index() {
         let mut storage: Storage<TownId, Town> = Storage::default();
-        let id = storage.create();
+        let id = storage.create(Town::new);
 
         assert_eq!(NotFound, storage.delete(TownId::new(5)));
         assert_eq!(1, storage.get_all().len());

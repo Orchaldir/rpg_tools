@@ -1,15 +1,20 @@
 use crate::model::color::Color;
+use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 
 /// A tile of the [`town`](crate::model::world::town::Town) map.
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TownTile {
     pub terrain: Terrain,
+    pub construction: Construction,
 }
 
 impl TownTile {
     pub fn new(terrain: Terrain) -> Self {
-        Self { terrain }
+        Self {
+            terrain,
+            construction: Construction::None,
+        }
     }
 
     pub fn get_color(&self) -> Color {

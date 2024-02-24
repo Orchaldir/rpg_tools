@@ -1,12 +1,11 @@
-pub mod edge;
+pub mod construction;
 pub mod terrain;
 pub mod tile;
 
 use crate::model::math::size2d::Size2d;
-use crate::model::world::town::edge::TownEdge;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
-use crate::utils::map::edge::EdgeMap;
+use crate::utils::map::tile::TileMap;
 use crate::utils::storage::{Element, Id};
 
 /// The unique identifier of a [`town`](Town).
@@ -28,22 +27,20 @@ impl Id for TownId {
 pub struct Town {
     id: TownId,
     name: String,
-    pub map: EdgeMap<TownTile, TownEdge>,
+    pub map: TileMap<TownTile>,
 }
 
-impl Element<TownId> for Town {
-    fn new(id: TownId) -> Self {
+impl Town {
+    pub fn new(id: TownId) -> Self {
         Town {
             id,
             name: format!("Town {}", id.0),
-            map: EdgeMap::simple(
-                Size2d::square(1),
-                TownTile::new(Terrain::Plain),
-                TownEdge::None,
-            ),
+            map: TileMap::simple(Size2d::square(1), TownTile::new(Terrain::Plain)),
         }
     }
+}
 
+impl Element<TownId> for Town {
     fn id(&self) -> TownId {
         self.id
     }

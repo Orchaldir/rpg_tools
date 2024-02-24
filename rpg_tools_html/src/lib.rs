@@ -1,6 +1,6 @@
-use crate::html::form::FormBuilder;
-
 pub mod form;
+
+use crate::form::FormBuilder;
 
 pub struct HtmlBuilder {
     lines: Vec<String>,
@@ -138,6 +138,10 @@ impl HtmlBuilder {
         self.inline_tag("h2", title)
     }
 
+    pub fn h3(self, title: &str) -> Self {
+        self.inline_tag("h3", title)
+    }
+
     pub fn p<F: FnOnce(Self) -> Self>(self, f: F) -> Self {
         self.tag("p", f)
     }
@@ -215,5 +219,17 @@ impl HtmlBuilder {
             width,
         )
         .close_tag()
+    }
+
+    pub fn complex_field<F: FnOnce(Self) -> Self>(self, name: &str, f: F) -> Self {
+        self.p(|builder| f(builder.bold(name)))
+    }
+
+    pub fn field(self, name: &str, value: &str) -> Self {
+        self.complex_field(name, |b| b.text(value))
+    }
+
+    pub fn field_usize(self, name: &str, value: usize) -> Self {
+        self.complex_field(name, |b| b.usize(value))
     }
 }

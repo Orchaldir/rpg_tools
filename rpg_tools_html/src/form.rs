@@ -1,4 +1,4 @@
-use crate::html::HtmlBuilder;
+use crate::HtmlBuilder;
 
 pub struct FormBuilder {
     html: HtmlBuilder,

@@ -8,5 +8,6 @@ edition = "2021"
 [dependencies]
 rocket = "0.5.0"
 rpg_tools_core = { path = "../rpg_tools_core" }
+rpg_tools_html = { path = "../rpg_tools_html" }
 rpg_tools_rendering = { path = "../rpg_tools_rendering" }
 log = "0.4.20"

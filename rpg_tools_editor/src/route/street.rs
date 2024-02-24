@@ -1,10 +1,11 @@
-use crate::html::HtmlBuilder;
-use crate::route::{get_all_template, get_elements};
+use crate::html::create_html;
+use crate::route::town::link_town_details;
+use crate::route::{get_all_html, get_elements};
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::world::street::StreetId;
+use rpg_tools_core::model::world::street::{Street, StreetId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -12,30 +13,30 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/street/all")]
 pub fn get_all_streets(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data.street_manager, "street", "Streets")
+    get_all_html(&data.street_manager, "street", "Streets")
 }
 
 #[get("/street/new")]
 pub fn add_street(data: &State<EditorData>) -> Option<RawHtml<String>> {
     let mut data = data.data.lock().expect("lock shared data");
 
-    let id = data.street_manager.create();
+    let id = data.street_manager.create(Street::new);
 
     println!("Create street {}", id.id());
 
-    get_edit_template(&data, id, "")
+    get_edit_html(&data, id, "")
 }
 
 #[get("/street/<id>/details")]
 pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, StreetId::new(id))
+    get_details_html(&data, StreetId::new(id))
 }
 
 #[get("/street/<id>/edit")]
 pub fn edit_street(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_template(&data, StreetId::new(id), "")
+    get_edit_html(&data, StreetId::new(id), "")
 }
 
 #[derive(FromForm, Debug)]
@@ -55,23 +56,23 @@ pub fn update_street(
     let street_id = StreetId::new(id);
 
     if let Err(e) = update_name(&mut data.street_manager, street_id, update.name) {
-        return get_edit_template(&data, street_id, &e.to_string());
+        return get_edit_html(&data, street_id, &e.to_string());
     }
 
-    get_details_template(&data, street_id)
+    get_details_html(&data, street_id)
 }
 
-fn get_details_template(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
     data.street_manager.get(id).map(|street| {
         let towns = get_elements(&data.town_manager, &street.towns);
 
-        let builder = HtmlBuilder::editor()
+        let builder = create_html()
             .h1(&format!("Street: {}", street.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
-            .list(&towns, |b, &(id, name)| {
-                b.link(&format!("/town/{}/details", id), name)
+            .list(&towns, |b, &town| {
+                b.link(&link_town_details(town.id()), town.name())
             })
             .p(|b| b.link(&format!("/street/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/street/all", "Back"));
@@ -80,9 +81,9 @@ fn get_details_template(data: &WorldData, id: StreetId) -> Option<RawHtml<String
     })
 }
 
-fn get_edit_template(data: &WorldData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &WorldData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
     data.street_manager.get(id).map(|street| {
-        let builder = HtmlBuilder::editor()
+        let builder = create_html()
             .h1(&format!("Edit Street: {}", street.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/street/{}", id.id()), |b| {

@@ -1,5 +1,6 @@
-use crate::html::HtmlBuilder;
+use crate::html::create_html;
 use crate::route::get_all_elements;
+use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
@@ -14,12 +15,12 @@ use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::EdgeMapRenderer;
+use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/tile/all")]
 pub fn get_all_tiles(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data, TownId::new(id))
+    get_all_tiles_html(&data, TownId::new(id))
 }
 
 #[get("/town/<id>/tile/map.svg")]
@@ -33,7 +34,7 @@ pub fn get_tile_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg>
 #[get("/town/<id>/tile/<index>/edit")]
 pub fn edit_tile(state: &State<EditorData>, id: usize, index: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_template(&data, TownId::new(id), index)
+    get_edit_html(&data, TownId::new(id), index)
 }
 
 #[derive(FromForm, Debug)]
@@ -57,7 +58,7 @@ pub fn preview_tile(
 
     data.town_manager
         .get(town_id)
-        .map(|town| get_form_template(&data, town_id, index, town, &tile))
+        .map(|town| get_form_html(&data, town_id, index, town, &tile))
 }
 
 fn parse_tile(update: Form<TileUpdate>) -> TownTile {
@@ -94,10 +95,10 @@ pub fn update_tile(
         }
     }
 
-    get_all_template(&data, town_id)
+    get_all_tiles_html(&data, town_id)
 }
 
-fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
+fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
@@ -106,35 +107,36 @@ fn render_to_svg(renderer: &EdgeMapRenderer, town: &Town) -> RawSvg {
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
-        |index, _tile| uri!(edit_tile(town.id().id(), index)).to_string(),
+        |index, _tile| Some(uri!(edit_tile(town.id().id(), index)).to_string()),
     );
 
     let svg = builder.finish();
     RawSvg::new(svg.export())
 }
 
-fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
-    let map_uri = uri!(get_tile_edit_map(id = id.id())).to_string();
+fn get_all_tiles_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+    let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
+    let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
-        let builder = HtmlBuilder::editor()
+        let builder = create_html()
             .h1(&format!("Edit Terrain of Town {}", town.name()))
             .center(|b| b.svg(&map_uri, "800"))
-            .p(|b| b.link(&format!("/town/{}/details", id.id()), "Back"));
+            .p(|b| b.link(&back_uri, "Back"));
 
         RawHtml(builder.finish())
     })
 }
 
-fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
     data.town_manager.get(id).and_then(|town| {
         town.map
             .get_tile(index)
-            .map(|tile| get_form_template(data, id, index, town, tile))
+            .map(|tile| get_form_html(data, id, index, town, tile))
     })
 }
 
-fn get_form_template(
+fn get_form_html(
     data: &WorldData,
     id: TownId,
     index: usize,
@@ -145,7 +147,7 @@ fn get_form_template(
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
 
-    let builder = HtmlBuilder::editor()
+    let builder = create_html()
         .h1(&format!("Edit Town Tile {} of {}", index, town.name()))
         .form(&format!("/town/{}/tile/{}", id.id(), index), |mut b| {
             let terrain = match tile.terrain {
