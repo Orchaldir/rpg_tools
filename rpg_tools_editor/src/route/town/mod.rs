@@ -22,7 +22,7 @@ use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::LinkRenderer;
+use rpg_tools_rendering::renderer::{LinkRenderer, Tooltip};
 use rpg_tools_rendering::usecase::map::town::{render_building, render_street};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
@@ -96,7 +96,7 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_town(&state.town_renderer, town, link_building_details))
+        .map(|town| render_town(&data, &state.town_renderer, town, link_building_details))
 }
 
 fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
@@ -126,6 +126,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
 }
 
 fn render_town<F: FnMut(BuildingId) -> String>(
+    data: &WorldData,
     renderer: &TileMapRenderer,
     town: &Town,
     mut get_link: F,
@@ -142,12 +143,22 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
         if let Building { id } = tile.construction {
+            if let Some(building) = data.building_manager.get(id) {
+                builder.tooltip(building.name())
+            }
+
             builder.link(&get_link(id));
             render_building(&mut builder, &aabb);
             builder.close();
-        } else if let Street { .. } = tile.construction {
+        } else if let Street { id } = tile.construction {
+            if let Some(street) = data.street_manager.get(id) {
+                builder.tooltip(street.name())
+            }
+
             render_street(&mut builder, &aabb);
         }
+
+        builder.clear_tooltip();
     });
 
     let svg = builder.finish();
