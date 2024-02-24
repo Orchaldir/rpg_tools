@@ -14,6 +14,7 @@ use crate::route::street::{
     add_street, edit_street, get_all_streets, get_street_details, update_street,
 };
 use crate::route::town::building::{add_building, get_building_creator, get_building_creator_map};
+use crate::route::town::street::{get_street_editor, get_street_editor_map};
 use crate::route::town::tile::{
     edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
 };
@@ -38,7 +39,7 @@ pub struct EditorData {
 }
 
 #[get("/")]
-fn hello(state: &State<EditorData>) -> RawHtml<String> {
+fn home(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
     RawHtml(
@@ -99,6 +100,8 @@ fn rocket() -> _ {
                 add_building,
                 edit_building,
                 update_building
+                get_street_editor,
+                get_street_editor_map,
             ],
         )
 }

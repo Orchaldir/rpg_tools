@@ -1,4 +1,5 @@
 pub mod building;
+pub mod street;
 pub mod tile;
 
 use crate::html::create_html;
