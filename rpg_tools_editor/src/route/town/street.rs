@@ -4,17 +4,13 @@ use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::town::construction::Construction;
-use rpg_tools_core::model::world::town::construction::Construction::Street;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
-use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::Renderer;
 use rpg_tools_rendering::usecase::map::town::render_buildings;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
@@ -25,7 +21,7 @@ pub fn get_street_editor(state: &State<EditorData>, id: usize) -> Option<RawHtml
 }
 
 pub fn link_street_creator(id: TownId) -> String {
-    uri!(get_street_creator(id.id())).to_string()
+    uri!(get_street_editor(id.id())).to_string()
 }
 
 #[get("/town/<id>/street/editor.svg")]
@@ -50,7 +46,7 @@ pub fn link_add_street(id: TownId, tile: usize) -> String {
 }
 
 fn get_street_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
-    let map_uri = uri!(get_street_creator_map(id.id())).to_string();
+    let map_uri = uri!(get_street_editor(id.id())).to_string();
     let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {

@@ -1,6 +1,6 @@
 use crate::html::{create_html, EditorBuilder};
-use crate::route::get_all_html;
 use crate::route::town::link_town_details;
+use crate::route::util::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;

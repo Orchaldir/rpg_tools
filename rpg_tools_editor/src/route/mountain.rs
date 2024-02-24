@@ -1,5 +1,5 @@
 use crate::html::create_html;
-use crate::route::get_all_html;
+use crate::route::util::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;

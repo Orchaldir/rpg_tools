@@ -66,7 +66,7 @@ fn rocket() -> _ {
         .mount(
             "/",
             routes![
-                hello,
+                home,
                 get_all_mountains,
                 get_mountain_details,
                 add_mountain,
@@ -99,9 +99,7 @@ fn rocket() -> _ {
                 get_building_creator_map,
                 add_building,
                 edit_building,
-                update_building
-                get_street_editor,
-                get_street_editor_map,
+                update_building,
             ],
         )
 }

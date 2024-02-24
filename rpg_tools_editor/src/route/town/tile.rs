@@ -1,6 +1,6 @@
 use crate::html::create_html;
-use crate::route::get_all_elements;
 use crate::route::town::link_town_details;
+use crate::route::util::get_all_elements;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
