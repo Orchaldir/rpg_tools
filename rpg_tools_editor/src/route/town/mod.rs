@@ -7,14 +7,18 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::world::town::construction::Construction::Building;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
+use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
+use rpg_tools_rendering::renderer::Renderer;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -116,6 +120,13 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         &town.map,
         TownTile::get_color,
     );
+
+    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
+        if let Building { .. } = tile.construction {
+            let style = RenderStyle::no_border(Color::Black);
+            builder.render_rectangle(&aabb.scale(0.5), &style);
+        }
+    });
 
     let svg = builder.finish();
     RawSvg::new(svg.export())
