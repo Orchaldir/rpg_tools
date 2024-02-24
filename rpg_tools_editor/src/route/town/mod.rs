@@ -23,6 +23,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::{LinkRenderer, Renderer};
+use rpg_tools_rendering::usecase::map::town::render_building;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -140,10 +141,8 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
         if let Building { id } = tile.construction {
-            let style = RenderStyle::no_border(Color::Black);
-
             builder.link(&get_link(id));
-            builder.render_rectangle(&aabb.scale(0.5), &style);
+            render_building(&mut builder, &aabb);
             builder.close();
         }
     });

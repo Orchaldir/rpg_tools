@@ -1,3 +1,5 @@
+pub mod town;
+
 use crate::renderer::style::RenderStyle;
 use crate::renderer::{LinkRenderer, Renderer};
 use rpg_tools_core::model::color::Color;

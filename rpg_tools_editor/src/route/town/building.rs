@@ -18,6 +18,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::Renderer;
+use rpg_tools_rendering::usecase::map::town::render_buildings;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/building/creator")]
@@ -91,12 +92,7 @@ fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         },
     );
 
-    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Building { .. } = tile.construction {
-            let style = RenderStyle::no_border(Color::Black);
-            builder.render_rectangle(&aabb.scale(0.5), &style);
-        }
-    });
+    render_buildings(&mut builder, renderer, town);
 
     let svg = builder.finish();
     RawSvg::new(svg.export())
