@@ -5,7 +5,7 @@ use crate::model::world::WorldData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
-/// Tries to a [`street`](Street).
+/// Tries to add a [`street`](Street) to a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn add_street_to_tile(
     data: &mut WorldData,
     town_id: TownId,

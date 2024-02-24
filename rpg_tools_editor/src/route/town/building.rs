@@ -39,13 +39,7 @@ pub fn add_building(state: &State<EditorData>, id: usize, tile: usize) -> Option
     let mut data = state.data.lock().expect("lock shared data");
     let town_id = TownId::new(id);
 
-    if let Ok(building_id) = create_building(
-        &mut data,
-        BuildingLot {
-            town: town_id,
-            tile,
-        },
-    ) {
+    if let Ok(building_id) = create_building(&mut data, BuildingLot::new(town_id, tile)) {
         println!(
             "Added building {} to tile {} of town {}",
             building_id.id(),

@@ -5,7 +5,7 @@ use crate::model::world::WorldData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
-/// Tries to a [`building`](Building).
+/// Tries to add a [`building`](Building) to a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<BuildingId> {
     if let Some(town) = data.town_manager.get_mut(lot.town) {
         if let Some(tile) = town.map.get_tile_mut(lot.tile) {
@@ -86,10 +86,7 @@ mod tests {
     }
 
     fn create_lot(tile: usize) -> BuildingLot {
-        BuildingLot {
-            town: TownId::default(),
-            tile,
-        }
+        BuildingLot::new(TownId::default(), tile)
     }
 
     fn assert_first_building(data: &WorldData, town_id: TownId, id: BuildingId) {
