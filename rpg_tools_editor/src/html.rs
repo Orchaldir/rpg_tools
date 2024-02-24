@@ -2,7 +2,7 @@ use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_html::HtmlBuilder;
 
-pub fn editor() -> HtmlBuilder {
+pub fn create_html() -> HtmlBuilder {
     HtmlBuilder::new("RPG Tools - Editor")
 }
 

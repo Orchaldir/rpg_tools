@@ -1,4 +1,4 @@
-use crate::html::editor;
+use crate::html::create_html;
 use crate::route::town::link_town_details;
 use crate::route::{get_all_html, get_elements};
 use crate::EditorData;
@@ -66,7 +66,7 @@ fn get_details_html(data: &WorldData, id: RiverId) -> Option<RawHtml<String>> {
     data.river_manager.get(id).map(|river| {
         let towns = get_elements(&data.town_manager, &river.towns);
 
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("River: {}", river.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
@@ -83,7 +83,7 @@ fn get_details_html(data: &WorldData, id: RiverId) -> Option<RawHtml<String>> {
 
 fn get_edit_html(data: &WorldData, id: RiverId, name_error: &str) -> Option<RawHtml<String>> {
     data.river_manager.get(id).map(|river| {
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("Edit River: {}", river.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/river/{}", id.id()), |b| {

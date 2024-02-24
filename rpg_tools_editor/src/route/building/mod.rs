@@ -1,4 +1,4 @@
-use crate::html::{editor, EditorBuilder};
+use crate::html::{create_html, EditorBuilder};
 use crate::route::get_all_html;
 use crate::route::town::link_town_details;
 use crate::EditorData;
@@ -66,7 +66,7 @@ pub fn update_building(
 
 pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
-        let mut builder = editor()
+        let mut builder = create_html()
             .h1(&format!("Building: {}", building.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
@@ -91,7 +91,7 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
 
 fn get_edit_html(data: &WorldData, id: BuildingId, name_error: &str) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|mountain| {
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("Edit Building: {}", mountain.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/building/{}", id.id()), |b| {

@@ -1,4 +1,4 @@
-use crate::html::editor;
+use crate::html::create_html;
 use crate::route::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
@@ -63,7 +63,7 @@ pub fn update_mountain(
 
 fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
     data.mountain_manager.get(id).map(|mountain| {
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("Mountain: {}", mountain.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
@@ -76,7 +76,7 @@ fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>>
 
 fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
     data.mountain_manager.get(id).map(|mountain| {
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/mountain/{}", id.id()), |b| {

@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
-use crate::html::{editor, EditorBuilder};
+use crate::html::{create_html, EditorBuilder};
 use crate::init::init;
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, link_all_buildings, update_building,
@@ -42,7 +42,7 @@ fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
     RawHtml(
-        editor()
+        create_html()
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)

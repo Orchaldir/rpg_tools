@@ -1,4 +1,4 @@
-use crate::html::editor;
+use crate::html::create_html;
 use crate::route::building::get_building_details_html;
 use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
@@ -64,7 +64,7 @@ fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<Str
     let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
-        let builder = editor()
+        let builder = create_html()
             .h1(&format!("Add a Building to Town {}", town.name()))
             .center(|b| b.svg(&map_uri, "800"))
             .p(|b| b.link(&back_uri, "Back"));
