@@ -1,6 +1,5 @@
 use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::building::lot::BuildingLot;
-use rpg_tools_core::model::world::building::{Building, BuildingId};
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::street::{Street, StreetId};
@@ -8,6 +7,7 @@ use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::map::tile::TileMap;
 use rpg_tools_core::utils::storage::{Element, Storage};
 
@@ -41,20 +41,6 @@ pub fn init() -> WorldData {
         .set_name("Arkham".to_string());
     town_manager.get_mut(town_id).unwrap().map =
         TileMap::simple(Size2d::new(18, 20), TownTile::new(Terrain::Plain));
-    let mut building_manager: Storage<BuildingId, Building> = Storage::default();
-    let building_id = building_manager.create(|id| {
-        Building::new(
-            id,
-            BuildingLot {
-                town: town_id,
-                tile: 7,
-            },
-        )
-    });
-    building_manager
-        .get_mut(building_id)
-        .unwrap()
-        .set_name("Orne Library".to_string());
 
     town_manager
         .get_mut(town_id)
@@ -75,11 +61,26 @@ pub fn init() -> WorldData {
         .towns
         .insert(town_id);
 
-    WorldData {
-        building_manager,
+    let mut data = WorldData {
+        building_manager: Storage::default(),
         mountain_manager,
         river_manager,
         street_manager,
         town_manager,
-    }
+    };
+
+    let building_id = create_building(
+        &mut data,
+        BuildingLot {
+            town: town_id,
+            tile: 7,
+        },
+    )
+    .unwrap();
+    data.building_manager
+        .get_mut(building_id)
+        .unwrap()
+        .set_name("Orne Library".to_string());
+
+    data
 }
