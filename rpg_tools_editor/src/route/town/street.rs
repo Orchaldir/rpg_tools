@@ -1,7 +1,9 @@
 use crate::html::create_html;
 use crate::route::town::link_town_details;
+use crate::route::util::get_all_elements;
 use crate::svg::RawSvg;
 use crate::EditorData;
+use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -19,11 +21,33 @@ use rpg_tools_rendering::usecase::map::TileMapRenderer;
 #[get("/town/<id>/street/editor")]
 pub fn get_street_editor(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_street_creator_html(&data, TownId::new(id))
+    let tools = state.tools.lock().expect("lock shared data");
+
+    get_street_creator_html(&data, TownId::new(id), tools.selected_street)
 }
 
 pub fn link_street_creator(id: TownId) -> String {
     uri!(get_street_editor(id.id())).to_string()
+}
+
+#[derive(FromForm, Debug)]
+pub struct StreetEditorUpdate {
+    street: usize,
+}
+
+#[post("/town/<id>/street/update", data = "<update>")]
+pub fn update_street_editor(
+    state: &State<EditorData>,
+    id: usize,
+    update: Form<StreetEditorUpdate>,
+) -> Option<RawHtml<String>> {
+    println!("Update street editor {} with {:?}", id, update);
+    let data = state.data.lock().expect("lock shared data");
+    let mut tools = state.tools.lock().expect("lock shared data");
+
+    tools.selected_street = StreetId::new(update.street);
+
+    get_street_creator_html(&data, TownId::new(id), tools.selected_street)
 }
 
 #[get("/town/<id>/street/editor.svg")]
@@ -41,28 +65,43 @@ pub fn add_street_to_town(
     tile: usize,
 ) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
+    let tools = state.tools.lock().expect("lock shared data");
     let town_id = TownId::new(id);
 
-    if add_street_to_tile(&mut data, town_id, tile, StreetId::default()).is_ok() {
-        println!("Added a street to tile {} of town {}", tile, id);
+    if add_street_to_tile(&mut data, town_id, tile, tools.selected_street).is_ok() {
+        println!(
+            "Added street {} to tile {} of town {}",
+            tools.selected_street.id(),
+            tile,
+            id
+        );
     } else {
         println!("Failed to add a street to tile {} of town {}", tile, id);
     }
 
-    get_street_creator_html(&data, town_id)
+    get_street_creator_html(&data, town_id, tools.selected_street)
 }
 
 pub fn link_add_street_to_town(id: TownId, tile: usize) -> String {
     uri!(add_street_to_town(id.id(), tile)).to_string()
 }
 
-fn get_street_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_street_creator_html(
+    data: &WorldData,
+    id: TownId,
+    street_id: StreetId,
+) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_street_editor_map(id.id())).to_string();
     let back_uri = link_town_details(id);
+    let update_uri = uri!(update_street_editor(id.id())).to_string();
+    let streets = get_all_elements(&data.street_manager);
 
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
             .h1(&format!("Add Streets to Town {}", town.name()))
+            .form(&update_uri, |b| {
+                b.select_id("Street", "street", &streets, street_id.id())
+            })
             .center(|b| b.svg(&map_uri, "800"))
             .p(|b| b.link(&back_uri, "Back"));
 
