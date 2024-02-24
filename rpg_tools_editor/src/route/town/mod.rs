@@ -1,8 +1,10 @@
+pub mod building;
 pub mod tile;
 
 use crate::html::HtmlBuilder;
 use crate::route::building::link_building_details;
 use crate::route::get_all_template;
+use crate::route::town::building::link_building_creator;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
@@ -10,6 +12,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::town::construction::Construction::Building;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
@@ -92,7 +95,7 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_to_svg(&state.town_renderer, town))
+        .map(|town| render_town(&state.town_renderer, town, link_building_details))
 }
 
 fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
@@ -105,6 +108,7 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>
             .field_usize("Id:", id.id())
             .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
             .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
+            .p(|b| b.link(&link_building_creator(id), "Add Building"))
             .p(|b| b.link("/town/all", "Back"))
             .h2("Map")
             .center(|b| b.svg(&map_uri, "800"));
@@ -112,7 +116,11 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>
     })
 }
 
-fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_town<F: FnMut(BuildingId) -> String>(
+    renderer: &TileMapRenderer,
+    town: &Town,
+    mut get_link: F,
+) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
@@ -127,7 +135,7 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         if let Building { id } = tile.construction {
             let style = RenderStyle::no_border(Color::Black);
 
-            builder.link(&link_building_details(id));
+            builder.link(&get_link(id));
             builder.render_rectangle(&aabb.scale(0.5), &style);
             builder.close();
         }
