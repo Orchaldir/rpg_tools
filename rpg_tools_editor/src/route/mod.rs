@@ -26,7 +26,7 @@ pub fn get_elements<'a, ID: Id, ELEMENT: Element<ID>>(
     ids.iter().flat_map(|id| storage.get(*id)).collect()
 }
 
-pub fn get_all_template<ID: Id, ELEMENT: Element<ID>>(
+pub fn get_all_html<ID: Id, ELEMENT: Element<ID>>(
     storage: &Storage<ID, ELEMENT>,
     name: &str,
     title: &str,

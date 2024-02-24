@@ -1,5 +1,5 @@
 use crate::html::HtmlBuilder;
-use crate::route::get_all_template;
+use crate::route::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
@@ -12,7 +12,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/mountain/all")]
 pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data.mountain_manager, "mountain", "Mountains")
+    get_all_html(&data.mountain_manager, "mountain", "Mountains")
 }
 
 #[get("/mountain/new")]
@@ -23,19 +23,19 @@ pub fn add_mountain(data: &State<EditorData>) -> Option<RawHtml<String>> {
 
     println!("Create mountain {}", id.id());
 
-    get_edit_template(&data, id, "")
+    get_edit_html(&data, id, "")
 }
 
 #[get("/mountain/<id>/details")]
 pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, MountainId::new(id))
+    get_details_html(&data, MountainId::new(id))
 }
 
 #[get("/mountain/<id>/edit")]
 pub fn edit_mountain(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_template(&data, MountainId::new(id), "")
+    get_edit_html(&data, MountainId::new(id), "")
 }
 
 #[derive(FromForm, Debug)]
@@ -55,13 +55,13 @@ pub fn update_mountain(
     let mountain_id = MountainId::new(id);
 
     if let Err(e) = update_name(&mut data.mountain_manager, mountain_id, update.name) {
-        return get_edit_template(&data, mountain_id, &e.to_string());
+        return get_edit_html(&data, mountain_id, &e.to_string());
     }
 
-    get_details_template(&data, mountain_id)
+    get_details_html(&data, mountain_id)
 }
 
-fn get_details_template(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
     data.mountain_manager.get(id).map(|mountain| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Mountain: {}", mountain.name()))
@@ -74,11 +74,7 @@ fn get_details_template(data: &WorldData, id: MountainId) -> Option<RawHtml<Stri
     })
 }
 
-fn get_edit_template(
-    data: &WorldData,
-    id: MountainId,
-    name_error: &str,
-) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
     data.mountain_manager.get(id).map(|mountain| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Mountain: {}", mountain.name()))

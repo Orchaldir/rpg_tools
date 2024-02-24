@@ -1,5 +1,5 @@
 use crate::html::HtmlBuilder;
-use crate::route::get_all_template;
+use crate::route::get_all_html;
 use crate::route::town::link_town_details;
 use crate::EditorData;
 use rocket::response::content::RawHtml;
@@ -12,7 +12,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/building/all")]
 pub fn get_all_buildings(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data.building_manager, "building", "Buildings")
+    get_all_html(&data.building_manager, "building", "Buildings")
 }
 
 pub fn link_all_buildings() -> String {

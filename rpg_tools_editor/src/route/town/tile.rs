@@ -20,7 +20,7 @@ use rpg_tools_rendering::usecase::map::TileMapRenderer;
 #[get("/town/<id>/tile/all")]
 pub fn get_all_tiles(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data, TownId::new(id))
+    get_all_tiles_html(&data, TownId::new(id))
 }
 
 #[get("/town/<id>/tile/map.svg")]
@@ -34,7 +34,7 @@ pub fn get_tile_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg>
 #[get("/town/<id>/tile/<index>/edit")]
 pub fn edit_tile(state: &State<EditorData>, id: usize, index: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_template(&data, TownId::new(id), index)
+    get_edit_html(&data, TownId::new(id), index)
 }
 
 #[derive(FromForm, Debug)]
@@ -95,7 +95,7 @@ pub fn update_tile(
         }
     }
 
-    get_all_template(&data, town_id)
+    get_all_tiles_html(&data, town_id)
 }
 
 fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
@@ -114,7 +114,7 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     RawSvg::new(svg.export())
 }
 
-fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_all_tiles_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
     let back_uri = link_town_details(id);
 
@@ -128,7 +128,7 @@ fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     })
 }
 
-fn get_edit_template(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<String>> {
     data.town_manager.get(id).and_then(|town| {
         town.map
             .get_tile(index)

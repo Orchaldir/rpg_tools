@@ -3,7 +3,7 @@ pub mod tile;
 
 use crate::html::HtmlBuilder;
 use crate::route::building::link_building_details;
-use crate::route::get_all_template;
+use crate::route::get_all_html;
 use crate::route::town::building::link_building_creator;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -28,7 +28,7 @@ use rpg_tools_rendering::usecase::map::TileMapRenderer;
 #[get("/town/all")]
 pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_template(&data.town_manager, "town", "Towns")
+    get_all_html(&data.town_manager, "town", "Towns")
 }
 
 pub fn link_all_towns() -> String {
@@ -43,13 +43,13 @@ pub fn add_town(data: &State<EditorData>) -> Option<RawHtml<String>> {
 
     println!("Create town {}", id.id());
 
-    get_edit_template(&data, id, "")
+    get_edit_html(&data, id, "")
 }
 
 #[get("/town/<id>/details")]
 pub fn get_town_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, TownId::new(id))
+    get_details_html(&data, TownId::new(id))
 }
 
 pub fn link_town_details(id: TownId) -> String {
@@ -59,7 +59,7 @@ pub fn link_town_details(id: TownId) -> String {
 #[get("/town/<id>/edit")]
 pub fn edit_town(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_template(&data, TownId::new(id), "")
+    get_edit_html(&data, TownId::new(id), "")
 }
 
 #[derive(FromForm, Debug)]
@@ -81,13 +81,13 @@ pub fn update_town(
     let town_id = TownId::new(id);
 
     if let Err(e) = update_name(&mut data.town_manager, town_id, update.name) {
-        return get_edit_template(&data, town_id, &e.to_string());
+        return get_edit_html(&data, town_id, &e.to_string());
     }
     if let Err(e) = resize_town(&mut data, town_id, update.width, update.height) {
-        return get_edit_template(&data, town_id, &e.to_string());
+        return get_edit_html(&data, town_id, &e.to_string());
     }
 
-    get_details_template(&data, town_id)
+    get_details_html(&data, town_id)
 }
 
 #[get("/town/<id>/map.svg")]
@@ -98,7 +98,7 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_town(&state.town_renderer, town, link_building_details))
 }
 
-fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_details_html(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_town_map(id.id())).to_string();
 
     state.town_manager.get(id).map(|town| {
@@ -145,7 +145,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     RawSvg::new(svg.export())
 }
 
-fn get_edit_template(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Town: {}", town.name()))
