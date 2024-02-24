@@ -212,7 +212,7 @@ impl AxisAlignedBoundingBox {
         )
     }
 
-    /// Shrinks the axis aligned bounding box by a certain amount?
+    /// Scale the axis aligned bounding box by a factor.
     ///
     /// ```
     ///# use rpg_tools_core::model::math::aabb2d::AABB;
@@ -222,7 +222,7 @@ impl AxisAlignedBoundingBox {
     ///
     /// assert_eq!(aabb.scale(0.5), desired);
     /// ```
-    pub fn scale(&self, scale: f32) -> Self {
-        Self::with_center(self.center(), self.size.scale(scale, scale))
+    pub fn scale(&self, factor: f32) -> Self {
+        Self::with_center(self.center(), self.size.scale(factor, factor))
     }
 }
