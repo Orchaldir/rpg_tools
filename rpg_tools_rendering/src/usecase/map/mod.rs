@@ -32,7 +32,7 @@ impl TileMapRenderer {
         &self,
         start: &Point2d,
         map: &TileMap<Tile>,
-        mut rendering: F,
+        mut render_tile: F,
     ) {
         let size = map.get_size();
         let tile_size = Size2d::square(self.tile_size);
@@ -42,7 +42,7 @@ impl TileMapRenderer {
             for x in 0..size.width() {
                 if let Some(tile) = map.get_tile(index) {
                     let position = self.calculate_position(start, x, y);
-                    rendering(index, AABB::new(position, tile_size), tile);
+                    render_tile(index, AABB::new(position, tile_size), tile);
                 }
 
                 index += 1;

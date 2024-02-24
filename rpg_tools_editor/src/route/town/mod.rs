@@ -14,7 +14,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::world::town::construction::Construction::Building;
+use rpg_tools_core::model::world::town::construction::Construction::{Building, Street};
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -23,7 +23,7 @@ use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::LinkRenderer;
-use rpg_tools_rendering::usecase::map::town::render_building;
+use rpg_tools_rendering::usecase::map::town::{render_building, render_street};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -145,6 +145,8 @@ fn render_town<F: FnMut(BuildingId) -> String>(
             builder.link(&get_link(id));
             render_building(&mut builder, &aabb);
             builder.close();
+        } else if let Street { .. } = tile.construction {
+            render_street(&mut builder, &aabb);
         }
     });
 
