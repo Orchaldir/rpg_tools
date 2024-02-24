@@ -1,4 +1,4 @@
-use crate::html::HtmlBuilder;
+use crate::html::editor;
 use crate::route::get_all_elements;
 use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
@@ -119,7 +119,7 @@ fn get_all_tiles_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
-        let builder = HtmlBuilder::editor()
+        let builder = editor()
             .h1(&format!("Edit Terrain of Town {}", town.name()))
             .center(|b| b.svg(&map_uri, "800"))
             .p(|b| b.link(&back_uri, "Back"));
@@ -147,7 +147,7 @@ fn get_form_html(
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
 
-    let builder = HtmlBuilder::editor()
+    let builder = editor()
         .h1(&format!("Edit Town Tile {} of {}", index, town.name()))
         .form(&format!("/town/{}/tile/{}", id.id(), index), |mut b| {
             let terrain = match tile.terrain {

@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
-use crate::html::HtmlBuilder;
+use crate::html::{editor, EditorBuilder};
 use crate::init::init;
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, link_all_buildings, update_building,
@@ -23,9 +23,7 @@ use crate::route::town::{
 use rocket::fs::FileServer;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::WorldData;
-use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 use std::sync::Mutex;
 
@@ -39,49 +37,12 @@ pub struct EditorData {
     town_renderer: TileMapRenderer,
 }
 
-impl HtmlBuilder {
-    pub fn editor() -> Self {
-        Self::new("RPG Tools - Editor")
-    }
-
-    pub fn complex_field<F: FnOnce(Self) -> Self>(self, name: &str, f: F) -> Self {
-        self.p(|builder| f(builder.bold(name)))
-    }
-
-    pub fn field(self, name: &str, value: &str) -> Self {
-        self.complex_field(name, |b| b.text(value))
-    }
-
-    pub fn field_usize(self, name: &str, value: usize) -> Self {
-        self.complex_field(name, |b| b.usize(value))
-    }
-
-    pub fn field_size2d(self, name: &str, size: &Size2d) -> Self {
-        self.complex_field(name, |b| {
-            b.text(&format!("{} x {}", size.width(), size.height()))
-        })
-    }
-
-    pub fn add_storage_link<ID: Id, ELEMENT: Element<ID>>(
-        self,
-        title: &str,
-        link: &str,
-        storage: &Storage<ID, ELEMENT>,
-    ) -> Self {
-        self.p(|builder| {
-            builder
-                .bold(title)
-                .complex_link(link, |a| a.usize(storage.get_all().len()))
-        })
-    }
-}
-
 #[get("/")]
 fn hello(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
 
     RawHtml(
-        HtmlBuilder::editor()
+        editor()
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)

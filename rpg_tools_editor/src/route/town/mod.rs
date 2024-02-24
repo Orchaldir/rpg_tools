@@ -1,7 +1,7 @@
 pub mod building;
 pub mod tile;
 
-use crate::html::HtmlBuilder;
+use crate::html::editor;
 use crate::route::building::link_building_details;
 use crate::route::get_all_html;
 use crate::route::town::building::link_building_creator;
@@ -102,7 +102,7 @@ fn get_details_html(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_town_map(id.id())).to_string();
 
     state.town_manager.get(id).map(|town| {
-        let builder = HtmlBuilder::editor()
+        let builder = editor()
             .h1(&format!("Town: {}", town.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
@@ -147,7 +147,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
 fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     data.town_manager.get(id).map(|town| {
-        let builder = HtmlBuilder::editor()
+        let builder = editor()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/town/{}", id.id()), |b| {

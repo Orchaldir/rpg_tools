@@ -1,4 +1,4 @@
-use crate::html::HtmlBuilder;
+use crate::html::editor;
 use rocket::response::content::RawHtml;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use std::collections::HashSet;
@@ -32,7 +32,7 @@ pub fn get_all_html<ID: Id, ELEMENT: Element<ID>>(
     title: &str,
 ) -> RawHtml<String> {
     RawHtml(
-        HtmlBuilder::editor()
+        editor()
             .h1(title)
             .field("Count:", &storage.get_all().len().to_string())
             .list(storage.get_all(), |b, e| {

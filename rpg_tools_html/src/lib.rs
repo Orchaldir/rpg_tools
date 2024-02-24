@@ -220,4 +220,16 @@ impl HtmlBuilder {
         )
         .close_tag()
     }
+
+    pub fn complex_field<F: FnOnce(Self) -> Self>(self, name: &str, f: F) -> Self {
+        self.p(|builder| f(builder.bold(name)))
+    }
+
+    pub fn field(self, name: &str, value: &str) -> Self {
+        self.complex_field(name, |b| b.text(value))
+    }
+
+    pub fn field_usize(self, name: &str, value: usize) -> Self {
+        self.complex_field(name, |b| b.usize(value))
+    }
 }

@@ -1,4 +1,4 @@
-use crate::html::HtmlBuilder;
+use crate::html::editor;
 use crate::route::town::link_town_details;
 use crate::route::{get_all_html, get_elements};
 use crate::EditorData;
@@ -66,7 +66,7 @@ fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
     data.street_manager.get(id).map(|street| {
         let towns = get_elements(&data.town_manager, &street.towns);
 
-        let builder = HtmlBuilder::editor()
+        let builder = editor()
             .h1(&format!("Street: {}", street.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
@@ -83,7 +83,7 @@ fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
 
 fn get_edit_html(data: &WorldData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
     data.street_manager.get(id).map(|street| {
-        let builder = HtmlBuilder::editor()
+        let builder = editor()
             .h1(&format!("Edit Street: {}", street.name()))
             .field_usize("Id:", id.id())
             .form(&format!("/street/{}", id.id()), |b| {
