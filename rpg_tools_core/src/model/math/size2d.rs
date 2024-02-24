@@ -74,14 +74,14 @@ impl Size2d {
         self.height
     }
 
-    /// Returns the number of cells covered by this size.
+    /// Returns the number of tiles covered by this size.
     ///
     /// ```
     ///# use rpg_tools_core::model::math::size2d::Size2d;
     /// let size = Size2d::new(2, 3);
-    /// assert_eq!(size.len(), 6);
+    /// assert_eq!(size.tiles(), 6);
     /// ```
-    pub fn len(&self) -> usize {
+    pub fn tiles(&self) -> usize {
         (self.width * self.height) as usize
     }
 

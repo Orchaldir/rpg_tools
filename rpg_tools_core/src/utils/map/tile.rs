@@ -13,14 +13,14 @@ pub struct TileMap<Tile> {
 impl<Tile: Clone> TileMap<Tile> {
     /// Creates an edge map with the default tile & edge.
     pub fn simple(size: Size2d, tile: Tile) -> TileMap<Tile> {
-        let tiles = vec![tile; size.len()];
+        let tiles = vec![tile; size.tiles()];
 
         Self::new(size, tiles).unwrap()
     }
 
     /// Creates an edge map.
     pub fn new(size: Size2d, tiles: Vec<Tile>) -> Result<TileMap<Tile>> {
-        if size.len() != tiles.len() {
+        if size.tiles() != tiles.len() {
             bail!("Tiles don't match size")
         }
 
