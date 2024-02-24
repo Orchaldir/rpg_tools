@@ -11,7 +11,7 @@ use crate::route::river::{add_river, edit_river, get_all_rivers, get_river_detai
 use crate::route::street::{
     add_street, edit_street, get_all_streets, get_street_details, update_street,
 };
-use crate::route::town::building::{get_building_creator, get_building_creator_map};
+use crate::route::town::building::{add_building, get_building_creator, get_building_creator_map};
 use crate::route::town::tile::{
     edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
 };
@@ -133,6 +133,7 @@ fn rocket() -> _ {
                 get_building_details,
                 get_building_creator,
                 get_building_creator_map,
+                add_building,
             ],
         )
 }

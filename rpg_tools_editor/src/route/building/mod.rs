@@ -22,14 +22,14 @@ pub fn link_all_buildings() -> String {
 #[get("/building/<id>/details")]
 pub fn get_building_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_details_template(&data, BuildingId::new(id))
+    get_building_details_html(&data, BuildingId::new(id))
 }
 
 pub fn link_building_details(id: BuildingId) -> String {
     uri!(get_building_details(id.id())).to_string()
 }
 
-fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
+pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
         let mut builder = HtmlBuilder::editor()
             .h1(&format!("Building: {}", building.name()))
