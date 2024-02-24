@@ -58,7 +58,7 @@ pub fn preview_tile(
 
     data.town_manager
         .get(town_id)
-        .map(|town| get_form_template(&data, town_id, index, town, &tile))
+        .map(|town| get_form_html(&data, town_id, index, town, &tile))
 }
 
 fn parse_tile(update: Form<TileUpdate>) -> TownTile {
@@ -132,11 +132,11 @@ fn get_edit_html(data: &WorldData, id: TownId, index: usize) -> Option<RawHtml<S
     data.town_manager.get(id).and_then(|town| {
         town.map
             .get_tile(index)
-            .map(|tile| get_form_template(data, id, index, town, tile))
+            .map(|tile| get_form_html(data, id, index, town, tile))
     })
 }
 
-fn get_form_template(
+fn get_form_html(
     data: &WorldData,
     id: TownId,
     index: usize,
