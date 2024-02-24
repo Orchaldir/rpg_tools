@@ -114,7 +114,7 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
 }
 
 fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
-    let map_uri = uri!(get_tile_edit_map(id = id.id())).to_string();
+    let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()

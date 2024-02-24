@@ -1,6 +1,7 @@
 pub mod tile;
 
 use crate::html::HtmlBuilder;
+use crate::route::building::link_building_details;
 use crate::route::get_all_template;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -18,7 +19,7 @@ use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::Renderer;
+use rpg_tools_rendering::renderer::{LinkRenderer, Renderer};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -86,7 +87,7 @@ pub fn update_town(
     get_details_template(&data, town_id)
 }
 
-#[get("/town/<id>/map/map.svg")]
+#[get("/town/<id>/map.svg")]
 pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
@@ -95,6 +96,8 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
 }
 
 fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+    let map_uri = uri!(get_town_map(id.id())).to_string();
+
     state.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Town: {}", town.name()))
@@ -104,8 +107,7 @@ fn get_details_template(state: &WorldData, id: TownId) -> Option<RawHtml<String>
             .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
             .p(|b| b.link("/town/all", "Back"))
             .h2("Map")
-            .center(|b| b.image(&format!("/town/{}/map/map.svg", id.id()), "Town Map", "75%"));
-
+            .center(|b| b.svg(&map_uri, "800"));
         RawHtml(builder.finish())
     })
 }
@@ -122,9 +124,12 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     );
 
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Building { .. } = tile.construction {
+        if let Building { id } = tile.construction {
             let style = RenderStyle::no_border(Color::Black);
+
+            builder.link(&link_building_details(id));
             builder.render_rectangle(&aabb.scale(0.5), &style);
+            builder.close();
         }
     });
 

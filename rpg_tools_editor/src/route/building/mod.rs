@@ -25,6 +25,10 @@ pub fn get_building_details(state: &State<EditorData>, id: usize) -> Option<RawH
     get_details_template(&data, BuildingId::new(id))
 }
 
+pub fn link_building_details(id: BuildingId) -> String {
+    uri!(get_building_details(id.id())).to_string()
+}
+
 fn get_details_template(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
         let mut builder = HtmlBuilder::editor()
