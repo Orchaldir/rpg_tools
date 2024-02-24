@@ -32,9 +32,12 @@ pub fn add_street_to_tile(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::world::building::lot::BuildingLot;
     use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
+    use crate::usecase::create::building::create_building;
+    use crate::usecase::get::town::is_construction;
 
     #[test]
     fn create_successful() {
@@ -43,10 +46,12 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
-        assert_eq!(
-            get_construction(&data, town_id, 0).unwrap(),
-            &Construction::Street { id: street_id }
-        );
+        assert!(is_construction(
+            &data,
+            town_id,
+            0,
+            Construction::Street { id: street_id }
+        ));
     }
 
     #[test]
@@ -64,6 +69,23 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 10, street_id).is_err());
+        assert!(is_construction(&data, town_id, 0, Construction::None));
+    }
+
+    #[test]
+    fn occupied_by_building() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let street_id = data.street_manager.create(Street::new);
+        let building_id = create_building(&mut data, BuildingLot::new(town_id, 0)).unwrap();
+
+        assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+        assert!(is_construction(
+            &data,
+            town_id,
+            0,
+            Construction::Building { id: building_id }
+        ));
     }
 
     #[test]
@@ -74,14 +96,5 @@ mod tests {
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
-    }
-
-    fn get_construction(data: &WorldData, town_id: TownId, tile: usize) -> Option<&Construction> {
-        data.town_manager
-            .get(town_id)
-            .unwrap()
-            .map
-            .get_tile(tile)
-            .map(|tile| &tile.construction)
     }
 }
