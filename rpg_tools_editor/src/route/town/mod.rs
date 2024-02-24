@@ -5,6 +5,7 @@ pub mod tile;
 use crate::html::create_html;
 use crate::route::building::link_building_details;
 use crate::route::town::building::link_building_creator;
+use crate::route::town::street::link_street_creator;
 use crate::route::util::get_all_html;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -116,6 +117,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
             .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
             .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
             .p(|b| b.link(&link_building_creator(id), "Add Building"))
+            .p(|b| b.link(&link_street_creator(id), "Add Streets"))
             .p(|b| b.link("/town/all", "Back"))
             .h2("Map")
             .center(|b| b.svg(&map_uri, "800"));

@@ -33,7 +33,11 @@ pub fn get_street_editor_map(state: &State<EditorData>, id: usize) -> Option<Raw
 }
 
 #[get("/town/<id>/street/add/<tile>")]
-pub fn add_street(state: &State<EditorData>, id: usize, tile: usize) -> Option<RawHtml<String>> {
+pub fn add_street_to_town(
+    state: &State<EditorData>,
+    id: usize,
+    tile: usize,
+) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
 
     println!("Add street to tile {} of town {}", tile, id);
@@ -41,12 +45,12 @@ pub fn add_street(state: &State<EditorData>, id: usize, tile: usize) -> Option<R
     get_street_editor(state, id)
 }
 
-pub fn link_add_street(id: TownId, tile: usize) -> String {
-    uri!(add_street(id.id(), tile)).to_string()
+pub fn link_add_street_to_town(id: TownId, tile: usize) -> String {
+    uri!(add_street_to_town(id.id(), tile)).to_string()
 }
 
 fn get_street_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
-    let map_uri = uri!(get_street_editor(id.id())).to_string();
+    let map_uri = uri!(get_street_editor_map(id.id())).to_string();
     let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
@@ -70,7 +74,7 @@ fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         TownTile::get_color,
         |index, tile| {
             if tile.construction == Construction::None {
-                Some(link_add_street(town.id(), index))
+                Some(link_add_street_to_town(town.id(), index))
             } else {
                 None
             }
