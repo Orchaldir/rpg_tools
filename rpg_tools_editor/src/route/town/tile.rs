@@ -1,5 +1,6 @@
 use crate::html::HtmlBuilder;
 use crate::route::get_all_elements;
+use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
@@ -115,12 +116,13 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
 
 fn get_all_template(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
+    let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
         let builder = HtmlBuilder::editor()
             .h1(&format!("Edit Terrain of Town {}", town.name()))
             .center(|b| b.svg(&map_uri, "800"))
-            .p(|b| b.link(&format!("/town/{}/details", id.id()), "Back"));
+            .p(|b| b.link(&back_uri, "Back"));
 
         RawHtml(builder.finish())
     })
