@@ -5,10 +5,12 @@ use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::usecase::create::street::add_street_to_tile;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::town::render_buildings;
@@ -41,7 +43,11 @@ pub fn add_street_to_town(
     let mut data = state.data.lock().expect("lock shared data");
     let town_id = TownId::new(id);
 
-    println!("Add street to tile {} of town {}", tile, id);
+    if add_street_to_tile(&mut data, town_id, tile, StreetId::default()).is_ok() {
+        println!("Added a street to tile {} of town {}", tile, id);
+    } else {
+        println!("Failed to add a street to tile {} of town {}", tile, id);
+    }
 
     get_street_creator_html(&data, town_id)
 }
