@@ -1,11 +1,12 @@
 #[macro_use]
 extern crate rocket;
 
-use crate::html::{create_html, EditorBuilder};
+use crate::html::EditorBuilder;
 use crate::init::init;
 use crate::route::building::{
-    edit_building, get_all_buildings, get_building_details, link_all_buildings, update_building,
+    edit_building, get_all_buildings, get_building_details, update_building,
 };
+use crate::route::home;
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
@@ -14,16 +15,13 @@ use crate::route::street::{
     add_street, edit_street, get_all_streets, get_street_details, update_street,
 };
 use crate::route::town::building::{add_building, get_building_creator, get_building_creator_map};
-use crate::route::town::street::{get_street_editor, get_street_editor_map};
 use crate::route::town::tile::{
     edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
 };
 use crate::route::town::{
-    add_town, edit_town, get_all_towns, get_town_details, get_town_map, link_all_towns, update_town,
+    add_town, edit_town, get_all_towns, get_town_details, get_town_map, update_town,
 };
 use rocket::fs::FileServer;
-use rocket::response::content::RawHtml;
-use rocket::State;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 use std::sync::Mutex;
@@ -36,23 +34,6 @@ mod svg;
 pub struct EditorData {
     data: Mutex<WorldData>,
     town_renderer: TileMapRenderer,
-}
-
-#[get("/")]
-fn home(state: &State<EditorData>) -> RawHtml<String> {
-    let data = state.data.lock().expect("lock shared data");
-
-    RawHtml(
-        create_html()
-            .h1("RPG Tools - Editor")
-            .h2("Overview")
-            .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)
-            .add_storage_link("Mountains:", "/mountain/all", &data.mountain_manager)
-            .add_storage_link("Rivers:", "/river/all", &data.river_manager)
-            .add_storage_link("Streets:", "/street/all", &data.street_manager)
-            .add_storage_link("Towns:", &link_all_towns(), &data.town_manager)
-            .finish(),
-    )
 }
 
 #[launch]
