@@ -1,6 +1,6 @@
-use crate::html::form::FormBuilder;
-
 pub mod form;
+
+use crate::form::FormBuilder;
 
 pub struct HtmlBuilder {
     lines: Vec<String>,
