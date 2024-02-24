@@ -8,6 +8,7 @@ use rocket::State;
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::lot::BuildingLot;
+use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::construction::Construction::Building;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
@@ -81,7 +82,13 @@ fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
-        |index, _tile| link_add_building(town.id(), index),
+        |index, tile| {
+            if tile.construction == Construction::None {
+                Some(link_add_building(town.id(), index))
+            } else {
+                None
+            }
+        },
     );
 
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {

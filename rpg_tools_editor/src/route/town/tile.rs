@@ -107,7 +107,7 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
-        |index, _tile| uri!(edit_tile(town.id().id(), index)).to_string(),
+        |index, _tile| Some(uri!(edit_tile(town.id().id(), index)).to_string()),
     );
 
     let svg = builder.finish();

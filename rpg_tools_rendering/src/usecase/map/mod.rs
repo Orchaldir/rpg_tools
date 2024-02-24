@@ -65,7 +65,7 @@ impl TileMapRenderer {
     pub fn render_tiles_with_link<
         Tile: Clone,
         C: Fn(&Tile) -> Color,
-        L: Fn(usize, &Tile) -> String,
+        L: Fn(usize, &Tile) -> Option<String>,
     >(
         &self,
         renderer: &mut dyn LinkRenderer,
@@ -76,12 +76,15 @@ impl TileMapRenderer {
     ) {
         self.render(start, map, |index, aabb, tile| {
             let color = color_lookup(tile);
-            let link = link_lookup(index, tile);
             let style = RenderStyle::with_border(color, Color::Black, self.border_size);
 
-            renderer.link(&link);
-            renderer.render_rectangle(&aabb, &style);
-            renderer.close();
+            if let Some(link) = link_lookup(index, tile) {
+                renderer.link(&link);
+                renderer.render_rectangle(&aabb, &style);
+                renderer.close();
+            } else {
+                renderer.render_rectangle(&aabb, &style);
+            }
         });
     }
 
