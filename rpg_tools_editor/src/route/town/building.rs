@@ -1,5 +1,4 @@
 use crate::html::create_html;
-use crate::route::building::get_building_details_html;
 use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -47,7 +46,14 @@ pub fn add_building(state: &State<EditorData>, id: usize, tile: usize) -> Option
             tile,
         },
     ) {
-        return get_building_details_html(&data, building_id);
+        println!(
+            "Added building {} to tile {} of town {}",
+            building_id.id(),
+            tile,
+            id
+        );
+    } else {
+        println!("Failed to add a building to tile {} of town {}", tile, id);
     }
 
     get_building_creator_html(&data, town_id)
