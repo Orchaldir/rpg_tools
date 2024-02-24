@@ -197,13 +197,12 @@ impl HtmlBuilder {
         submit: &str,
         f: F,
     ) -> Self {
-        self = self.open_tag_with_3_attributes(
-            "form", "id", "editor", "action", &update, "method", "post",
-        );
+        self = self
+            .open_tag_with_3_attributes("form", "id", "editor", "action", update, "method", "post");
 
         f(FormBuilder::new(self))
             .finish()
-            .open_tag_with_2_attributes("button", "formaction", &submit, "formmethod", "post")
+            .open_tag_with_2_attributes("button", "formaction", submit, "formmethod", "post")
             .text("Submit")
             .close_tag()
             .close_tag()
