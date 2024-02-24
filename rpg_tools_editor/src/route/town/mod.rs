@@ -98,14 +98,21 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_town(&state.town_renderer, town, link_building_details))
 }
 
-fn get_details_html(state: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+    let buildings = data
+        .building_manager
+        .get_all()
+        .iter()
+        .filter(|&building| building.lot().town.eq(&id))
+        .count();
     let map_uri = uri!(get_town_map(id.id())).to_string();
 
-    state.town_manager.get(id).map(|town| {
+    data.town_manager.get(id).map(|town| {
         let builder = create_html()
             .h1(&format!("Town: {}", town.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
+            .field_usize("Buildings:", buildings)
             .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
             .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
             .p(|b| b.link(&link_building_creator(id), "Add Building"))
