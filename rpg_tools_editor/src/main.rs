@@ -3,7 +3,9 @@ extern crate rocket;
 
 use crate::html::HtmlBuilder;
 use crate::init::init;
-use crate::route::building::{get_all_buildings, get_building_details, link_all_buildings};
+use crate::route::building::{
+    edit_building, get_all_buildings, get_building_details, link_all_buildings, update_building,
+};
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, update_mountain,
 };
@@ -134,6 +136,8 @@ fn rocket() -> _ {
                 get_building_creator,
                 get_building_creator_map,
                 add_building,
+                edit_building,
+                update_building
             ],
         )
 }
