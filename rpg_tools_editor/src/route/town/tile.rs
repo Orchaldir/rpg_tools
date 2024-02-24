@@ -1,6 +1,6 @@
 use crate::html::create_html;
-use crate::route::get_all_elements;
 use crate::route::town::link_town_details;
+use crate::route::util::get_all_elements;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
@@ -146,10 +146,12 @@ fn get_form_html(
     let back_uri = uri!(get_all_tiles(id = id.id())).to_string();
     let mountains = get_all_elements(&data.mountain_manager);
     let rivers = get_all_elements(&data.river_manager);
+    let preview = uri!(preview_tile(id.id(), index)).to_string();
+    let submit = uri!(update_tile(id.id(), index)).to_string();
 
     let builder = create_html()
         .h1(&format!("Edit Town Tile {} of {}", index, town.name()))
-        .form(&format!("/town/{}/tile/{}", id.id(), index), |mut b| {
+        .form_with_change(&preview, &submit, |mut b| {
             let terrain = match tile.terrain {
                 Terrain::Hill { .. } => "Hill",
                 Terrain::Mountain { .. } => "Mountain",

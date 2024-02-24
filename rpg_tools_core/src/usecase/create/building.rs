@@ -5,7 +5,7 @@ use crate::model::world::WorldData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
-/// Tries to a [`building`](Building).
+/// Tries to add a [`building`](Building) to a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<BuildingId> {
     if let Some(town) = data.town_manager.get_mut(lot.town) {
         if let Some(tile) = town.map.get_tile_mut(lot.tile) {
@@ -28,8 +28,11 @@ pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<Buildin
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
+    use crate::usecase::create::street::add_street_to_tile;
+    use crate::usecase::get::town::{is_building, is_street};
 
     #[test]
     fn create_successful() {
@@ -64,14 +67,26 @@ mod tests {
         let town_id = data.town_manager.create(Town::new);
         let id = create_building(&mut data, create_lot(0)).unwrap();
 
+        assert!(create_building(&mut data, create_lot(0)).is_err());
+
         assert_first_building(&data, town_id, id);
     }
 
+    #[test]
+    fn occupied_by_street() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let street_id = data.street_manager.create(Street::new);
+
+        assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
+        assert!(create_building(&mut data, create_lot(0)).is_err());
+
+        assert!(data.building_manager.get_all().is_empty());
+        assert!(is_street(&data, town_id, 0, street_id));
+    }
+
     fn create_lot(tile: usize) -> BuildingLot {
-        BuildingLot {
-            town: TownId::default(),
-            tile,
-        }
+        BuildingLot::new(TownId::default(), tile)
     }
 
     fn assert_first_building(data: &WorldData, town_id: TownId, id: BuildingId) {
@@ -80,15 +95,6 @@ mod tests {
             data.building_manager.get(id).unwrap(),
             &Building::new(id, create_lot(0))
         );
-        assert_eq!(
-            data.town_manager
-                .get(town_id)
-                .unwrap()
-                .map
-                .get_tile(0)
-                .unwrap()
-                .construction,
-            Construction::Building { id }
-        );
+        assert!(is_building(&data, town_id, 0, id));
     }
 }

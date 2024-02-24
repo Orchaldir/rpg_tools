@@ -1,23 +1,19 @@
 use crate::html::create_html;
-use crate::route::building::get_building_details_html;
 use crate::route::town::link_town_details;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::lot::BuildingLot;
 use rpg_tools_core::model::world::town::construction::Construction;
-use rpg_tools_core::model::world::town::construction::Construction::Building;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::storage::{Element, Id};
-use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::Renderer;
+use rpg_tools_rendering::usecase::map::town::render_constructions;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/building/creator")]
@@ -41,18 +37,20 @@ pub fn get_building_creator_map(state: &State<EditorData>, id: usize) -> Option<
 #[get("/town/<id>/building/add/<tile>")]
 pub fn add_building(state: &State<EditorData>, id: usize, tile: usize) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
+    let town_id = TownId::new(id);
 
-    if let Ok(building_id) = create_building(
-        &mut data,
-        BuildingLot {
-            town: TownId::new(id),
+    if let Ok(building_id) = create_building(&mut data, BuildingLot::new(town_id, tile)) {
+        println!(
+            "Added building {} to tile {} of town {}",
+            building_id.id(),
             tile,
-        },
-    ) {
-        return get_building_details_html(&data, building_id);
+            id
+        );
+    } else {
+        println!("Failed to add a building to tile {} of town {}", tile, id);
     }
 
-    get_building_creator(state, id)
+    get_building_creator_html(&data, town_id)
 }
 
 pub fn link_add_building(id: TownId, tile: usize) -> String {
@@ -91,12 +89,7 @@ fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         },
     );
 
-    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Building { .. } = tile.construction {
-            let style = RenderStyle::no_border(Color::Black);
-            builder.render_rectangle(&aabb.scale(0.5), &style);
-        }
-    });
+    render_constructions(&mut builder, renderer, town);
 
     let svg = builder.finish();
     RawSvg::new(svg.export())

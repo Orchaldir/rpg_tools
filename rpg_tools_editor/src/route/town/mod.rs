@@ -1,28 +1,29 @@
 pub mod building;
+pub mod street;
 pub mod tile;
 
 use crate::html::create_html;
 use crate::route::building::link_building_details;
-use crate::route::get_all_html;
 use crate::route::town::building::link_building_creator;
+use crate::route::town::street::link_street_creator;
+use crate::route::util::get_all_html;
 use crate::svg::RawSvg;
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::world::town::construction::Construction::Building;
+use rpg_tools_core::model::world::town::construction::Construction::{Building, Street};
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
-use rpg_tools_rendering::renderer::style::RenderStyle;
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::{LinkRenderer, Renderer};
+use rpg_tools_rendering::renderer::LinkRenderer;
+use rpg_tools_rendering::usecase::map::town::{render_building, render_street};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -115,7 +116,8 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
             .field_usize("Buildings:", buildings)
             .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
             .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
-            .p(|b| b.link(&link_building_creator(id), "Add Building"))
+            .p(|b| b.link(&link_building_creator(id), "Add Buildings"))
+            .p(|b| b.link(&link_street_creator(id), "Add Streets"))
             .p(|b| b.link("/town/all", "Back"))
             .h2("Map")
             .center(|b| b.svg(&map_uri, "800"));
@@ -140,11 +142,11 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
         if let Building { id } = tile.construction {
-            let style = RenderStyle::no_border(Color::Black);
-
             builder.link(&get_link(id));
-            builder.render_rectangle(&aabb.scale(0.5), &style);
+            render_building(&mut builder, &aabb);
             builder.close();
+        } else if let Street { .. } = tile.construction {
+            render_street(&mut builder, &aabb);
         }
     });
 
@@ -153,11 +155,13 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 }
 
 fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
+    let submit = uri!(update_town(id.id())).to_string();
+
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
-            .form(&format!("/town/{}", id.id()), |b| {
+            .form(&submit, |b| {
                 b.text_input("Name", "name", town.name())
                     .error(name_error)
                     .number_input(
