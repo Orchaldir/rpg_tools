@@ -38,18 +38,19 @@ pub fn get_building_creator_map(state: &State<EditorData>, id: usize) -> Option<
 #[get("/town/<id>/building/add/<tile>")]
 pub fn add_building(state: &State<EditorData>, id: usize, tile: usize) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
+    let town_id = TownId::new(id);
 
     if let Ok(building_id) = create_building(
         &mut data,
         BuildingLot {
-            town: TownId::new(id),
+            town: town_id,
             tile,
         },
     ) {
         return get_building_details_html(&data, building_id);
     }
 
-    get_building_creator(state, id)
+    get_building_creator_html(&data, town_id)
 }
 
 pub fn link_add_building(id: TownId, tile: usize) -> String {

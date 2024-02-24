@@ -39,10 +39,11 @@ pub fn add_street_to_town(
     tile: usize,
 ) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
+    let town_id = TownId::new(id);
 
     println!("Add street to tile {} of town {}", tile, id);
 
-    get_street_editor(state, id)
+    get_street_creator_html(&data, town_id)
 }
 
 pub fn link_add_street_to_town(id: TownId, tile: usize) -> String {
