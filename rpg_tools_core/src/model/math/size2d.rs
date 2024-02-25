@@ -29,16 +29,16 @@ use std::ops::{Div, Mul, Sub};
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Size2d {
-    width: u32,
-    height: u32,
+    width: i32,
+    height: i32,
 }
 
 impl Size2d {
     /// Returns a new size.
     pub fn new(width: u32, height: u32) -> Self {
         Size2d {
-            width: width.max(1),
-            height: height.max(1),
+            width: width.max(1) as i32,
+            height: height.max(1) as i32,
         }
     }
 
@@ -59,7 +59,7 @@ impl Size2d {
     /// let size = Size2d::new(2, 3);
     /// assert_eq!(size.width(), 2);
     /// ```
-    pub fn width(&self) -> u32 {
+    pub fn width(&self) -> i32 {
         self.width
     }
 
@@ -70,7 +70,7 @@ impl Size2d {
     /// let size = Size2d::new(2, 3);
     /// assert_eq!(size.height(), 3);
     /// ```
-    pub fn height(&self) -> u32 {
+    pub fn height(&self) -> i32 {
         self.height
     }
 
@@ -94,8 +94,8 @@ impl Size2d {
     /// assert!(size.is_inside(1, 2));
     /// assert!(!size.is_inside(4, 5));
     /// ```
-    pub fn is_inside(&self, x: u32, y: u32) -> bool {
-        x < self.width && y < self.height
+    pub fn is_inside(&self, x: i32, y: i32) -> bool {
+        x >= 0 && x < self.width && y >= 0 && y < self.height
     }
 
     /// Converts an index to the x-coordinate of the equivalent [`Point`].
@@ -128,8 +128,10 @@ impl Size2d {
     ///
     /// assert_eq!(size.to_index(1, 2), Some(5));
     /// assert_eq!(size.to_index(4, 5), None);
+    /// assert_eq!(size.to_index(-1, 0), None);
+    /// assert_eq!(size.to_index(0, -1), None);
     /// ```
-    pub fn to_index(&self, x: u32, y: u32) -> Option<usize> {
+    pub fn to_index(&self, x: i32, y: i32) -> Option<usize> {
         if self.is_inside(x, y) {
             return Some(self.to_index_risky(x, y));
         }
@@ -144,7 +146,7 @@ impl Size2d {
     /// let size = Size2d::new(2, 3);
     /// assert_eq!(size.to_index_risky(1, 2), 5);
     /// ```
-    pub fn to_index_risky(&self, x: u32, y: u32) -> usize {
+    pub fn to_index_risky(&self, x: i32, y: i32) -> usize {
         (y * self.width + x) as usize
     }
 
@@ -166,7 +168,10 @@ impl Sub<Size2d> for Size2d {
     type Output = Self;
 
     fn sub(self, other: Size2d) -> Self::Output {
-        Size2d::new(self.width - other.width(), self.height - other.height)
+        Size2d::new(
+            (self.width - other.width()) as u32,
+            (self.height - other.height) as u32,
+        )
     }
 }
 

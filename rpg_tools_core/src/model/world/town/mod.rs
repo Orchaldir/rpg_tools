@@ -54,7 +54,7 @@ impl Town {
                 if let Some(tile) = self
                     .map
                     .get_size()
-                    .to_index(x as u32, y as u32)
+                    .to_index(x, y)
                     .and_then(|index| self.map.get_tile_mut(index))
                 {
                     if tile.construction != Construction::None {
@@ -79,7 +79,7 @@ impl Town {
                 if let Some(tile) = self
                     .map
                     .get_size()
-                    .to_index(x as u32, y as u32)
+                    .to_index(x, y)
                     .and_then(|index| self.map.get_tile(index))
                 {
                     if !tile.construction.eq(&construction) {

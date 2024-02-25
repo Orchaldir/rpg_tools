@@ -94,8 +94,8 @@ impl TileMapRenderer {
         });
     }
 
-    pub fn calculate_tile_position(&self, start: &Point2d, x: u32, y: u32) -> Point2d {
-        *start + Point2d::new((x * self.tile_size) as i32, (y * self.tile_size) as i32)
+    pub fn calculate_tile_position(&self, start: &Point2d, x: i32, y: i32) -> Point2d {
+        *start + Point2d::new(x * self.tile_size as i32, y * self.tile_size as i32)
     }
 
     pub fn calculate_index_position(

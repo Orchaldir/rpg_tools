@@ -159,10 +159,10 @@ impl AxisAlignedBoundingBox {
     /// assert_eq!(AABB::simple(100, 100, 6, 8).inner_radius(), 3);
     /// ```
     pub fn inner_radius(&self) -> u32 {
-        self.size.width().min(self.size.height()) / 2
+        self.size.width().min(self.size.height()) as u32 / 2
     }
 
-    /// Is the [`Point2d`] inside?
+    /// Is the [`point`](Point2d) inside?
     ///
     /// ```
     ///# use rpg_tools_core::model::math::aabb2d::AxisAlignedBoundingBox;
