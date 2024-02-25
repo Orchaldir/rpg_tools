@@ -41,6 +41,31 @@ impl Town {
         }
     }
 
+    pub fn set_lot_construction(&mut self, lot: &BuildingLot, construction: Construction) -> bool {
+        let start_x = self.map.get_size().to_x(lot.tile);
+        let start_y = self.map.get_size().to_y(lot.tile);
+
+        for y in start_y..(start_y + lot.size.height() as i32) {
+            for x in start_x..(start_x + lot.size.height() as i32) {
+                if let Some(tile) = self
+                    .map
+                    .get_size()
+                    .to_index(x as u32, y as u32)
+                    .and_then(|index| self.map.get_tile_mut(index))
+                {
+                    if tile.construction != Construction::None {
+                        return false;
+                    }
+
+                    tile.construction = construction.clone();
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     pub fn is_lot_construction(&self, lot: &BuildingLot, construction: Construction) -> bool {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
@@ -62,6 +87,10 @@ impl Town {
             }
         }
         return true;
+    }
+
+    pub fn is_lot_free(&self, lot: &BuildingLot) -> bool {
+        self.is_lot_construction(lot, Construction::None)
     }
 }
 

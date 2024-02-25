@@ -8,18 +8,29 @@ use anyhow::{bail, Result};
 /// Tries to add a [`building`](Building) to a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn create_building(data: &mut WorldData, lot: BuildingLot) -> Result<BuildingId> {
     if let Some(town) = data.town_manager.get_mut(lot.town) {
-        if let Some(tile) = town.map.get_tile_mut(lot.tile) {
-            if tile.construction == Construction::None {
-                let id = data.building_manager.create(|id| Building::new(id, lot));
-                tile.construction = Construction::Building { id };
+        if town.is_lot_free(&lot) {
+            let id = data
+                .building_manager
+                .create(|id| Building::new(id, lot.clone()));
+            let construction = Construction::Building { id };
 
+            if town.set_lot_construction(&lot, construction) {
                 return Ok(id);
             }
-        } else {
-            bail!("Tile {} is outside town {}!", lot.tile, town.name());
-        }
 
-        bail!("Tile {} in town {} is occupied!", lot.tile, town.name(),);
+            panic!(
+                "Created building {}, but couldn't set construction of lot!",
+                id.id()
+            )
+        } else {
+            bail!(
+                "Lot with tile={} & size={}x{} is outside town {}!",
+                lot.tile,
+                lot.size.width(),
+                lot.size.height(),
+                town.name()
+            );
+        }
     } else {
         bail!("Unknown town id {}!", lot.town.id());
     }
