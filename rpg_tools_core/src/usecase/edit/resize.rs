@@ -105,4 +105,39 @@ mod tests {
             ]
         )
     }
+
+    #[test]
+    fn resize_building_with_unknown_town() {
+        let mut data = WorldData::default();
+
+        assert!(resize_building(&mut data, BuildingId::default(), 2, 2).is_err());
+        assert!(data.town_manager.get_all().is_empty());
+        assert!(data.building_manager.get_all().is_empty());
+    }
+
+    #[test]
+    fn resize_building_with_unknown_building() {
+        let mut data = WorldData::default();
+        data.town_manager
+            .create(|id| Town::simple(id, Size2d::new(3, 2)));
+
+        assert!(resize_building(&mut data, BuildingId::default(), 2, 2).is_err());
+    }
+
+    #[test]
+    fn resize_building_with_too_small_map() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let lot = BuildingLot::new(town_id, 0);
+        let building_id = create_building(&mut data, lot.clone()).unwrap();
+        let construction = Construction::Building { id: building_id };
+
+        assert!(resize_building(&mut data, building_id, 2, 2).is_err());
+
+        assert_eq!(
+            data.building_manager.get_all(),
+            &vec![Building::new(building_id, lot)]
+        );
+        assert_eq!(get_constructions(&data, town_id), vec![&construction,])
+    }
 }
