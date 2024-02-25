@@ -71,7 +71,11 @@ impl Town {
         true
     }
 
-    pub fn is_lot_construction(&self, lot: &BuildingLot, construction: Construction) -> bool {
+    fn check_lot_construction<F: Fn(&Construction) -> bool>(
+        &self,
+        lot: &BuildingLot,
+        check: F,
+    ) -> bool {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
 
@@ -83,7 +87,7 @@ impl Town {
                     .to_index(x, y)
                     .and_then(|index| self.map.get_tile(index))
                 {
-                    if !tile.construction.eq(&construction) {
+                    if !check(&tile.construction) {
                         return false;
                     }
                 } else {
@@ -95,8 +99,14 @@ impl Town {
         true
     }
 
+    /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) matches the [`construction`](Construction).
+    pub fn is_lot_construction(&self, lot: &BuildingLot, construction: &Construction) -> bool {
+        self.check_lot_construction(lot, |c| c.eq(construction))
+    }
+
+    /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) are free.
     pub fn is_lot_free(&self, lot: &BuildingLot) -> bool {
-        self.is_lot_construction(lot, Construction::None)
+        self.is_lot_construction(lot, &Construction::None)
     }
 }
 

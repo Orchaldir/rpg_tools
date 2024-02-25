@@ -30,7 +30,7 @@ pub fn is_lot_construction(
 ) -> bool {
     data.town_manager
         .get(lot.town)
-        .map(|town| town.is_lot_construction(lot, construction))
+        .map(|town| town.is_lot_construction(lot, &construction))
         .unwrap_or(false)
 }
 
