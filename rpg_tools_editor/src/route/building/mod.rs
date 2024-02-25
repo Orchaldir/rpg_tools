@@ -5,7 +5,6 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::math::size2d::Size2d;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
@@ -81,7 +80,7 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
 
         builder = builder
             .field_usize("Tile:", building.lot().tile)
-            .field_size2d("Size:", &Size2d::square(1))
+            .field_size2d("Size:", &building.lot().size)
             .p(|b| b.link(&link_edit_building(id), "Edit"))
             .p(|b| b.link(&link_all_buildings(), "Back"));
 
