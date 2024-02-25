@@ -49,7 +49,7 @@ pub fn resize_building(
                 building.lot = new_lot.clone();
             });
         } else {
-            bail!("");
+            bail!("Resize impossible");
         }
     } else {
         bail!("Town doesn't exist")

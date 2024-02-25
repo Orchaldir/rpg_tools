@@ -8,6 +8,7 @@ use rocket::State;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
+use rpg_tools_core::usecase::edit::resize::resize_building;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/building/all")]
@@ -33,7 +34,7 @@ pub fn link_building_details(id: BuildingId) -> String {
 #[get("/building/<id>/edit")]
 pub fn edit_building(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_edit_html(&data, BuildingId::new(id), "")
+    get_edit_html(&data, BuildingId::new(id), "", "")
 }
 
 pub fn link_edit_building(id: BuildingId) -> String {
@@ -43,6 +44,8 @@ pub fn link_edit_building(id: BuildingId) -> String {
 #[derive(FromForm, Debug)]
 pub struct BuildingUpdate<'r> {
     name: &'r str,
+    width: u32,
+    height: u32,
 }
 
 #[post("/building/<id>/update", data = "<update>")]
@@ -57,7 +60,9 @@ pub fn update_building(
     let building_id = BuildingId::new(id);
 
     if let Err(e) = update_name(&mut data.building_manager, building_id, update.name) {
-        return get_edit_html(&data, building_id, &e.to_string());
+        return get_edit_html(&data, building_id, &e.to_string(), "");
+    } else if let Err(e) = resize_building(&mut data, building_id, update.width, update.height) {
+        return get_edit_html(&data, building_id, "", &e.to_string());
     }
 
     get_building_details_html(&data, building_id)
@@ -88,16 +93,30 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
     })
 }
 
-fn get_edit_html(data: &WorldData, id: BuildingId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(
+    data: &WorldData,
+    id: BuildingId,
+    name_error: &str,
+    size_error: &str,
+) -> Option<RawHtml<String>> {
     let submit = uri!(update_building(id.id())).to_string();
 
-    data.building_manager.get(id).map(|mountain| {
+    data.building_manager.get(id).map(|building| {
         let builder = create_html()
-            .h1(&format!("Edit Building: {}", mountain.name()))
+            .h1(&format!("Edit Building: {}", building.name()))
             .field_usize("Id:", id.id())
             .form(&submit, |b| {
-                b.text_input("Name", "name", mountain.name())
+                b.text_input("Name", "name", building.name())
                     .error(name_error)
+                    .number_input("Width", "width", building.lot.size.width() as usize, 1, 100)
+                    .number_input(
+                        "Height",
+                        "height",
+                        building.lot.size.height() as usize,
+                        1,
+                        100,
+                    )
+                    .error(size_error)
             })
             .p(|b| b.link(&link_building_details(id), "Back"));
 
