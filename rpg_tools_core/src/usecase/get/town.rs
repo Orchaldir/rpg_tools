@@ -30,26 +30,7 @@ pub fn is_lot_construction(
 ) -> bool {
     data.town_manager
         .get(lot.town)
-        .map(|town| {
-            let start_x = town.map.get_size().to_x(lot.tile);
-            let start_y = town.map.get_size().to_y(lot.tile);
-
-            for y in start_y..(start_y + lot.size.height()) {
-                for x in start_x..(start_x + lot.size.height()) {
-                    if let Some(tile) = town
-                        .map
-                        .get_size()
-                        .to_index(x as u32, y as u32)
-                        .and_then(|index| town.map.get_tile(index))
-                    {
-                        if !tile.construction.eq(&construction) {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        })
+        .map(|town| town.is_lot_construction(lot, construction))
         .unwrap_or(false)
 }
 

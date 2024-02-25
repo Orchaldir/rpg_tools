@@ -3,6 +3,8 @@ pub mod terrain;
 pub mod tile;
 
 use crate::model::math::size2d::Size2d;
+use crate::model::world::building::lot::BuildingLot;
+use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::utils::map::tile::TileMap;
@@ -37,6 +39,29 @@ impl Town {
             name: format!("Town {}", id.0),
             map: TileMap::simple(Size2d::square(1), TownTile::new(Terrain::Plain)),
         }
+    }
+
+    pub fn is_lot_construction(&self, lot: &BuildingLot, construction: Construction) -> bool {
+        let start_x = self.map.get_size().to_x(lot.tile);
+        let start_y = self.map.get_size().to_y(lot.tile);
+
+        for y in start_y..(start_y + lot.size.height() as i32) {
+            for x in start_x..(start_x + lot.size.height() as i32) {
+                if let Some(tile) = self
+                    .map
+                    .get_size()
+                    .to_index(x as u32, y as u32)
+                    .and_then(|index| self.map.get_tile(index))
+                {
+                    if !tile.construction.eq(&construction) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 
