@@ -22,7 +22,7 @@ impl Id for BuildingId {
 pub struct Building {
     id: BuildingId,
     name: String,
-    lot: BuildingLot,
+    pub lot: BuildingLot,
 }
 
 impl Building {

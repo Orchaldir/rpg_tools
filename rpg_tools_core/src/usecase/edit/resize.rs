@@ -45,13 +45,17 @@ pub fn resize_building(
                 panic!("Couldn't update lot")
             }
 
-            Ok(())
+            data.building_manager.get_mut(building_id).map(|building| {
+                building.lot = new_lot.clone();
+            });
         } else {
             bail!("");
         }
     } else {
         bail!("Town doesn't exist")
     }
+
+    Ok(())
 }
 
 #[cfg(test)]
@@ -61,6 +65,7 @@ mod tests {
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
     use crate::usecase::create::building::create_building;
+    use crate::usecase::get::town::get_constructions;
 
     #[test]
     fn resize_non_existing_town() {
@@ -80,6 +85,7 @@ mod tests {
         let old_lot = BuildingLot::new(town_id, 0);
         let new_lot = BuildingLot::big(town_id, 0, Size2d::square(2));
         let building_id = create_building(&mut data, old_lot).unwrap();
+        let construction = Construction::Building { id: building_id };
 
         assert!(resize_building(&mut data, building_id, 2, 2).is_ok());
 
@@ -87,5 +93,16 @@ mod tests {
             data.building_manager.get_all(),
             &vec![Building::new(building_id, new_lot)]
         );
+        assert_eq!(
+            get_constructions(&data, town_id),
+            vec![
+                &construction,
+                &construction,
+                &Construction::None,
+                &construction,
+                &construction,
+                &Construction::None
+            ]
+        )
     }
 }

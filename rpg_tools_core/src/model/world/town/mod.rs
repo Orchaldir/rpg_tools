@@ -57,6 +57,7 @@ impl Town {
     pub fn set_lot_construction(&mut self, lot: &BuildingLot, construction: Construction) -> bool {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
+        let is_building = construction.is_present();
 
         for y in start_y..(start_y + lot.size.height()) {
             for x in start_x..(start_x + lot.size.width()) {
@@ -66,7 +67,7 @@ impl Town {
                     .to_index(x, y)
                     .and_then(|index| self.map.get_tile_mut(index))
                 {
-                    if tile.construction != Construction::None {
+                    if is_building && tile.construction.is_present() {
                         return false;
                     }
 

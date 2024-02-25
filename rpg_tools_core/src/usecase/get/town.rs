@@ -12,6 +12,15 @@ pub fn get_construction(data: &WorldData, town_id: TownId, tile: usize) -> Optio
         .map(|tile| &tile.construction)
 }
 
+pub fn get_constructions(data: &WorldData, town_id: TownId) -> Vec<&Construction> {
+    data.town_manager
+        .get(town_id)
+        .iter()
+        .flat_map(|town| town.map.get_tiles())
+        .map(|a| &a.construction)
+        .collect()
+}
+
 pub fn is_construction(
     data: &WorldData,
     town_id: TownId,

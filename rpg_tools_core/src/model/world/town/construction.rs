@@ -9,3 +9,13 @@ pub enum Construction {
     Street { id: StreetId },
     None,
 }
+
+impl Construction {
+    pub fn is_clear(&self) -> bool {
+        self == &Self::None
+    }
+
+    pub fn is_present(&self) -> bool {
+        self != &Self::None
+    }
+}
