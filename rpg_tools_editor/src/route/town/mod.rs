@@ -144,12 +144,11 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
         if let Building { id } = tile.construction {
             if let Some(building) = data.building_manager.get(id) {
-                builder.tooltip(building.name())
+                builder.tooltip(building.name());
+                builder.link(&get_link(id));
+                render_building(&mut builder, renderer, town, building);
+                builder.close();
             }
-
-            builder.link(&get_link(id));
-            render_building(&mut builder, &aabb);
-            builder.close();
         } else if let Street { id } = tile.construction {
             if let Some(street) = data.street_manager.get(id) {
                 builder.tooltip(street.name())
