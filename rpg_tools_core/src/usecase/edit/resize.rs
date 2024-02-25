@@ -6,7 +6,6 @@ use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::model::world::town::TownId;
 use crate::model::world::WorldData;
-use crate::utils::storage::Id;
 use anyhow::{bail, Context, Result};
 
 pub fn resize_town(data: &mut WorldData, id: TownId, width: u32, height: u32) -> Result<()> {
@@ -58,14 +57,35 @@ pub fn resize_building(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::world::town::TownId;
+    use crate::model::world::building::Building;
+    use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
+    use crate::usecase::create::building::create_building;
 
     #[test]
     fn resize_non_existing_town() {
         let mut data = WorldData::default();
 
         assert!(resize_town(&mut data, TownId::default(), 2, 3).is_err());
+
         assert!(data.town_manager.get_all().is_empty());
+    }
+
+    #[test]
+    fn resize_building_successful() {
+        let mut data = WorldData::default();
+        let town_id = data
+            .town_manager
+            .create(|id| Town::simple(id, Size2d::new(3, 2)));
+        let old_lot = BuildingLot::new(town_id, 0);
+        let new_lot = BuildingLot::big(town_id, 0, Size2d::square(2));
+        let building_id = create_building(&mut data, old_lot).unwrap();
+
+        assert!(resize_building(&mut data, building_id, 2, 2).is_ok());
+
+        assert_eq!(
+            data.building_manager.get_all(),
+            &vec![Building::new(building_id, new_lot)]
+        );
     }
 }

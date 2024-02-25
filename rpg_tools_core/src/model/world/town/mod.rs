@@ -42,6 +42,14 @@ impl Town {
         }
     }
 
+    pub fn simple(id: TownId, size: Size2d) -> Self {
+        Town {
+            id,
+            name: format!("Town {}", id.0),
+            map: TileMap::simple(size, TownTile::new(Terrain::Plain)),
+        }
+    }
+
     /// Tries to set the [`construction`](Construction) of a [`lot`](BuildingLot).
     /// Fails if part of the lot is outside the map or already has a construction.
     ///
