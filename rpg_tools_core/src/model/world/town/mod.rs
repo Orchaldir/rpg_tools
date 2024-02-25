@@ -41,6 +41,10 @@ impl Town {
         }
     }
 
+    /// Tries to set the [`construction`](Construction) of a [`lot`](BuildingLot).
+    /// Fails if part of the lot is outside the map or already has a construction.
+    ///
+    /// This can leave the town in an inconsistent state!
     pub fn set_lot_construction(&mut self, lot: &BuildingLot, construction: Construction) -> bool {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
