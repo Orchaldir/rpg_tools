@@ -37,7 +37,7 @@ mod tests {
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
     use crate::usecase::create::building::create_building;
-    use crate::usecase::get::town::{is_building, is_construction, is_street};
+    use crate::usecase::get::town::{is_building, is_free, is_street};
 
     #[test]
     fn create_successful() {
@@ -64,7 +64,7 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 10, street_id).is_err());
-        assert!(is_construction(&data, town_id, 0, Construction::None));
+        assert!(is_free(&data, town_id, 0));
     }
 
     #[test]

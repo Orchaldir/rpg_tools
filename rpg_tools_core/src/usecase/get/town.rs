@@ -36,6 +36,10 @@ pub fn is_building(
     )
 }
 
+pub fn is_free(data: &WorldData, town_id: TownId, tile: usize) -> bool {
+    is_construction(data, town_id, tile, Construction::None)
+}
+
 pub fn is_street(data: &WorldData, town_id: TownId, tile: usize, street_id: StreetId) -> bool {
     is_construction(data, town_id, tile, Construction::Street { id: street_id })
 }
