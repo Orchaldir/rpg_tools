@@ -69,7 +69,8 @@ pub fn init() -> WorldData {
         town_manager,
     };
 
-    let building_id = create_building(&mut data, BuildingLot::new(town_id, 7)).unwrap();
+    let building_id =
+        create_building(&mut data, BuildingLot::big(town_id, 7, Size2d::new(3, 2))).unwrap();
     data.building_manager
         .get_mut(building_id)
         .unwrap()
