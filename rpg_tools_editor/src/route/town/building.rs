@@ -31,7 +31,7 @@ pub fn get_building_creator_map(state: &State<EditorData>, id: usize) -> Option<
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_town(&state.town_renderer, town))
+        .map(|town| render_building_creator_map(&state.town_renderer, town))
 }
 
 #[get("/town/<id>/building/add/<tile>")]
@@ -71,7 +71,7 @@ fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<Str
     })
 }
 
-fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_building_creator_map(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 

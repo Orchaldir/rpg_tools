@@ -55,7 +55,7 @@ pub fn get_street_editor_map(state: &State<EditorData>, id: usize) -> Option<Raw
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_town(&state.town_renderer, town))
+        .map(|town| render_street_editor_map(&state.town_renderer, town))
 }
 
 #[get("/town/<id>/street/add/<tile>")]
@@ -109,7 +109,7 @@ fn get_street_creator_html(
     })
 }
 
-fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_street_editor_map(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
