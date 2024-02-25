@@ -25,3 +25,11 @@ pub trait LinkRenderer: Renderer {
     /// Closes the link.
     fn close(&mut self);
 }
+
+pub trait Tooltip {
+    /// Sets the tooltip for all elements until cleared.
+    fn tooltip<S: Into<String>>(&mut self, tooltip: S);
+
+    /// Clears the tooltip.
+    fn clear_tooltip(&mut self);
+}

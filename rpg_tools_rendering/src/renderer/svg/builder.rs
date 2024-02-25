@@ -1,6 +1,6 @@
 use crate::renderer::style::RenderStyle;
 use crate::renderer::svg::Svg;
-use crate::renderer::{LinkRenderer, Renderer};
+use crate::renderer::{LinkRenderer, Renderer, Tooltip};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -11,6 +11,7 @@ use rpg_tools_core::model::math::size2d::Size2d;
 pub struct SvgBuilder {
     lines: Vec<String>,
     elements: Vec<String>,
+    tooltip: Option<String>,
 }
 
 impl SvgBuilder {
@@ -26,6 +27,7 @@ impl SvgBuilder {
         Self {
             lines,
             elements: Vec::new(),
+            tooltip: None,
         }
     }
 
@@ -35,6 +37,32 @@ impl SvgBuilder {
 
     fn indent(&self) -> String {
         "  ".repeat(self.elements.len() + 1)
+    }
+
+    fn open_width_attributes(&mut self, tag: &str, text: &str) {
+        self.add(format!("<{} {}>", tag, text));
+        self.elements.push(tag.to_string());
+    }
+
+    fn get_circle_attributes(&self, center: &Point2d, radius: u32, style: &RenderStyle) -> String {
+        format!(
+            r#"cx="{}" cy="{}" r="{}" style="{}""#,
+            center.x,
+            center.y,
+            radius,
+            to_style(style),
+        )
+    }
+
+    fn get_rectangle_attributes(&mut self, aabb: &AABB, style: &RenderStyle) -> String {
+        format!(
+            r#"x="{}" y="{}" width="{}" height="{}" style="{}""#,
+            aabb.start().x,
+            aabb.start().y,
+            aabb.size().width(),
+            aabb.size().height(),
+            to_style(style),
+        )
     }
 
     pub fn finish(mut self) -> Svg {
@@ -50,24 +78,27 @@ impl SvgBuilder {
 
 impl Renderer for SvgBuilder {
     fn render_circle(&mut self, center: &Point2d, radius: u32, style: &RenderStyle) {
-        self.add(format!(
-            "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" style=\"{}\"/>",
-            center.x,
-            center.y,
-            radius,
-            to_style(style),
-        ));
+        let attributes = self.get_circle_attributes(center, radius, style);
+
+        if self.tooltip.is_some() {
+            self.open_width_attributes("circle", &attributes);
+            self.add(format!("<title>{}</title>", self.tooltip.clone().unwrap()));
+            self.close();
+        } else {
+            self.add(format!("<circle {}/>", attributes));
+        }
     }
 
     fn render_rectangle(&mut self, aabb: &AABB, style: &RenderStyle) {
-        self.add(format!(
-            "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" style=\"{}\"/>",
-            aabb.start().x,
-            aabb.start().y,
-            aabb.size().width(),
-            aabb.size().height(),
-            to_style(style),
-        ));
+        let attributes = self.get_rectangle_attributes(aabb, style);
+
+        if self.tooltip.is_some() {
+            self.open_width_attributes("rect", &attributes);
+            self.add(format!("<title>{}</title>", self.tooltip.clone().unwrap()));
+            self.close();
+        } else {
+            self.add(format!("<rect {}/>", attributes));
+        }
     }
 }
 
@@ -81,6 +112,16 @@ impl LinkRenderer for SvgBuilder {
         if let Some(element) = self.elements.pop() {
             self.add(format!("</{}>", element));
         }
+    }
+}
+
+impl Tooltip for SvgBuilder {
+    fn tooltip<S: Into<String>>(&mut self, tooltip: S) {
+        self.tooltip = Some(tooltip.into())
+    }
+
+    fn clear_tooltip(&mut self) {
+        self.tooltip = None;
     }
 }
 
