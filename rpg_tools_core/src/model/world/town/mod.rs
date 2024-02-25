@@ -50,7 +50,7 @@ impl Town {
         let start_y = self.map.get_size().to_y(lot.tile);
 
         for y in start_y..(start_y + lot.size.height() as i32) {
-            for x in start_x..(start_x + lot.size.height() as i32) {
+            for x in start_x..(start_x + lot.size.width() as i32) {
                 if let Some(tile) = self
                     .map
                     .get_size()
@@ -75,7 +75,7 @@ impl Town {
         let start_y = self.map.get_size().to_y(lot.tile);
 
         for y in start_y..(start_y + lot.size.height() as i32) {
-            for x in start_x..(start_x + lot.size.height() as i32) {
+            for x in start_x..(start_x + lot.size.width() as i32) {
                 if let Some(tile) = self
                     .map
                     .get_size()

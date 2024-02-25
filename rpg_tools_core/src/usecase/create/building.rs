@@ -118,9 +118,9 @@ mod tests {
     fn other_building_occupies_tile(tile: usize) {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
-        assert!(resize_town(&mut data, town_id, 2, 2).is_ok());
+        assert!(resize_town(&mut data, town_id, 3, 2).is_ok());
         let other_id = create_building(&mut data, create_lot(tile)).unwrap();
-        let lot = BuildingLot::big(town_id, 0, Size2d::square(2));
+        let lot = BuildingLot::big(town_id, 0, Size2d::new(3, 2));
 
         assert!(create_building(&mut data, lot).is_err());
 
