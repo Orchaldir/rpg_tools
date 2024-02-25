@@ -225,4 +225,18 @@ impl AxisAlignedBoundingBox {
     pub fn scale(&self, factor: f32) -> Self {
         Self::with_center(self.center(), self.size.scale(factor, factor))
     }
+
+    /// Scale the axis aligned bounding box by a factor.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::aabb2d::AABB;
+    ///# use rpg_tools_core::model::math::point2d::Point2d;
+    /// let aabb = AABB::simple(1000, 2000, 400, 600);
+    /// let desired = AABB::simple(1010, 2010, 380, 580);
+    ///
+    /// assert_eq!(aabb.shrink(10), desired);
+    /// ```
+    pub fn shrink(&self, border: u32) -> Self {
+        Self::with_center(self.center(), self.size - Size2d::square(border * 2))
+    }
 }

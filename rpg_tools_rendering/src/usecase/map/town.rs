@@ -37,9 +37,9 @@ pub fn render_building(
         building.lot().tile,
     );
     let size = renderer.calculate_size(building.lot().size);
-    let aabb = AABB::new(start, size);
+    let aabb = AABB::new(start, size).shrink(renderer.tile_size / 4);
 
-    builder.render_rectangle(&aabb.scale(0.5), &style);
+    builder.render_rectangle(&aabb, &style);
 }
 
 pub fn render_streets(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town: &Town) {

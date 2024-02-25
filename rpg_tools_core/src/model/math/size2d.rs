@@ -1,4 +1,4 @@
-use std::ops::{Div, Mul};
+use std::ops::{Div, Mul, Sub};
 
 /// Defines the size of a 2d rectangle.
 ///
@@ -159,6 +159,14 @@ impl Size2d {
             (self.width as f32 * horizontal) as u32,
             (self.height as f32 * vertical) as u32,
         )
+    }
+}
+
+impl Sub<Size2d> for Size2d {
+    type Output = Self;
+
+    fn sub(self, other: Size2d) -> Self::Output {
+        Size2d::new(self.width - other.width(), self.height - other.height)
     }
 }
 
