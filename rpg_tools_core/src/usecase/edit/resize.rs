@@ -140,4 +140,33 @@ mod tests {
         );
         assert_eq!(get_constructions(&data, town_id), vec![&construction,])
     }
+
+    #[test]
+    fn resize_building_blocked_by_other_building() {
+        let mut data = WorldData::default();
+        let town_id = data
+            .town_manager
+            .create(|id| Town::simple(id, Size2d::new(2, 1)));
+        let lot = BuildingLot::new(town_id, 0);
+        let other_lot = BuildingLot::new(town_id, 1);
+        let building_id = create_building(&mut data, lot.clone()).unwrap();
+        let other_id = create_building(&mut data, other_lot.clone()).unwrap();
+
+        assert!(resize_building(&mut data, building_id, 2, 2).is_err());
+
+        assert_eq!(
+            data.building_manager.get_all(),
+            &vec![
+                Building::new(building_id, lot),
+                Building::new(other_id, other_lot)
+            ]
+        );
+        assert_eq!(
+            get_constructions(&data, town_id),
+            vec![
+                &Construction::Building { id: building_id },
+                &Construction::Building { id: other_id },
+            ]
+        )
+    }
 }
