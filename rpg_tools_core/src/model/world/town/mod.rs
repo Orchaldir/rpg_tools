@@ -4,6 +4,7 @@ pub mod tile;
 
 use crate::model::math::size2d::Size2d;
 use crate::model::world::building::lot::BuildingLot;
+use crate::model::world::building::BuildingId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
@@ -99,9 +100,15 @@ impl Town {
         true
     }
 
-    /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) matches the [`construction`](Construction).
+    /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) match the [`construction`](Construction).
     pub fn is_lot_construction(&self, lot: &BuildingLot, construction: &Construction) -> bool {
         self.check_lot_construction(lot, |c| c.eq(construction))
+    }
+
+    /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) are free or match the [`construction`](Construction).
+    pub fn can_update_building(&self, lot: &BuildingLot, id: BuildingId) -> bool {
+        let construction = Construction::Building { id };
+        self.check_lot_construction(lot, |c| c.eq(&Construction::None) || c.eq(&construction))
     }
 
     /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) are free.
