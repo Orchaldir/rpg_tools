@@ -45,9 +45,9 @@ pub fn resize_building(
                 panic!("Couldn't update lot")
             }
 
-            data.building_manager.get_mut(building_id).map(|building| {
+            if let Some(building) = data.building_manager.get_mut(building_id) {
                 building.lot = new_lot.clone();
-            });
+            }
         } else {
             bail!("Resize impossible");
         }

@@ -167,6 +167,12 @@ impl Size2d {
 impl Sub<Size2d> for Size2d {
     type Output = Self;
 
+    /// Subtracts a size from another.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::size2d::Size2d;
+    /// assert_eq!(Size2d::new(10, 30) - Size2d::new(2, 5), Size2d::new(8, 25));
+    /// ```
     fn sub(self, other: Size2d) -> Self::Output {
         Size2d::new(
             (self.width - other.width()) as u32,
