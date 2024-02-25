@@ -131,7 +131,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     town: &Town,
     mut get_link: F,
 ) -> RawSvg {
-    let size = renderer.calculate_size(&town.map);
+    let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
     renderer.render_tiles(

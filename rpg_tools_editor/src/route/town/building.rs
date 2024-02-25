@@ -72,7 +72,7 @@ fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<Str
 }
 
 fn render_building_creator_map(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
-    let size = renderer.calculate_size(&town.map);
+    let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
     renderer.render_tiles_with_link(

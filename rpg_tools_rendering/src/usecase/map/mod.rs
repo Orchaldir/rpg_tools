@@ -24,8 +24,12 @@ impl TileMapRenderer {
         }
     }
 
-    pub fn calculate_size<Tile: Clone>(&self, map: &TileMap<Tile>) -> Size2d {
+    pub fn calculate_map_size<Tile: Clone>(&self, map: &TileMap<Tile>) -> Size2d {
         map.get_size() * self.tile_size as f32
+    }
+
+    pub fn calculate_size(&self, size: Size2d) -> Size2d {
+        size * self.tile_size as f32
     }
 
     pub fn render<Tile: Clone, F: FnMut(usize, AABB, &Tile)>(
@@ -41,7 +45,7 @@ impl TileMapRenderer {
         for y in 0..size.height() {
             for x in 0..size.width() {
                 if let Some(tile) = map.get_tile(index) {
-                    let position = self.calculate_position(start, x, y);
+                    let position = self.calculate_tile_position(start, x, y);
                     render_tile(index, AABB::new(position, tile_size), tile);
                 }
 
@@ -90,7 +94,18 @@ impl TileMapRenderer {
         });
     }
 
-    fn calculate_position(&self, start: &Point2d, x: u32, y: u32) -> Point2d {
+    pub fn calculate_tile_position(&self, start: &Point2d, x: u32, y: u32) -> Point2d {
         *start + Point2d::new((x * self.tile_size) as i32, (y * self.tile_size) as i32)
+    }
+
+    pub fn calculate_index_position(
+        &self,
+        start: &Point2d,
+        tiles: Size2d,
+        index: usize,
+    ) -> Point2d {
+        let x = tiles.to_x(index);
+        let y = tiles.to_y(index);
+        *start + Point2d::new(x * self.tile_size as i32, y * self.tile_size as i32)
     }
 }

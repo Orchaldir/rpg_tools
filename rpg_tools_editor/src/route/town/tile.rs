@@ -99,7 +99,7 @@ pub fn update_tile(
 }
 
 fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
-    let size = renderer.calculate_size(&town.map);
+    let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
     renderer.render_tiles_with_link(
