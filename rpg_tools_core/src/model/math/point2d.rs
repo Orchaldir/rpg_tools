@@ -97,10 +97,7 @@ impl Add<Size2d> for Point2d {
     /// assert_eq!(a + b, result);
     /// ```
     fn add(self, other: Size2d) -> Point2d {
-        Point2d::new(
-            self.x + other.width() as i32,
-            self.y + other.height() as i32,
-        )
+        Point2d::new(self.x + other.width(), self.y + other.height())
     }
 }
 
@@ -171,9 +168,6 @@ impl Sub<Size2d> for Point2d {
     /// assert_eq!(a - b, result);
     /// ```
     fn sub(self, other: Size2d) -> Point2d {
-        Point2d::new(
-            self.x - other.width() as i32,
-            self.y - other.height() as i32,
-        )
+        Point2d::new(self.x - other.width(), self.y - other.height())
     }
 }

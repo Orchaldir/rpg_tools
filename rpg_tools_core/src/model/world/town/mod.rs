@@ -49,8 +49,8 @@ impl Town {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
 
-        for y in start_y..(start_y + lot.size.height() as i32) {
-            for x in start_x..(start_x + lot.size.width() as i32) {
+        for y in start_y..(start_y + lot.size.height()) {
+            for x in start_x..(start_x + lot.size.width()) {
                 if let Some(tile) = self
                     .map
                     .get_size()
@@ -67,15 +67,16 @@ impl Town {
                 }
             }
         }
-        return true;
+
+        true
     }
 
     pub fn is_lot_construction(&self, lot: &BuildingLot, construction: Construction) -> bool {
         let start_x = self.map.get_size().to_x(lot.tile);
         let start_y = self.map.get_size().to_y(lot.tile);
 
-        for y in start_y..(start_y + lot.size.height() as i32) {
-            for x in start_x..(start_x + lot.size.width() as i32) {
+        for y in start_y..(start_y + lot.size.height()) {
+            for x in start_x..(start_x + lot.size.width()) {
                 if let Some(tile) = self
                     .map
                     .get_size()
@@ -90,7 +91,8 @@ impl Town {
                 }
             }
         }
-        return true;
+
+        true
     }
 
     pub fn is_lot_free(&self, lot: &BuildingLot) -> bool {

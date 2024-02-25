@@ -106,7 +106,7 @@ impl Size2d {
     /// assert_eq!(size.to_x(5), 1);
     /// ```
     pub fn to_x(&self, index: usize) -> i32 {
-        index as i32 % self.width as i32
+        index as i32 % self.width
     }
 
     /// Converts an index to the y-coordinate of the equivalent [`Point`].
@@ -117,7 +117,7 @@ impl Size2d {
     /// assert_eq!(size.to_y(5), 2);
     /// ```
     pub fn to_y(&self, index: usize) -> i32 {
-        index as i32 / self.width as i32
+        index as i32 / self.width
     }
 
     /// Converts a point to the equivalent index, if it is inside.
