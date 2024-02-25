@@ -21,7 +21,7 @@ fn main() {
 
     let renderer = TileMapRenderer::new(100, 10, 1);
 
-    let size = renderer.calculate_size(&map);
+    let size = renderer.calculate_map_size(&map);
     let mut builder = SvgBuilder::new(size);
 
     renderer.render_tiles(&mut builder, &Point2d::default(), &map, TownTile::get_color);

@@ -13,7 +13,7 @@ use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::town::render_constructions;
+use rpg_tools_rendering::usecase::map::town::{render_buildings, render_streets};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/building/creator")]
@@ -31,7 +31,7 @@ pub fn get_building_creator_map(state: &State<EditorData>, id: usize) -> Option<
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_town(&state.town_renderer, town))
+        .map(|town| render_building_creator_map(&data, &state.town_renderer, town))
 }
 
 #[get("/town/<id>/building/add/<tile>")]
@@ -71,8 +71,12 @@ fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<Str
     })
 }
 
-fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
-    let size = renderer.calculate_size(&town.map);
+fn render_building_creator_map(
+    data: &WorldData,
+    renderer: &TileMapRenderer,
+    town: &Town,
+) -> RawSvg {
+    let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
     renderer.render_tiles_with_link(
@@ -89,7 +93,8 @@ fn render_town(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         },
     );
 
-    render_constructions(&mut builder, renderer, town);
+    render_buildings(data, &mut builder, renderer, town);
+    render_streets(&mut builder, renderer, town);
 
     let svg = builder.finish();
     RawSvg::new(svg.export())
