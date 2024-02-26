@@ -3,6 +3,7 @@ use crate::model::world::mountain::{Mountain, MountainId};
 use crate::model::world::river::{River, RiverId};
 use crate::model::world::street::{Street, StreetId};
 use crate::model::world::town::{Town, TownId};
+use crate::utils::io::save_storage;
 use crate::utils::storage::Storage;
 
 pub mod building;
@@ -19,4 +20,14 @@ pub struct WorldData {
     pub river_manager: Storage<RiverId, River>,
     pub street_manager: Storage<StreetId, Street>,
     pub town_manager: Storage<TownId, Town>,
+}
+
+impl WorldData {
+    pub fn save(&self, setting: &str) {
+        save_storage(&self.building_manager, setting);
+        save_storage(&self.mountain_manager, setting);
+        save_storage(&self.river_manager, setting);
+        save_storage(&self.street_manager, setting);
+        save_storage(&self.town_manager, setting);
+    }
 }

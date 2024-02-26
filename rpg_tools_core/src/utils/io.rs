@@ -1,3 +1,5 @@
+use crate::model::get_setting_path;
+use crate::utils::storage::{Element, Id, Storage};
 use anyhow::{Context, Result};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -21,4 +23,16 @@ pub fn write<T: Serialize>(object: &T, path: &Path) -> Result<()> {
         .context(format!("Failed to write to {:?}", path))?;
 
     Ok(())
+}
+
+pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
+    storage: &Storage<ID, ELEMENT>,
+    setting: &str,
+) {
+    if let Err(e) = write(
+        storage.get_all(),
+        &get_setting_path(setting, &format!("{}.yaml", storage.name())),
+    ) {
+        println!("Failed to save the {}s: {}", storage.name(), e);
+    }
 }

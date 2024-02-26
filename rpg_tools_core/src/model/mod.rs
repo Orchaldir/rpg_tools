@@ -22,6 +22,10 @@ impl RpgData {
     pub fn get_path(&self, file: &str) -> PathBuf {
         get_setting_path(&self.setting, file)
     }
+
+    pub fn save(&self) {
+        self.world.save(&self.setting);
+    }
 }
 
 pub fn get_setting_path(setting: &str, file: &str) -> PathBuf {

@@ -26,16 +26,22 @@ pub enum DeleteElementResult<I: Id> {
 
 #[derive(Debug)]
 pub struct Storage<I: Id, T: Element<I>> {
+    name: String,
     elements: Vec<T>,
     phantom: PhantomData<I>,
 }
 
 impl<I: Id, T: Element<I>> Storage<I, T> {
-    pub fn new(entries: Vec<T>) -> Self {
+    pub fn new(name: String, elements: Vec<T>) -> Self {
         Self {
-            elements: entries,
+            name,
+            elements,
             phantom: PhantomData,
         }
+    }
+
+    pub fn name(&self) -> &str {
+        &self.name
     }
 
     pub fn create<F: FnOnce(I) -> T>(&mut self, f: F) -> I {
@@ -82,7 +88,7 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
 
 impl<I: Id, T: Element<I>> Default for Storage<I, T> {
     fn default() -> Self {
-        Storage::new(Vec::new())
+        Storage::new("Unknown".to_string(), Vec::new())
     }
 }
 

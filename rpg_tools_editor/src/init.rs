@@ -12,28 +12,30 @@ use rpg_tools_core::utils::map::tile::TileMap;
 use rpg_tools_core::utils::storage::{Element, Storage};
 
 pub fn init() -> WorldData {
-    let mut mountain_manager: Storage<MountainId, Mountain> = Storage::default();
+    let mut mountain_manager: Storage<MountainId, Mountain> =
+        Storage::new("mountain".to_string(), Vec::new());
     let hill_id = mountain_manager.create(Mountain::new);
     mountain_manager
         .get_mut(hill_id)
         .unwrap()
         .set_name("Hangman's Hill".to_string());
 
-    let mut river_manager: Storage<RiverId, River> = Storage::default();
+    let mut river_manager: Storage<RiverId, River> = Storage::new("river".to_string(), Vec::new());
     let river_id = river_manager.create(River::new);
     river_manager
         .get_mut(river_id)
         .unwrap()
         .set_name("Miskatonic River".to_string());
 
-    let mut street_manager: Storage<StreetId, Street> = Storage::default();
+    let mut street_manager: Storage<StreetId, Street> =
+        Storage::new("street".to_string(), Vec::new());
     let street_id = street_manager.create(Street::new);
     street_manager
         .get_mut(street_id)
         .unwrap()
         .set_name("Armitage Street".to_string());
 
-    let mut town_manager: Storage<TownId, Town> = Storage::default();
+    let mut town_manager: Storage<TownId, Town> = Storage::new("town".to_string(), Vec::new());
     let town_id = town_manager.create(Town::new);
     town_manager
         .get_mut(town_id)
@@ -62,7 +64,7 @@ pub fn init() -> WorldData {
         .insert(town_id);
 
     let mut data = WorldData {
-        building_manager: Storage::default(),
+        building_manager: Storage::new("building".to_string(), Vec::new()),
         mountain_manager,
         river_manager,
         street_manager,
