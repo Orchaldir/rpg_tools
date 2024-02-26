@@ -82,13 +82,13 @@ fn get_details_html(data: &WorldData, id: RiverId) -> Option<RawHtml<String>> {
 }
 
 fn get_edit_html(data: &WorldData, id: RiverId, name_error: &str) -> Option<RawHtml<String>> {
-    let submit = uri!(update_river(id.id())).to_string();
+    let submit_uri = uri!(update_river(id.id())).to_string();
 
     data.river_manager.get(id).map(|river| {
         let builder = create_html()
             .h1(&format!("Edit River: {}", river.name()))
             .field_usize("Id:", id.id())
-            .form(&submit, |b| {
+            .form(&submit_uri, |b| {
                 b.text_input("Name", "name", river.name()).error(name_error)
             })
             .p(|b| b.link(&format!("/river/{}/details", id.id()), "Back"));

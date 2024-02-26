@@ -144,14 +144,14 @@ fn get_form_html(
     tile: &TownTile,
 ) -> RawHtml<String> {
     let back_uri = uri!(get_all_tiles(id = id.id())).to_string();
-    let mountains = get_all_elements(&data.mountain_manager);
-    let rivers = get_all_elements(&data.river_manager);
-    let preview = uri!(preview_tile(id.id(), index)).to_string();
-    let submit = uri!(update_tile(id.id(), index)).to_string();
+    let mountains_uri = get_all_elements(&data.mountain_manager);
+    let rivers_uri = get_all_elements(&data.river_manager);
+    let preview_uri = uri!(preview_tile(id.id(), index)).to_string();
+    let submit_uri = uri!(update_tile(id.id(), index)).to_string();
 
     let builder = create_html()
         .h1(&format!("Edit Town Tile {} of {}", index, town.name()))
-        .form_with_change(&preview, &submit, |mut b| {
+        .form_with_change(&preview_uri, &submit_uri, |mut b| {
             let terrain = match tile.terrain {
                 Terrain::Hill { .. } => "Hill",
                 Terrain::Mountain { .. } => "Mountain",
@@ -166,10 +166,10 @@ fn get_form_html(
             );
 
             match tile.terrain {
-                Terrain::Hill { id } => b.select_id("Hill", "id", &mountains, id.id()),
-                Terrain::Mountain { id } => b.select_id("Mountain", "id", &mountains, id.id()),
+                Terrain::Hill { id } => b.select_id("Hill", "id", &mountains_uri, id.id()),
+                Terrain::Mountain { id } => b.select_id("Mountain", "id", &mountains_uri, id.id()),
                 Terrain::Plain => b,
-                Terrain::River { id } => b.select_id("River", "id", &rivers, id.id()),
+                Terrain::River { id } => b.select_id("River", "id", &rivers_uri, id.id()),
             }
         })
         .p(|b| b.link(&back_uri, "Back"));

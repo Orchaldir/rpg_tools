@@ -165,13 +165,13 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 }
 
 fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
-    let submit = uri!(update_town(id.id())).to_string();
+    let submit_uri = uri!(update_town(id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
-            .form(&submit, |b| {
+            .form(&submit_uri, |b| {
                 b.text_input("Name", "name", town.name())
                     .error(name_error)
                     .number_input(

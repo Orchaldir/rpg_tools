@@ -99,13 +99,13 @@ fn get_edit_html(
     name_error: &str,
     size_error: &str,
 ) -> Option<RawHtml<String>> {
-    let submit = uri!(update_building(id.id())).to_string();
+    let submit_uri = uri!(update_building(id.id())).to_string();
 
     data.building_manager.get(id).map(|building| {
         let builder = create_html()
             .h1(&format!("Edit Building: {}", building.name()))
             .field_usize("Id:", id.id())
-            .form(&submit, |b| {
+            .form(&submit_uri, |b| {
                 b.text_input("Name", "name", building.name())
                     .error(name_error)
                     .number_input("Width", "width", building.lot.size.width() as usize, 1, 100)
