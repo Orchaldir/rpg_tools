@@ -7,6 +7,7 @@ use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::map::tile::TileMap;
 use rpg_tools_core::utils::storage::{Element, Storage};
@@ -78,5 +79,12 @@ pub fn init() -> WorldData {
         .unwrap()
         .set_name("Orne Library".to_string());
 
-    data
+    let rpg_data = RpgData {
+        setting: "CoC".to_string(),
+        world: data,
+    };
+
+    rpg_data.save();
+
+    rpg_data.world
 }

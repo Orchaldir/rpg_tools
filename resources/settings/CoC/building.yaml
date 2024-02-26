@@ -1,0 +1,8 @@
+- id: 0
+  name: Orne Library
+  lot:
+    town: 0
+    tile: 7
+    size:
+      width: 3
+      height: 2

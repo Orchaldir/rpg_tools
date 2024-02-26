@@ -1,0 +1,1454 @@
+- id: 0
+  name: Arkham
+  map:
+    size:
+      width: 18
+      height: 20
+    tiles:
+    - terrain:
+        type: Hill
+        id: 0
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: Building
+        id: 0
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
