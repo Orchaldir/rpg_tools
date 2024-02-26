@@ -25,6 +25,16 @@ pub fn write<T: Serialize>(object: &T, path: &Path) -> Result<()> {
     Ok(())
 }
 
+pub fn load_storage<ID: Id + DeserializeOwned, ELEMENT: Element<ID> + DeserializeOwned>(
+    setting: &str,
+    storage: &str,
+) -> Result<Storage<ID, ELEMENT>> {
+    let elements: Vec<ELEMENT> = read(&get_setting_path(setting, &format!("{}.yaml", storage)))
+        .context(format!("Failed to load to storage {}", storage))?;
+
+    Ok(Storage::new(setting.to_string(), elements))
+}
+
 pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
     storage: &Storage<ID, ELEMENT>,
     setting: &str,

@@ -3,8 +3,9 @@ use crate::model::world::mountain::{Mountain, MountainId};
 use crate::model::world::river::{River, RiverId};
 use crate::model::world::street::{Street, StreetId};
 use crate::model::world::town::{Town, TownId};
-use crate::utils::io::save_storage;
+use crate::utils::io::{load_storage, save_storage};
 use crate::utils::storage::Storage;
+use anyhow::Result;
 
 pub mod building;
 pub mod mountain;
@@ -23,6 +24,16 @@ pub struct WorldData {
 }
 
 impl WorldData {
+    pub fn load(setting: &str) -> Result<Self> {
+        Ok(Self {
+            building_manager: load_storage(setting, "building")?,
+            mountain_manager: load_storage(setting, "mountain")?,
+            river_manager: load_storage(setting, "river")?,
+            street_manager: load_storage(setting, "street")?,
+            town_manager: load_storage(setting, "town")?,
+        })
+    }
+
     pub fn save(&self, setting: &str) {
         save_storage(&self.building_manager, setting);
         save_storage(&self.mountain_manager, setting);
