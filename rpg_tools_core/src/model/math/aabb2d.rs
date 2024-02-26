@@ -1,5 +1,6 @@
 use crate::model::math::point2d::Point2d;
 use crate::model::math::size2d::Size2d;
+use serde::{Deserialize, Serialize};
 
 pub type AABB = AxisAlignedBoundingBox;
 
@@ -19,7 +20,7 @@ pub type AABB = AxisAlignedBoundingBox;
 ///   v
 /// y-axis
 /// ```
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AxisAlignedBoundingBox {
     start: Point2d,
     end: Point2d,

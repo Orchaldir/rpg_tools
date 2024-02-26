@@ -2,9 +2,10 @@ pub mod lot;
 
 use crate::model::world::building::lot::BuildingLot;
 use crate::utils::storage::{Element, Id};
+use serde::{Deserialize, Serialize};
 
 /// The unique identifier of a [`building`](Building).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct BuildingId(usize);
 
 impl Id for BuildingId {
@@ -18,7 +19,7 @@ impl Id for BuildingId {
 }
 
 /// A building in the game.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Building {
     id: BuildingId,
     name: String,

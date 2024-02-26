@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use std::ops::{Div, Mul, Sub};
 
 /// Defines the size of a 2d rectangle.
@@ -27,7 +28,7 @@ use std::ops::{Div, Mul, Sub};
 /// assert_eq!(Size2d::new(0, 3), Size2d::new(1, 3));
 /// ```
 
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Size2d {
     width: i32,
     height: i32,

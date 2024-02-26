@@ -1,8 +1,9 @@
 use crate::model::math::size2d::Size2d;
 use crate::model::world::town::TownId;
+use serde::{Deserialize, Serialize};
 
 /// The lot, plot or parcel of a [`building`](crate::model::world::building::Building).
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct BuildingLot {
     pub town: TownId,
     pub tile: usize,

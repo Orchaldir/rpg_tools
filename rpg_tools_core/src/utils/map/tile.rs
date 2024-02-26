@@ -1,8 +1,9 @@
 use crate::model::math::size2d::Size2d;
 use anyhow::{bail, Result};
+use serde::{Deserialize, Serialize};
 
 /// The edge map is a 2d grid of tiles with edges around each.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct TileMap<Tile> {
     /// The size of the tile map.
     size: Size2d,

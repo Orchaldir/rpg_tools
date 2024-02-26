@@ -10,9 +10,10 @@ use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::utils::map::tile::TileMap;
 use crate::utils::storage::{Element, Id};
+use serde::{Deserialize, Serialize};
 
 /// The unique identifier of a [`town`](Town).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct TownId(usize);
 
 impl Id for TownId {
@@ -26,7 +27,7 @@ impl Id for TownId {
 }
 
 /// A town in the game.
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Town {
     id: TownId,
     name: String,
