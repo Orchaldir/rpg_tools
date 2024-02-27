@@ -1,7 +1,9 @@
 use crate::model::world::mountain::MountainId;
 use crate::model::world::river::RiverId;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type")]
 pub enum Terrain {
     Hill { id: MountainId },
     Mountain { id: MountainId },

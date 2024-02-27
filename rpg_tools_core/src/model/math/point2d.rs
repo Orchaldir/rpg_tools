@@ -1,4 +1,5 @@
 use crate::model::math::size2d::Size2d;
+use serde::{Deserialize, Serialize};
 use std::ops::{Add, Div, Mul, Sub};
 
 /// Defines a point in 2 dimensions.
@@ -18,7 +19,7 @@ use std::ops::{Add, Div, Mul, Sub};
 ///   v
 /// y-axis
 /// ```
-#[derive(Copy, Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Point2d {
     pub x: i32,
     pub y: i32,

@@ -1,9 +1,10 @@
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
+use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 /// The unique identifier of a [`river`](River).
-#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash)]
+#[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
 pub struct RiverId(usize);
 
 impl Id for RiverId {
@@ -17,7 +18,7 @@ impl Id for RiverId {
 }
 
 /// A river in the game.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct River {
     id: RiverId,
     name: String,

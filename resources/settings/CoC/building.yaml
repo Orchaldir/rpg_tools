@@ -1,0 +1,24 @@
+- id: 0
+  name: Orne Library
+  lot:
+    town: 0
+    tile: 7
+    size:
+      width: 3
+      height: 2
+- id: 1
+  name: Charles Tyner Science Annex
+  lot:
+    town: 0
+    tile: 10
+    size:
+      width: 2
+      height: 1
+- id: 2
+  name: St. Mary’s Teaching Hospital
+  lot:
+    town: 0
+    tile: 28
+    size:
+      width: 2
+      height: 2

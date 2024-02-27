@@ -12,7 +12,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/mountain/all")]
 pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.mountain_manager, "mountain", "Mountains")
+    get_all_html(&data.mountain_manager, "Mountains")
 }
 
 #[get("/mountain/new")]
@@ -75,13 +75,13 @@ fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>>
 }
 
 fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
-    let submit = uri!(update_mountain(id.id())).to_string();
+    let submit_uri = uri!(update_mountain(id.id())).to_string();
 
     data.mountain_manager.get(id).map(|mountain| {
         let builder = create_html()
             .h1(&format!("Edit Mountain: {}", mountain.name()))
             .field_usize("Id:", id.id())
-            .form(&submit, |b| {
+            .form(&submit_uri, |b| {
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })

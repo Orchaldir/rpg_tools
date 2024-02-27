@@ -22,6 +22,7 @@ use crate::route::town::{
     add_town, edit_town, get_all_towns, get_town_details, get_town_map, update_town,
 };
 use crate::EditorData;
+use rocket::http::Status;
 use rocket::response::content::RawHtml;
 use rocket::{Route, State};
 
@@ -35,6 +36,7 @@ pub mod util;
 #[get("/")]
 pub fn home(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
+    let save_uri = uri!(save()).to_string();
 
     RawHtml(
         create_html()
@@ -45,13 +47,27 @@ pub fn home(state: &State<EditorData>) -> RawHtml<String> {
             .add_storage_link("Rivers:", "/river/all", &data.river_manager)
             .add_storage_link("Streets:", "/street/all", &data.street_manager)
             .add_storage_link("Towns:", &link_all_towns(), &data.town_manager)
+            .p(|b| b.link(&save_uri, "Save"))
             .finish(),
     )
+}
+
+#[get("/save")]
+pub fn save(state: &State<EditorData>) -> Status {
+    let data = state.data.lock().expect("lock shared data");
+
+    if let Err(e) = data.save() {
+        println!("Failed to save: {}", e);
+        return Status::InternalServerError;
+    }
+
+    Status::NoContent
 }
 
 pub fn get_routes() -> Vec<Route> {
     let mut routes = routes![
         home,
+        save,
         get_all_mountains,
         get_mountain_details,
         add_mountain,
@@ -78,6 +94,8 @@ pub fn get_routes() -> Vec<Route> {
         edit_tile,
         preview_tile,
         update_tile,
+    ];
+    routes.extend(routes![
         get_all_buildings,
         get_building_details,
         get_building_creator,
@@ -85,8 +103,6 @@ pub fn get_routes() -> Vec<Route> {
         add_building,
         edit_building,
         update_building,
-    ];
-    routes.extend(routes![
         get_street_editor,
         get_street_editor_map,
         update_street_editor,

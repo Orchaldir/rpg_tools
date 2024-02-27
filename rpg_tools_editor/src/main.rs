@@ -28,7 +28,7 @@ pub struct EditorData {
 fn rocket() -> _ {
     rocket::build()
         .manage(EditorData {
-            data: Mutex::new(init()),
+            data: Mutex::new(init().unwrap()),
             town_renderer: TileMapRenderer::new(100, 10, 1),
             tools: Mutex::new(ToolData {
                 selected_street: StreetId::default(),
