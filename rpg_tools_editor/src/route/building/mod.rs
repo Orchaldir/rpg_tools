@@ -14,7 +14,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/building/all")]
 pub fn get_all_buildings(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.building_manager, "building", "Buildings")
+    get_all_html(&data.building_manager, "Buildings")
 }
 
 pub fn link_all_buildings() -> String {

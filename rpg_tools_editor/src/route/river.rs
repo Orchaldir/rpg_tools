@@ -13,7 +13,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/river/all")]
 pub fn get_all_rivers(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.river_manager, "river", "Rivers")
+    get_all_html(&data.river_manager, "Rivers")
 }
 
 #[get("/river/new")]

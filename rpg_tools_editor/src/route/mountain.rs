@@ -12,7 +12,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/mountain/all")]
 pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.mountain_manager, "mountain", "Mountains")
+    get_all_html(&data.mountain_manager, "Mountains")
 }
 
 #[get("/mountain/new")]

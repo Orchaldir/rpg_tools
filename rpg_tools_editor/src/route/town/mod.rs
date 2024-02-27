@@ -29,7 +29,7 @@ use rpg_tools_rendering::usecase::map::TileMapRenderer;
 #[get("/town/all")]
 pub fn get_all_towns(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.town_manager, "town", "Towns")
+    get_all_html(&data.town_manager, "Towns")
 }
 
 pub fn link_all_towns() -> String {

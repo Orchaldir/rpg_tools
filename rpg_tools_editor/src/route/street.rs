@@ -13,7 +13,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 #[get("/street/all")]
 pub fn get_all_streets(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.street_manager, "street", "Streets")
+    get_all_html(&data.street_manager, "Streets")
 }
 
 #[get("/street/new")]
