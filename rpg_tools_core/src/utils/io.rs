@@ -46,3 +46,20 @@ pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
         println!("Failed to save the {}s: {}", storage.name(), e);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::world::town::{Town, TownId};
+    #[test]
+    fn create_save_and_load_storage() {
+        let name = "element";
+        let mut storage: Storage<TownId, Town> = Storage::empty(name);
+        storage.create(Town::new);
+
+        save_storage(&storage, "test");
+        let result = load_storage("test", name).unwrap();
+
+        assert_eq!(result, storage);
+    }
+}
