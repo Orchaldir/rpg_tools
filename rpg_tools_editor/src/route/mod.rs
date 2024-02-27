@@ -56,7 +56,10 @@ pub fn home(state: &State<EditorData>) -> RawHtml<String> {
 pub fn save(state: &State<EditorData>) -> Status {
     let data = state.data.lock().expect("lock shared data");
 
-    data.save("CoC");
+    if let Err(e) = data.save("CoC") {
+        println!("Failed to save: {}", e);
+        return Status::InternalServerError;
+    }
 
     Status::NoContent
 }

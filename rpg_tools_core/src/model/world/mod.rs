@@ -34,11 +34,11 @@ impl WorldData {
         })
     }
 
-    pub fn save(&self, setting: &str) {
-        save_storage(&self.building_manager, setting);
-        save_storage(&self.mountain_manager, setting);
-        save_storage(&self.river_manager, setting);
-        save_storage(&self.street_manager, setting);
-        save_storage(&self.town_manager, setting);
+    pub fn save(&self, setting: &str) -> Result<()> {
+        save_storage(&self.building_manager, setting)?;
+        save_storage(&self.mountain_manager, setting)?;
+        save_storage(&self.river_manager, setting)?;
+        save_storage(&self.street_manager, setting)?;
+        save_storage(&self.town_manager, setting)
     }
 }

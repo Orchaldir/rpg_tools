@@ -42,13 +42,12 @@ pub fn load_storage<ID: Id + DeserializeOwned, ELEMENT: Element<ID> + Deserializ
 pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
     storage: &Storage<ID, ELEMENT>,
     setting: &str,
-) {
-    if let Err(e) = write(
+) -> Result<()> {
+    write(
         storage.get_all(),
         &get_setting_path(setting, &format!("{}.yaml", storage.name())),
-    ) {
-        println!("Failed to save the {}s: {}", storage.name(), e);
-    }
+    )
+    .context(format!("Failed to save the {}s", storage.name()))
 }
 
 #[cfg(test)]
@@ -62,7 +61,7 @@ mod tests {
         let mut storage: Storage<TownId, Town> = Storage::empty(name);
         storage.create(Town::new);
 
-        save_storage(&storage, "test");
+        save_storage(&storage, "test").unwrap();
         let result = load_storage("test", name).unwrap();
 
         assert_eq!(result, storage);

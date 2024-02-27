@@ -23,8 +23,8 @@ impl RpgData {
         get_setting_path(&self.setting, file)
     }
 
-    pub fn save(&self) {
-        self.world.save(&self.setting);
+    pub fn save(&self) -> anyhow::Result<()> {
+        self.world.save(&self.setting)
     }
 }
 
