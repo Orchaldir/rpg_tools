@@ -16,6 +16,7 @@ pub mod town;
 /// Contains the terrain features & settlements.
 #[derive(Debug, Default)]
 pub struct WorldData {
+    pub setting: String,
     pub building_manager: Storage<BuildingId, Building>,
     pub mountain_manager: Storage<MountainId, Mountain>,
     pub river_manager: Storage<RiverId, River>,
@@ -26,6 +27,7 @@ pub struct WorldData {
 impl WorldData {
     pub fn load(setting: &str) -> Result<Self> {
         Ok(Self {
+            setting: setting.to_string(),
             building_manager: load_storage(setting, "building")?,
             mountain_manager: load_storage(setting, "mountain")?,
             river_manager: load_storage(setting, "river")?,
@@ -34,11 +36,11 @@ impl WorldData {
         })
     }
 
-    pub fn save(&self, setting: &str) -> Result<()> {
-        save_storage(&self.building_manager, setting)?;
-        save_storage(&self.mountain_manager, setting)?;
-        save_storage(&self.river_manager, setting)?;
-        save_storage(&self.street_manager, setting)?;
-        save_storage(&self.town_manager, setting)
+    pub fn save(&self) -> Result<()> {
+        save_storage(&self.building_manager, &self.setting)?;
+        save_storage(&self.mountain_manager, &self.setting)?;
+        save_storage(&self.river_manager, &self.setting)?;
+        save_storage(&self.street_manager, &self.setting)?;
+        save_storage(&self.town_manager, &self.setting)
     }
 }
