@@ -33,7 +33,7 @@ pub fn load_storage<ID: Id + DeserializeOwned, ELEMENT: Element<ID> + Deserializ
     setting: &str,
     storage: &str,
 ) -> Result<Storage<ID, ELEMENT>> {
-    let elements: Vec<ELEMENT> = read(&get_setting_path(setting, &format!("{}.yaml", storage)))
+    let elements: Vec<ELEMENT> = read(&get_path(setting, storage))
         .context(format!("Failed to load to storage {}", storage))?;
 
     Ok(Storage::new(storage.to_string(), elements))
@@ -43,11 +43,12 @@ pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
     storage: &Storage<ID, ELEMENT>,
     setting: &str,
 ) -> Result<()> {
-    write(
-        storage.get_all(),
-        &get_setting_path(setting, &format!("{}.yaml", storage.name())),
-    )
-    .context(format!("Failed to save the {}s", storage.name()))
+    write(storage.get_all(), &get_path(&setting, storage.name()))
+        .context(format!("Failed to save the {}s", storage.name()))
+}
+
+fn get_path(setting: &str, storage: &str) -> PathBuf {
+    get_setting_path(setting, &format!("{}.yaml", storage))
 }
 
 #[cfg(test)]
