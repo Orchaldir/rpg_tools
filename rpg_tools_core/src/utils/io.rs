@@ -6,7 +6,7 @@ use serde::Serialize;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 pub fn read<T: DeserializeOwned>(path: &Path) -> Result<T> {
     let string = fs::read_to_string(path).context(format!("Failed to load {:?}", path))?;
@@ -15,7 +15,11 @@ pub fn read<T: DeserializeOwned>(path: &Path) -> Result<T> {
     Ok(data)
 }
 
-pub fn write<T: Serialize>(object: &T, path: &Path) -> Result<()> {
+pub fn write<T: Serialize>(object: &T, path: &PathBuf) -> Result<()> {
+    let directory = path
+        .parent()
+        .context(format!("Failed to get directory from {:?}", path))?;
+    fs::create_dir_all(directory).context(format!("Failed to create directory {:?}", directory))?;
     let mut file = File::create(path).context(format!("Failed to create {:?}", path))?;
     let s = serde_yaml::to_string(object).context(format!("Failed to serialize {:?}", path))?;
 
@@ -51,6 +55,7 @@ pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
 mod tests {
     use super::*;
     use crate::model::world::town::{Town, TownId};
+
     #[test]
     fn create_save_and_load_storage() {
         let name = "element";
