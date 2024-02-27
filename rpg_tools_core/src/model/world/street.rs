@@ -18,7 +18,7 @@ impl Id for StreetId {
 }
 
 /// A street in the game.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Street {
     id: StreetId,
     name: String,

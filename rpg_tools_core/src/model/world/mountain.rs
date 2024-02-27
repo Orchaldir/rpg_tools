@@ -16,7 +16,7 @@ impl Id for MountainId {
 }
 
 /// A mountain or hill in the game.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Mountain {
     id: MountainId,
     name: String,

@@ -1,13 +1,13 @@
 use std::hash::Hash;
 use std::marker::PhantomData;
 
-pub trait Id: Copy + Hash + Eq {
+pub trait Id: Copy + Hash + Eq + PartialEq {
     fn new(id: usize) -> Self;
 
     fn id(&self) -> usize;
 }
 
-pub trait Element<I: Id> {
+pub trait Element<I: Id>: Eq + PartialEq {
     fn id(&self) -> I;
 
     fn with_id(self, id: I) -> Self;
@@ -24,20 +24,24 @@ pub enum DeleteElementResult<I: Id> {
     NotFound,
 }
 
-#[derive(Debug)]
-pub struct Storage<I: Id, T: Element<I>> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct Storage<I: Id + PartialEq + Eq, T: Element<I> + PartialEq + Eq> {
     name: String,
     elements: Vec<T>,
     phantom: PhantomData<I>,
 }
 
 impl<I: Id, T: Element<I>> Storage<I, T> {
-    pub fn new(name: String, elements: Vec<T>) -> Self {
+    pub fn new<S: Into<String>>(name: S, elements: Vec<T>) -> Self {
         Self {
-            name,
+            name: name.into(),
             elements,
             phantom: PhantomData,
         }
+    }
+
+    pub fn empty<S: Into<String>>(name: S) -> Self {
+        Self::new(name, Vec::new())
     }
 
     pub fn name(&self) -> &str {
@@ -88,7 +92,7 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
 
 impl<I: Id, T: Element<I>> Default for Storage<I, T> {
     fn default() -> Self {
-        Storage::new("Unknown".to_string(), Vec::new())
+        Storage::new("unknown".to_string(), Vec::new())
     }
 }
 

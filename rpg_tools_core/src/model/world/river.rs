@@ -18,7 +18,7 @@ impl Id for RiverId {
 }
 
 /// A river in the game.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct River {
     id: RiverId,
     name: String,
