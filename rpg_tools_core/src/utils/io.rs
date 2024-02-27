@@ -43,7 +43,7 @@ pub fn save_storage<ID: Id + Serialize, ELEMENT: Element<ID> + Serialize>(
     storage: &Storage<ID, ELEMENT>,
     setting: &str,
 ) -> Result<()> {
-    write(storage.get_all(), &get_path(&setting, storage.name()))
+    write(storage.get_all(), &get_path(setting, storage.name()))
         .context(format!("Failed to save the {}s", storage.name()))
 }
 
