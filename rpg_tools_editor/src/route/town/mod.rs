@@ -22,9 +22,7 @@ use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::{LinkRenderer, Tooltip};
-use rpg_tools_rendering::usecase::map::town::{
-    render_building, render_buildings, render_street, render_streets,
-};
+use rpg_tools_rendering::usecase::map::town::{render_building, render_street, render_streets};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -141,8 +139,6 @@ fn render_town<F: FnMut(BuildingId) -> String>(
         &town.map,
         TownTile::get_color,
     );
-
-    render_buildings(data, &mut builder, renderer, town);
 
     data.building_manager
         .get_all()

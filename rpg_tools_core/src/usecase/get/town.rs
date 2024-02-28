@@ -28,7 +28,7 @@ pub fn check_construction<F: FnOnce(&Construction) -> bool>(
     check: F,
 ) -> bool {
     get_construction(data, town_id, tile)
-        .map(|c| check(c))
+        .map(check)
         .unwrap_or(false)
 }
 
@@ -79,8 +79,7 @@ pub fn is_street(data: &WorldData, town_id: TownId, tile: usize, street_id: Stre
 }
 
 pub fn is_any_street(data: &WorldData, town_id: TownId, tile: usize) -> bool {
-    check_construction(data, town_id, tile, |construction| match construction {
-        Construction::Street { .. } => true,
-        _ => false,
+    check_construction(data, town_id, tile, |construction| {
+        matches!(construction, Construction::Street { .. })
     })
 }
