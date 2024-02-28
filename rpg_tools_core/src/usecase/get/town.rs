@@ -21,15 +21,24 @@ pub fn get_constructions(data: &WorldData, town_id: TownId) -> Vec<&Construction
         .collect()
 }
 
+pub fn check_construction<F: FnOnce(&Construction) -> bool>(
+    data: &WorldData,
+    town_id: TownId,
+    tile: usize,
+    check: F,
+) -> bool {
+    get_construction(data, town_id, tile)
+        .map(|c| check(c))
+        .unwrap_or(false)
+}
+
 pub fn is_construction(
     data: &WorldData,
     town_id: TownId,
     tile: usize,
     construction: Construction,
 ) -> bool {
-    get_construction(data, town_id, tile)
-        .map(|c| c.eq(&construction))
-        .unwrap_or(false)
+    check_construction(data, town_id, tile, |c| c.eq(&construction))
 }
 
 pub fn is_lot_construction(
@@ -67,4 +76,11 @@ pub fn is_lot_free(data: &WorldData, lot: &BuildingLot) -> bool {
 
 pub fn is_street(data: &WorldData, town_id: TownId, tile: usize, street_id: StreetId) -> bool {
     is_construction(data, town_id, tile, Construction::Street { id: street_id })
+}
+
+pub fn is_any_street(data: &WorldData, town_id: TownId, tile: usize) -> bool {
+    check_construction(data, town_id, tile, |construction| match construction {
+        Construction::Street { .. } => true,
+        _ => false,
+    })
 }
