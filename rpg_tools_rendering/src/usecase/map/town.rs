@@ -44,19 +44,7 @@ pub fn render_building(
     builder.render_rectangle(&aabb, &style);
 }
 
-pub fn render_streets(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town: &Town) {
-    renderer.render(
-        &Point2d::default(),
-        &town.map,
-        |_index, _x, _y, aabb, tile| {
-            if let Street { .. } = tile.construction {
-                render_street(builder, &aabb);
-            }
-        },
-    );
-}
-
-pub fn render_streets2<F: FnMut(AABB, StreetId)>(
+pub fn render_streets<F: FnMut(AABB, StreetId)>(
     renderer: &TileMapRenderer,
     town: &Town,
     mut render: F,

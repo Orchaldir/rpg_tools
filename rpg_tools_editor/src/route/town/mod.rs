@@ -24,7 +24,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::{LinkRenderer, Tooltip};
 use rpg_tools_rendering::usecase::map::town::{
-    render_building, render_buildings, render_street, render_streets2,
+    render_building, render_buildings, render_street, render_streets,
 };
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
@@ -161,7 +161,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
         },
     );
 
-    render_streets2(renderer, town, |aabb, id| {
+    render_streets(renderer, town, |aabb, id| {
         if let Some(street) = data.street_manager.get(id) {
             builder.tooltip(street.name())
         }
