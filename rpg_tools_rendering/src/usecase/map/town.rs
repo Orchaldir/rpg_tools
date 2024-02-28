@@ -43,11 +43,15 @@ pub fn render_building(
 }
 
 pub fn render_streets(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town: &Town) {
-    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Street { .. } = tile.construction {
-            render_street(builder, &aabb);
-        }
-    });
+    renderer.render(
+        &Point2d::default(),
+        &town.map,
+        |_index, _x, _y, aabb, tile| {
+            if let Street { .. } = tile.construction {
+                render_street(builder, &aabb);
+            }
+        },
+    );
 }
 
 pub fn render_street(builder: &mut SvgBuilder, aabb: &AABB) {
