@@ -141,24 +141,28 @@ fn render_town<F: FnMut(BuildingId) -> String>(
         TownTile::get_color,
     );
 
-    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Building { id } = tile.construction {
-            if let Some(building) = data.building_manager.get(id) {
-                builder.tooltip(building.name());
-                builder.link(&get_link(id));
-                render_building(&mut builder, renderer, town, building);
-                builder.close();
-            }
-        } else if let Street { id } = tile.construction {
-            if let Some(street) = data.street_manager.get(id) {
-                builder.tooltip(street.name())
+    renderer.render(
+        &Point2d::default(),
+        &town.map,
+        |_index, _x, _y, aabb, tile| {
+            if let Building { id } = tile.construction {
+                if let Some(building) = data.building_manager.get(id) {
+                    builder.tooltip(building.name());
+                    builder.link(&get_link(id));
+                    render_building(&mut builder, renderer, town, building);
+                    builder.close();
+                }
+            } else if let Street { id } = tile.construction {
+                if let Some(street) = data.street_manager.get(id) {
+                    builder.tooltip(street.name())
+                }
+
+                render_street(&mut builder, &aabb);
             }
 
-            render_street(&mut builder, &aabb);
-        }
-
-        builder.clear_tooltip();
-    });
+            builder.clear_tooltip();
+        },
+    );
 
     let svg = builder.finish();
     RawSvg::new(svg.export())

@@ -6,6 +6,7 @@ use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::Building;
+use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::construction::Construction::Street;
 use rpg_tools_core::model::world::town::Town;
 use rpg_tools_core::model::world::WorldData;
@@ -48,6 +49,26 @@ pub fn render_streets(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town
         &town.map,
         |_index, _x, _y, aabb, tile| {
             if let Street { .. } = tile.construction {
+                render_street(builder, &aabb);
+            }
+        },
+    );
+}
+
+pub fn render_streets2(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town: &Town) {
+    renderer.render(
+        &Point2d::default(),
+        &town.map,
+        |_index, x, y, aabb, tile| {
+            if let Street { .. } = tile.construction {
+                if town.check_construction_xy(x + 1, y, Construction::is_any_street) {
+                    let right_aabb = aabb + Point2d::new(renderer.tile_size as i32 / 2, 0);
+                    render_street(builder, &right_aabb);
+                }
+                if town.check_construction_xy(x, y + 1, Construction::is_any_street) {
+                    let right_aabb = aabb + Point2d::new(0, renderer.tile_size as i32 / 2);
+                    render_street(builder, &right_aabb);
+                }
                 render_street(builder, &aabb);
             }
         },

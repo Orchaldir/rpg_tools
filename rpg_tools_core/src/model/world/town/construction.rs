@@ -20,4 +20,11 @@ impl Construction {
     pub fn is_present(&self) -> bool {
         self != &Self::None
     }
+
+    pub fn is_any_street(&self) -> bool {
+        match self {
+            Construction::Street { .. } => true,
+            _ => false,
+        }
+    }
 }

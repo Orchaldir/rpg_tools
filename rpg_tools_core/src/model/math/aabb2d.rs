@@ -1,6 +1,7 @@
 use crate::model::math::point2d::Point2d;
 use crate::model::math::size2d::Size2d;
 use serde::{Deserialize, Serialize};
+use std::ops::Add;
 
 pub type AABB = AxisAlignedBoundingBox;
 
@@ -239,5 +240,25 @@ impl AxisAlignedBoundingBox {
     /// ```
     pub fn shrink(&self, border: u32) -> Self {
         Self::with_center(self.center(), self.size - Size2d::square(border * 2))
+    }
+}
+
+impl Add<Point2d> for AABB {
+    type Output = AABB;
+
+    /// Move an AABB.
+    ///
+    /// ```
+    ///# use rpg_tools_core::model::math::aabb2d::AABB;
+    ///# use rpg_tools_core::model::math::point2d::Point2d;
+    /// let aabb = AABB::simple(10, 20, 30, 40);
+    /// let point = Point2d::new(5, 6);
+    /// let result = AABB::simple(15, 26, 30, 40);
+    ///
+    /// assert_eq!(aabb + point, result);
+    /// ```
+    fn add(self, other: Point2d) -> AABB {
+        let start = self.start + other;
+        AABB::new(start, self.size)
     }
 }
