@@ -14,7 +14,6 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::world::town::construction::Construction::{Building, Street};
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -23,7 +22,7 @@ use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::{LinkRenderer, Tooltip};
-use rpg_tools_rendering::usecase::map::town::{render_building, render_street};
+use rpg_tools_rendering::usecase::map::town::{render_building, render_street, render_streets};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -141,22 +140,24 @@ fn render_town<F: FnMut(BuildingId) -> String>(
         TownTile::get_color,
     );
 
-    renderer.render(&Point2d::default(), &town.map, |_index, aabb, tile| {
-        if let Building { id } = tile.construction {
-            if let Some(building) = data.building_manager.get(id) {
-                builder.tooltip(building.name());
-                builder.link(&get_link(id));
-                render_building(&mut builder, renderer, town, building);
-                builder.close();
-            }
-        } else if let Street { id } = tile.construction {
-            if let Some(street) = data.street_manager.get(id) {
-                builder.tooltip(street.name())
-            }
+    data.building_manager
+        .get_all()
+        .iter()
+        .filter(|&building| building.lot().town.eq(&town.id()))
+        .for_each(|building| {
+            builder.tooltip(building.name());
+            builder.link(&get_link(building.id()));
+            render_building(&mut builder, renderer, town, building);
+            builder.close();
+            builder.clear_tooltip();
+        });
 
-            render_street(&mut builder, &aabb);
+    render_streets(renderer, town, |aabb, id| {
+        if let Some(street) = data.street_manager.get(id) {
+            builder.tooltip(street.name())
         }
 
+        render_street(&mut builder, &aabb);
         builder.clear_tooltip();
     });
 

@@ -82,6 +82,7 @@ impl Town {
         true
     }
 
+    /// Checks the [`construction`](Construction) of the [`tiles`](TownTile) of the [`lot`](BuildingLot).
     fn check_lot_construction<F: Fn(&Construction) -> bool>(
         &self,
         lot: &BuildingLot,
@@ -124,6 +125,27 @@ impl Town {
     /// Checks if the [`tiles`](TownTile) of the [`lot`](BuildingLot) are free.
     pub fn is_lot_free(&self, lot: &BuildingLot) -> bool {
         self.is_lot_construction(lot, &Construction::None)
+    }
+
+    /// Checks the [`construction`](Construction) of a [`tile`](TownTile).
+    pub fn check_construction<F: Fn(&Construction) -> bool>(&self, index: usize, check: F) -> bool {
+        self.map
+            .get_tile(index)
+            .map(|tile| check(&tile.construction))
+            .unwrap_or(false)
+    }
+
+    /// Checks the [`construction`](Construction) of a [`tile`](TownTile).
+    pub fn check_construction_xy<F: Fn(&Construction) -> bool>(
+        &self,
+        x: i32,
+        y: i32,
+        check: F,
+    ) -> bool {
+        self.map
+            .get_tile_xy(x, y)
+            .map(|tile| check(&tile.construction))
+            .unwrap_or(false)
     }
 }
 

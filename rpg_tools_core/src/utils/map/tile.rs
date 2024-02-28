@@ -49,6 +49,12 @@ impl<Tile: Clone> TileMap<Tile> {
         self.tiles.get(index)
     }
 
+    pub fn get_tile_xy(&self, x: i32, y: i32) -> Option<&Tile> {
+        self.size
+            .to_index(x, y)
+            .and_then(|index| self.tiles.get(index))
+    }
+
     pub fn get_tile_mut(&mut self, index: usize) -> Option<&mut Tile> {
         self.tiles.get_mut(index)
     }

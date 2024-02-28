@@ -13,11 +13,18 @@ pub enum Construction {
 }
 
 impl Construction {
+    /// Is the [`tile`](crate::model::world::town::tile::TownTile) clear of any construction?
     pub fn is_clear(&self) -> bool {
         self == &Self::None
     }
 
+    /// Does the [`tile`](crate::model::world::town::tile::TownTile) have any construction?
     pub fn is_present(&self) -> bool {
         self != &Self::None
+    }
+
+    /// Does the [`tile`](crate::model::world::town::tile::TownTile) have any street?
+    pub fn is_any_street(&self) -> bool {
+        matches!(self, Construction::Street { .. })
     }
 }

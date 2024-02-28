@@ -32,7 +32,7 @@ impl TileMapRenderer {
         size * self.tile_size as f32
     }
 
-    pub fn render<Tile: Clone, F: FnMut(usize, AABB, &Tile)>(
+    pub fn render<Tile: Clone, F: FnMut(usize, i32, i32, AABB, &Tile)>(
         &self,
         start: &Point2d,
         map: &TileMap<Tile>,
@@ -46,7 +46,7 @@ impl TileMapRenderer {
             for x in 0..size.width() {
                 if let Some(tile) = map.get_tile(index) {
                     let position = self.calculate_tile_position(start, x, y);
-                    render_tile(index, AABB::new(position, tile_size), tile);
+                    render_tile(index, x, y, AABB::new(position, tile_size), tile);
                 }
 
                 index += 1;
@@ -61,7 +61,7 @@ impl TileMapRenderer {
         map: &TileMap<Tile>,
         lookup: F,
     ) {
-        self.render(start, map, |_index, aabb, tile| {
+        self.render(start, map, |_index, _x, _y, aabb, tile| {
             let color = lookup(tile);
             let style = RenderStyle::with_border(color, Color::Black, self.border_size);
             renderer.render_rectangle(&aabb, &style);
@@ -80,7 +80,7 @@ impl TileMapRenderer {
         color_lookup: C,
         link_lookup: L,
     ) {
-        self.render(start, map, |index, aabb, tile| {
+        self.render(start, map, |index, _x, _y, aabb, tile| {
             let color = color_lookup(tile);
             let style = RenderStyle::with_border(color, Color::Black, self.border_size);
 
