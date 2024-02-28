@@ -14,7 +14,6 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::world::town::construction::Construction::Building;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -145,21 +144,17 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
     render_buildings(data, &mut builder, renderer, town);
 
-    renderer.render(
-        &Point2d::default(),
-        &town.map,
-        |_index, _x, _y, _aabb, tile| {
-            if let Building { id } = tile.construction {
-                if let Some(building) = data.building_manager.get(id) {
-                    builder.tooltip(building.name());
-                    builder.link(&get_link(id));
-                    render_building(&mut builder, renderer, town, building);
-                    builder.close();
-                    builder.clear_tooltip();
-                }
-            }
-        },
-    );
+    data.building_manager
+        .get_all()
+        .iter()
+        .filter(|&building| building.lot().town.eq(&town.id()))
+        .for_each(|building| {
+            builder.tooltip(building.name());
+            builder.link(&get_link(building.id()));
+            render_building(&mut builder, renderer, town, building);
+            builder.close();
+            builder.clear_tooltip();
+        });
 
     render_streets(renderer, town, |aabb, id| {
         if let Some(street) = data.street_manager.get(id) {
