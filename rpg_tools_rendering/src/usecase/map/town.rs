@@ -78,3 +78,13 @@ pub fn render_street_color(builder: &mut SvgBuilder, aabb: &AABB, color: Color) 
     let style = RenderStyle::no_border(color);
     builder.render_rectangle(&aabb.scale(0.5), &style);
 }
+
+pub fn render_constructs(
+    data: &WorldData,
+    builder: &mut SvgBuilder,
+    renderer: &TileMapRenderer,
+    town: &Town,
+) {
+    render_buildings(data, builder, renderer, town);
+    render_streets(builder, renderer, town);
+}

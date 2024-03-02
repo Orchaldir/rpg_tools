@@ -15,6 +15,7 @@ use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
+use rpg_tools_rendering::usecase::map::town::render_constructs;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/tile/all")]
@@ -28,7 +29,7 @@ pub fn get_tile_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg>
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
-        .map(|town| render_to_svg(&state.town_renderer, town))
+        .map(|town| render_to_svg(&data, &state.town_renderer, town))
 }
 
 #[get("/town/<id>/tile/<index>/edit")]
@@ -98,7 +99,7 @@ pub fn update_tile(
     get_all_tiles_html(&data, town_id)
 }
 
-fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_to_svg(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
@@ -109,6 +110,8 @@ fn render_to_svg(renderer: &TileMapRenderer, town: &Town) -> RawSvg {
         TownTile::get_color,
         |index, _tile| Some(uri!(edit_tile(town.id().id(), index)).to_string()),
     );
+
+    render_constructs(data, &mut builder, renderer, town);
 
     let svg = builder.finish();
     RawSvg::new(svg.export())
