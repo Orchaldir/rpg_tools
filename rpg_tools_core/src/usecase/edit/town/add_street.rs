@@ -10,18 +10,20 @@ pub fn add_street_to_tile(
     data: &mut WorldData,
     town_id: TownId,
     tile: usize,
-    id: StreetId,
+    street_id: StreetId,
 ) -> Result<()> {
     if let Some(town) = data.town_manager.get_mut(town_id) {
         if let Some(tile) = town.map.get_tile_mut(tile) {
-            if tile.construction == Construction::None {
-                tile.construction = Construction::Street { id };
-
-                if let Some(street) = data.street_manager.get_mut(id) {
+            if let Some(street) = data.street_manager.get_mut(street_id) {
+                if tile.construction == Construction::None {
+                    tile.construction = Construction::Street { id: street_id };
                     street.towns.insert(town_id);
-                }
 
-                return Ok(());
+                    return Ok(());
+                }
+            }
+            else {
+                bail!("Unknown street id {}!", street_id.id());
             }
         } else {
             bail!("Tile {} is outside town {}!", tile, town.name());
@@ -60,18 +62,24 @@ mod tests {
     }
 
     #[test]
+    fn unknown_street() {
+        let mut data = WorldData::default();
+        let street_id = StreetId::new(0);
+        let town_id = data.town_manager.create(Town::new);
+
+        assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+        assert!(is_free(&data, town_id, 0));
+        assert!(data.street_manager.is_empty());
+    }
+
+    #[test]
     fn unknown_town() {
         let mut data = WorldData::default();
         let street_id = data.street_manager.create(Street::new);
         let town_id = TownId::new(0);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
-        assert!(!data
-            .street_manager
-            .get(street_id)
-            .unwrap()
-            .towns
-            .contains(&town_id));
+        assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
 
     #[test]
@@ -82,12 +90,7 @@ mod tests {
 
         assert!(add_street_to_tile(&mut data, town_id, 10, street_id).is_err());
         assert!(is_free(&data, town_id, 0));
-        assert!(!data
-            .street_manager
-            .get(street_id)
-            .unwrap()
-            .towns
-            .contains(&town_id));
+        assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
 
     #[test]
@@ -99,12 +102,7 @@ mod tests {
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
         assert!(is_building(&data, town_id, 0, building_id));
-        assert!(!data
-            .street_manager
-            .get(street_id)
-            .unwrap()
-            .towns
-            .contains(&town_id));
+        assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
 
     #[test]
@@ -117,5 +115,11 @@ mod tests {
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id1).is_err());
         assert!(is_street(&data, town_id, 0, street_id));
+        assert!(data
+            .street_manager
+            .get(street_id1)
+            .unwrap()
+            .towns
+            .is_empty());
     }
 }
