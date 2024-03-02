@@ -270,7 +270,8 @@
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
@@ -346,7 +347,33 @@
     - terrain:
         type: Plain
       construction:
+        type: Street
+        id: 1
+    - terrain:
+        type: Plain
+      construction:
         type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
@@ -394,7 +421,33 @@
     - terrain:
         type: Plain
       construction:
+        type: Street
+        id: 1
+    - terrain:
+        type: Plain
+      construction:
         type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: None
+    - terrain:
+        type: Plain
+      construction:
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
@@ -442,79 +495,38 @@
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
-    - terrain:
-        type: Plain
-      construction:
-        type: None
+        type: Street
+        id: 1
     - terrain:
         type: Plain
       construction:

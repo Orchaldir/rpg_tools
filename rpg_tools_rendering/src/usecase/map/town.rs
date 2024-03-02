@@ -65,6 +65,10 @@ pub fn render_streets<F: FnMut(AABB, StreetId, usize)>(
 }
 
 pub fn render_street(builder: &mut SvgBuilder, aabb: &AABB) {
-    let style = RenderStyle::no_border(Color::Gray);
+    render_street_color(builder, aabb, Color::Gray);
+}
+
+pub fn render_street_color(builder: &mut SvgBuilder, aabb: &AABB, color: Color) {
+    let style = RenderStyle::no_border(color);
     builder.render_rectangle(&aabb.scale(0.5), &style);
 }
