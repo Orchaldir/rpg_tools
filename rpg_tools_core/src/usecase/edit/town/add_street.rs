@@ -21,8 +21,7 @@ pub fn add_street_to_tile(
 
                     return Ok(());
                 }
-            }
-            else {
+            } else {
                 bail!("Unknown street id {}!", street_id.id());
             }
         } else {

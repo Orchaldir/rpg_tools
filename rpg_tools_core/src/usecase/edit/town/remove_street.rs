@@ -8,8 +8,12 @@ use anyhow::{bail, Result};
 pub fn remove_street_from_tile(data: &mut WorldData, town_id: TownId, tile: usize) -> Result<()> {
     if let Some(town) = data.town_manager.get_mut(town_id) {
         if let Some(tile) = town.map.get_tile_mut(tile) {
-            if tile.construction.is_any_street() {
+            if let Construction::Street { id } = tile.construction {
                 tile.construction = Construction::None;
+
+                if let Some(street) = data.street_manager.get_mut(id) {
+                    street.towns.remove(&town_id);
+                }
 
                 return Ok(());
             }
@@ -33,7 +37,7 @@ mod tests {
     use crate::usecase::get::town::is_any_street;
 
     #[test]
-    fn create_successful() {
+    fn delete_last_street_in_town() {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
@@ -42,6 +46,7 @@ mod tests {
         assert!(remove_street_from_tile(&mut data, town_id, 0).is_ok());
 
         assert!(!is_any_street(&data, town_id, 0));
+        assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
 
     #[test]
