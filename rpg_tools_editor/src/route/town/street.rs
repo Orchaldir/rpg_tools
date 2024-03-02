@@ -12,7 +12,7 @@ use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
-use rpg_tools_core::usecase::create::street::add_street_to_tile;
+use rpg_tools_core::usecase::edit::town::add_street::add_street_to_tile;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::town::{render_buildings, render_street, render_streets};
