@@ -33,7 +33,7 @@ impl EditorBuilder for HtmlBuilder {
         self.p(|builder| {
             builder
                 .bold(title)
-                .complex_link(link, |a| a.usize(storage.get_all().len()))
+                .complex_link(link, |a| a.usize(storage.len()))
         })
     }
 }

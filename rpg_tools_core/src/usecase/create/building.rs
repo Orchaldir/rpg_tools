@@ -62,7 +62,7 @@ mod tests {
         let mut data = WorldData::default();
 
         assert!(create_building(&mut data, create_lot(0)).is_err());
-        assert!(data.building_manager.get_all().is_empty())
+        assert!(data.building_manager.is_empty())
     }
 
     #[test]
@@ -71,7 +71,7 @@ mod tests {
         data.town_manager.create(Town::new);
 
         assert!(create_building(&mut data, create_lot(1)).is_err());
-        assert!(data.building_manager.get_all().is_empty())
+        assert!(data.building_manager.is_empty())
     }
 
     #[test]
@@ -81,7 +81,7 @@ mod tests {
         let lot = BuildingLot::big(town_id, 0, Size2d::square(2));
 
         assert!(create_building(&mut data, lot).is_err());
-        assert!(data.building_manager.get_all().is_empty())
+        assert!(data.building_manager.is_empty())
     }
 
     #[test]
@@ -104,7 +104,7 @@ mod tests {
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
         assert!(create_building(&mut data, create_lot(0)).is_err());
 
-        assert!(data.building_manager.get_all().is_empty());
+        assert!(data.building_manager.is_empty());
         assert!(is_street(&data, town_id, 0, street_id));
     }
 

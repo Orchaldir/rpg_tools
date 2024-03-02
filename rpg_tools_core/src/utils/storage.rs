@@ -54,12 +54,16 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
         id
     }
 
-    pub fn get_all(&self) -> &Vec<T> {
-        &self.elements
+    pub fn is_empty(&self) -> bool {
+        self.elements.is_empty()
     }
 
-    pub fn get_all_mut(&mut self) -> &mut Vec<T> {
-        &mut self.elements
+    pub fn len(&self) -> usize {
+        self.elements.len()
+    }
+
+    pub fn get_all(&self) -> &Vec<T> {
+        &self.elements
     }
 
     pub fn get(&self, id: I) -> Option<&T> {
@@ -108,7 +112,7 @@ mod tests {
 
         let id = storage.create(Town::new);
 
-        assert_eq!(1, storage.get_all().len());
+        assert_eq!(1, storage.len());
         assert_element(&storage, id, "Town 0");
     }
 
@@ -137,7 +141,7 @@ mod tests {
 
         assert_eq!(SwappedAndRemoved { id_to_update: id2 }, storage.delete(id0));
 
-        assert_eq!(2, storage.get_all().len());
+        assert_eq!(2, storage.len());
         assert_element(&storage, id0, "Town 2");
         assert_element(&storage, id1, "Town 1");
     }
@@ -148,7 +152,7 @@ mod tests {
         let id = storage.create(Town::new);
 
         assert_eq!(NotFound, storage.delete(TownId::new(5)));
-        assert_eq!(1, storage.get_all().len());
+        assert_eq!(1, storage.len());
         assert_element(&storage, id, "Town 0");
     }
 
