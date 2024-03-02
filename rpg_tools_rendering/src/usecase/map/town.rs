@@ -44,7 +44,13 @@ pub fn render_building(
     builder.render_rectangle(&aabb, &style);
 }
 
-pub fn render_streets<F: FnMut(AABB, StreetId, usize)>(
+pub fn render_streets(builder: &mut SvgBuilder, renderer: &TileMapRenderer, town: &Town) {
+    render_streets_complex(renderer, town, |aabb, _id, _index| {
+        render_street(builder, &aabb);
+    });
+}
+
+pub fn render_streets_complex<F: FnMut(AABB, StreetId, usize)>(
     renderer: &TileMapRenderer,
     town: &Town,
     mut render: F,

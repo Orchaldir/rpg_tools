@@ -19,7 +19,7 @@ use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::LinkRenderer;
 use rpg_tools_rendering::usecase::map::town::{
-    render_buildings, render_street, render_street_color, render_streets,
+    render_buildings, render_street, render_street_color, render_streets_complex,
 };
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
@@ -168,7 +168,7 @@ fn render_street_editor_map(
     );
 
     render_buildings(data, &mut builder, renderer, town);
-    render_streets(renderer, town, |aabb, id, index| {
+    render_streets_complex(renderer, town, |aabb, id, index| {
         builder.link(&link_remove_street_from_town(town.id(), index));
 
         if id.eq(&selected) {
