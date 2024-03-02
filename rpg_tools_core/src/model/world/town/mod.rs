@@ -5,6 +5,7 @@ pub mod tile;
 use crate::model::math::size2d::Size2d;
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::BuildingId;
+use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
@@ -146,6 +147,14 @@ impl Town {
             .get_tile_xy(x, y)
             .map(|tile| check(&tile.construction))
             .unwrap_or(false)
+    }
+
+    /// Does the town contain a specific street?
+    pub fn contains_street(&self, id: StreetId) -> bool {
+        self.map
+            .get_tiles()
+            .iter()
+            .any(|tile| tile.construction.is_street(id))
     }
 }
 
