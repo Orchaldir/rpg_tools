@@ -152,7 +152,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
             builder.clear_tooltip();
         });
 
-    render_streets(renderer, town, |aabb, id| {
+    render_streets(renderer, town, |aabb, id, _index| {
         if let Some(street) = data.street_manager.get(id) {
             builder.tooltip(street.name())
         }

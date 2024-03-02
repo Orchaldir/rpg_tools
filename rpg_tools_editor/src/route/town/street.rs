@@ -13,8 +13,10 @@ use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::town::add_street::add_street_to_tile;
+use rpg_tools_core::usecase::edit::town::remove_street::remove_street_from_tile;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
+use rpg_tools_rendering::renderer::LinkRenderer;
 use rpg_tools_rendering::usecase::map::town::{render_buildings, render_street, render_streets};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
@@ -86,6 +88,34 @@ pub fn link_add_street_to_town(id: TownId, tile: usize) -> String {
     uri!(add_street_to_town(id.id(), tile)).to_string()
 }
 
+#[get("/town/<id>/street/remove/<tile>")]
+pub fn remove_street_from_town(
+    state: &State<EditorData>,
+    id: usize,
+    tile: usize,
+) -> Option<RawHtml<String>> {
+    let mut data = state.data.lock().expect("lock shared data");
+    let tools = state.tools.lock().expect("lock shared data");
+    let town_id = TownId::new(id);
+
+    if remove_street_from_tile(&mut data, town_id, tile).is_ok() {
+        println!(
+            "Removed street {} on tile {} of town {}",
+            tools.selected_street.id(),
+            tile,
+            id
+        );
+    } else {
+        println!("Failed to remove a street on tile {} of town {}", tile, id);
+    }
+
+    get_street_creator_html(&data, town_id, tools.selected_street)
+}
+
+pub fn link_remove_street_from_town(id: TownId, tile: usize) -> String {
+    uri!(remove_street_from_town(id.id(), tile)).to_string()
+}
+
 fn get_street_creator_html(
     data: &WorldData,
     id: TownId,
@@ -128,8 +158,10 @@ fn render_street_editor_map(data: &WorldData, renderer: &TileMapRenderer, town: 
     );
 
     render_buildings(data, &mut builder, renderer, town);
-    render_streets(renderer, town, |aabb, _id| {
-        render_street(&mut builder, &aabb)
+    render_streets(renderer, town, |aabb, _id, index| {
+        builder.link(&link_remove_street_from_town(town.id(), index));
+        render_street(&mut builder, &aabb);
+        builder.close();
     });
 
     let svg = builder.finish();

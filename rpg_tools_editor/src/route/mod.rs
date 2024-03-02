@@ -13,7 +13,8 @@ use crate::route::street::{
 use crate::route::town::building::{add_building, get_building_creator, get_building_creator_map};
 use crate::route::town::link_all_towns;
 use crate::route::town::street::{
-    add_street_to_town, get_street_editor, get_street_editor_map, update_street_editor,
+    add_street_to_town, get_street_editor, get_street_editor_map, remove_street_from_town,
+    update_street_editor,
 };
 use crate::route::town::tile::{
     edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
@@ -107,6 +108,7 @@ pub fn get_routes() -> Vec<Route> {
         get_street_editor_map,
         update_street_editor,
         add_street_to_town,
+        remove_street_from_town,
     ]);
 
     routes

@@ -94,7 +94,7 @@ fn render_building_creator_map(
     );
 
     render_buildings(data, &mut builder, renderer, town);
-    render_streets(renderer, town, |aabb, _id| {
+    render_streets(renderer, town, |aabb, _id, _index| {
         render_street(&mut builder, &aabb);
     });
 

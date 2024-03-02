@@ -44,28 +44,24 @@ pub fn render_building(
     builder.render_rectangle(&aabb, &style);
 }
 
-pub fn render_streets<F: FnMut(AABB, StreetId)>(
+pub fn render_streets<F: FnMut(AABB, StreetId, usize)>(
     renderer: &TileMapRenderer,
     town: &Town,
     mut render: F,
 ) {
-    renderer.render(
-        &Point2d::default(),
-        &town.map,
-        |_index, x, y, aabb, tile| {
-            if let Street { id } = tile.construction {
-                if town.check_construction_xy(x + 1, y, Construction::is_any_street) {
-                    let right_aabb = aabb + Point2d::new(renderer.tile_size as i32 / 2, 0);
-                    render(right_aabb, id);
-                }
-                if town.check_construction_xy(x, y + 1, Construction::is_any_street) {
-                    let down_aabb = aabb + Point2d::new(0, renderer.tile_size as i32 / 2);
-                    render(down_aabb, id);
-                }
-                render(aabb, id);
+    renderer.render(&Point2d::default(), &town.map, |index, x, y, aabb, tile| {
+        if let Street { id } = tile.construction {
+            if town.check_construction_xy(x + 1, y, Construction::is_any_street) {
+                let right_aabb = aabb + Point2d::new(renderer.tile_size as i32 / 2, 0);
+                render(right_aabb, id, index);
             }
-        },
-    );
+            if town.check_construction_xy(x, y + 1, Construction::is_any_street) {
+                let down_aabb = aabb + Point2d::new(0, renderer.tile_size as i32 / 2);
+                render(down_aabb, id, index);
+            }
+            render(aabb, id, index);
+        }
+    });
 }
 
 pub fn render_street(builder: &mut SvgBuilder, aabb: &AABB) {
