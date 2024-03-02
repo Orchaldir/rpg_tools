@@ -43,8 +43,8 @@ mod tests {
     use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
     use crate::model::world::WorldData;
-    use crate::usecase::create::street::add_street_to_tile;
     use crate::usecase::edit::resize::resize_town;
+    use crate::usecase::edit::town::add_street::add_street_to_tile;
     use crate::usecase::get::town::{is_building, is_street};
 
     #[test]
