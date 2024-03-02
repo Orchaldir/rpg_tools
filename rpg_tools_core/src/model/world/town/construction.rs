@@ -29,7 +29,11 @@ impl Construction {
     }
 
     /// Does the [`tile`](crate::model::world::town::tile::TownTile) have a specific street?
-    pub fn is_street(&self, id: StreetId) -> bool {
-        matches!(self, Construction::Street { id })
+    pub fn is_street(&self, street_id: StreetId) -> bool {
+        if let Construction::Street { id } = self {
+            return id.eq(&street_id);
+        }
+
+        false
     }
 }
