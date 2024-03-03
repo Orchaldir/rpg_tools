@@ -7,7 +7,7 @@ use crate::html::create_html;
 use crate::route::building::link_building_details;
 use crate::route::town::building::link_building_creator;
 use crate::route::town::street::link_street_editor;
-use crate::route::town::tile::link_terrain_editor;
+use crate::route::town::terrain::link_terrain_editor;
 use crate::route::util::get_all_html;
 use crate::svg::RawSvg;
 use crate::EditorData;

@@ -16,6 +16,8 @@ mod svg;
 
 pub struct ToolData {
     selected_street: StreetId,
+    terrain: String,
+    id: Option<usize>,
 }
 
 pub struct EditorData {
@@ -32,6 +34,8 @@ fn rocket() -> _ {
             town_renderer: TileMapRenderer::new(100, 10, 1),
             tools: Mutex::new(ToolData {
                 selected_street: StreetId::default(),
+                terrain: "".to_string(),
+                id: None,
             }),
         })
         .mount("/static", FileServer::from("rpg_tools_editor/static/"))
