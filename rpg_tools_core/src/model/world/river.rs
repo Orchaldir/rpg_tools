@@ -1,3 +1,4 @@
+use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
@@ -50,5 +51,15 @@ impl Element<RiverId> for River {
 
     fn set_name(&mut self, name: String) {
         self.name = name;
+    }
+}
+
+impl WithTowns for River {
+    fn towns(&self) -> &HashSet<TownId> {
+        &self.towns
+    }
+
+    fn towns_mut(&mut self) -> &mut HashSet<TownId> {
+        &mut self.towns
     }
 }

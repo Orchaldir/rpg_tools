@@ -23,7 +23,8 @@ pub fn edit_terrain(
                     }
                 }
                 Terrain::River { id } => {
-                    if let Some(river) = data.river_manager.get(id) {
+                    if let Some(river) = data.river_manager.get_mut(id) {
+                        river.towns_mut().insert(town_id);
                     } else {
                         bail!("Unknown river id {}!", town_id.id());
                     }
@@ -46,7 +47,7 @@ pub fn edit_terrain(
 mod tests {
     use super::*;
     use crate::model::world::mountain::{Mountain, MountainId};
-    use crate::model::world::river::RiverId;
+    use crate::model::world::river::{River, RiverId};
     use crate::model::world::town::Town;
     use crate::usecase::get::town::is_terrain;
     use crate::usecase::get::towns::contains_town;
@@ -62,6 +63,23 @@ mod tests {
 
         assert!(is_terrain(&data, town_id, 0, &terrain));
         assert!(contains_town(&data.mountain_manager, id, town_id));
+    }
+
+    #[test]
+    fn overwrite() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let mountain_id = data.mountain_manager.create(Mountain::new);
+        let river_id = data.river_manager.create(River::new);
+        let mountain = Terrain::Hill { id: mountain_id };
+        let river = Terrain::River { id: river_id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, mountain).is_ok());
+        assert!(edit_terrain(&mut data, town_id, 0, river).is_ok());
+
+        assert!(is_terrain(&data, town_id, 0, &river));
+        //assert!(!contains_town(&data.mountain_manager, mountain_id, town_id));
+        assert!(contains_town(&data.river_manager, river_id, town_id));
     }
 
     #[test]
