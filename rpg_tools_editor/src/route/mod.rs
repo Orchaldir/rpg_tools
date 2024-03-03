@@ -1,5 +1,5 @@
 use crate::html::{create_html, EditorBuilder};
-use crate::route::building::link_all_buildings;
+use crate::route::building::{delete_building_route, link_all_buildings};
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, update_building,
 };
@@ -102,6 +102,7 @@ pub fn get_routes() -> Vec<Route> {
         get_building_creator_map,
         add_building,
         edit_building,
+        delete_building_route,
         update_building,
         get_street_editor,
         get_street_editor_map,
