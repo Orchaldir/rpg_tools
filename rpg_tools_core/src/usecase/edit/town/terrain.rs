@@ -20,8 +20,13 @@ pub fn edit_terrain(
                         bail!("Unknown mountain id {}!", town_id.id());
                     }
                 }
+                Terrain::River { id } => {
+                    if let Some(river) = data.river_manager.get(id) {
+                    } else {
+                        bail!("Unknown river id {}!", town_id.id());
+                    }
+                }
                 Terrain::Plain => {}
-                Terrain::River { .. } => {}
             }
 
             tile.terrain = terrain;
@@ -39,6 +44,7 @@ pub fn edit_terrain(
 mod tests {
     use super::*;
     use crate::model::world::mountain::{Mountain, MountainId};
+    use crate::model::world::river::RiverId;
     use crate::model::world::town::Town;
     use crate::usecase::get::town::is_terrain;
 
@@ -60,6 +66,18 @@ mod tests {
         let town_id = data.town_manager.create(Town::new);
         let id = MountainId::default();
         let terrain = Terrain::Hill { id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, terrain).is_err());
+
+        assert!(is_terrain(&data, town_id, 0, &Terrain::Plain));
+    }
+
+    #[test]
+    fn unknown_river() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let id = RiverId::default();
+        let terrain = Terrain::River { id };
 
         assert!(edit_terrain(&mut data, town_id, 0, terrain).is_err());
 
