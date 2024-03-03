@@ -1,3 +1,5 @@
+pub mod building;
+
 use crate::model::world::town::TownId;
 
 #[derive(Debug, PartialEq, Eq)]
