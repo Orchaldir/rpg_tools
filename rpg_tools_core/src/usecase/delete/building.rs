@@ -39,7 +39,7 @@ mod tests {
     use crate::usecase::get::town::{is_building, is_free};
 
     #[test]
-    fn success() {
+    fn test_swapped_and_removed() {
         let mut data = WorldData::default();
         let town_id = data
             .town_manager
@@ -56,7 +56,7 @@ mod tests {
     }
 
     #[test]
-    fn delete_last() {
+    fn test_delete_last() {
         let mut data = WorldData::default();
         let town_id = data
             .town_manager
@@ -70,5 +70,13 @@ mod tests {
         assert!(!data.building_manager.contains(id1));
         assert!(is_building(&data, town_id, 0, id0));
         assert!(is_free(&data, town_id, 1));
+    }
+
+    #[test]
+    fn test_not_found() {
+        let mut data = WorldData::default();
+        let id = BuildingId::default();
+
+        assert_eq!(DeleteResult::NotFound, delete_building(&mut data, id));
     }
 }
