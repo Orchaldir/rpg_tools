@@ -28,8 +28,8 @@ pub fn link_terrain_editor(id: TownId) -> String {
     uri!(get_terrain_editor(id.id())).to_string()
 }
 
-#[get("/town/<id>/tile/map.svg")]
-pub fn get_tile_edit_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
+#[get("/town/<id>/terrain/editor.svg")]
+pub fn get_terrain_editor_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
     data.town_manager
         .get(TownId::new(id))
@@ -122,7 +122,7 @@ fn render_to_svg(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> R
 }
 
 fn get_terrain_editor_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
-    let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
+    let map_uri = uri!(get_terrain_editor_map(id.id())).to_string();
     let back_uri = link_town_details(id);
 
     data.town_manager.get(id).map(|town| {
