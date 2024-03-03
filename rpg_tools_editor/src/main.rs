@@ -31,7 +31,7 @@ fn rocket() -> _ {
     rocket::build()
         .manage(EditorData {
             data: Mutex::new(init().unwrap()),
-            town_renderer: TileMapRenderer::new(100, 10, 1),
+            town_renderer: TileMapRenderer::new(100, 1),
             tools: Mutex::new(ToolData {
                 selected_street: StreetId::default(),
                 terrain: "Plain".to_string(),

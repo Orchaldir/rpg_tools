@@ -11,15 +11,13 @@ use rpg_tools_core::utils::map::tile::TileMap;
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TileMapRenderer {
     pub tile_size: u32,
-    pub edge_size: u32,
     pub border_size: u32,
 }
 
 impl TileMapRenderer {
-    pub fn new(tile_size: u32, edge_size: u32, border_size: u32) -> Self {
+    pub fn new(tile_size: u32, border_size: u32) -> Self {
         Self {
             tile_size,
-            edge_size,
             border_size,
         }
     }
