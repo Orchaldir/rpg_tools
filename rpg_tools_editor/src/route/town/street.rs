@@ -153,7 +153,7 @@ fn render_street_editor_map(
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles_with_link(
+    renderer.render_links(
         &mut builder,
         &Point2d::default(),
         &town.map,

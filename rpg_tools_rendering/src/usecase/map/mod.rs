@@ -1,7 +1,7 @@
 pub mod town;
 
 use crate::renderer::style::RenderStyle;
-use crate::renderer::{LinkRenderer, Renderer};
+use crate::renderer::{LinkRenderer, Renderer, Tooltip};
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::aabb2d::AABB;
 use rpg_tools_core::model::math::point2d::Point2d;
@@ -54,7 +54,7 @@ impl TileMapRenderer {
         }
     }
 
-    pub fn render_tiles<Tile: Clone, F: Fn(&Tile) -> Color>(
+    pub fn render_color<Tile: Clone, F: Fn(&Tile) -> Color>(
         &self,
         renderer: &mut dyn Renderer,
         start: &Point2d,
@@ -68,7 +68,7 @@ impl TileMapRenderer {
         });
     }
 
-    pub fn render_tiles_with_link<
+    pub fn render_links<
         Tile: Clone,
         C: Fn(&Tile) -> Color,
         L: Fn(usize, &Tile) -> Option<String>,
@@ -88,6 +88,33 @@ impl TileMapRenderer {
                 renderer.link(&link);
                 renderer.render_rectangle(&aabb, &style);
                 renderer.close();
+            } else {
+                renderer.render_rectangle(&aabb, &style);
+            }
+        });
+    }
+
+    pub fn render_tooltips<
+        Tile: Clone,
+        R: Renderer + Tooltip,
+        C: Fn(&Tile) -> Color,
+        L: Fn(&Tile) -> Option<String>,
+    >(
+        &self,
+        renderer: &mut R,
+        start: &Point2d,
+        map: &TileMap<Tile>,
+        color_lookup: C,
+        tooltip_lookup: L,
+    ) {
+        self.render(start, map, |_index, _x, _y, aabb, tile| {
+            let color = color_lookup(tile);
+            let style = RenderStyle::with_border(color, Color::Black, self.border_size);
+
+            if let Some(tooltip) = tooltip_lookup(tile) {
+                renderer.tooltip(&tooltip);
+                renderer.render_rectangle(&aabb, &style);
+                renderer.clear_tooltip();
             } else {
                 renderer.render_rectangle(&aabb, &style);
             }

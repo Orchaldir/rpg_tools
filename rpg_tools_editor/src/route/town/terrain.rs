@@ -133,7 +133,7 @@ fn render_terrain_editor_map(data: &WorldData, renderer: &TileMapRenderer, town:
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles_with_link(
+    renderer.render_links(
         &mut builder,
         &Point2d::default(),
         &town.map,

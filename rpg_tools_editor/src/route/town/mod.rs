@@ -15,6 +15,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
+use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -136,11 +137,18 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(
+    renderer.render_tooltips(
         &mut builder,
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
+        |tile| match tile.terrain {
+            Terrain::Hill { id } | Terrain::Mountain { id } => {
+                data.mountain_manager.get(id).map(|m| m.name().to_string())
+            }
+            Terrain::Plain => None,
+            Terrain::River { id } => data.river_manager.get(id).map(|r| r.name().to_string()),
+        },
     );
 
     data.building_manager

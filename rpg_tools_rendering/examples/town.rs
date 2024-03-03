@@ -24,7 +24,7 @@ fn main() {
     let size = renderer.calculate_map_size(&map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(&mut builder, &Point2d::default(), &map, TownTile::get_color);
+    renderer.render_color(&mut builder, &Point2d::default(), &map, TownTile::get_color);
 
     let svg = builder.finish();
 
