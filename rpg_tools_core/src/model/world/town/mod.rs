@@ -157,6 +157,14 @@ impl Town {
             .iter()
             .any(|tile| tile.construction.is_street(id))
     }
+
+    /// Does the town contain a specific [`terrain`](Terrain)?
+    pub fn contains_terrain(&self, terrain: Terrain) -> bool {
+        self.map
+            .get_tiles()
+            .iter()
+            .any(|tile| tile.terrain.eq(&terrain))
+    }
 }
 
 impl Element<TownId> for Town {

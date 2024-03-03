@@ -32,7 +32,24 @@ pub fn edit_terrain(
                 Terrain::Plain => {}
             }
 
+            let old_terrain = tile.terrain;
             tile.terrain = terrain;
+
+            if !town.contains_terrain(old_terrain) {
+                match old_terrain {
+                    Terrain::Hill { id } | Terrain::Mountain { id } => {
+                        if let Some(mountain) = data.mountain_manager.get_mut(id) {
+                            mountain.towns_mut().remove(&town_id);
+                        }
+                    }
+                    Terrain::River { id } => {
+                        if let Some(river) = data.river_manager.get_mut(id) {
+                            river.towns_mut().remove(&town_id);
+                        }
+                    }
+                    Terrain::Plain => {}
+                }
+            }
 
             Ok(())
         } else {
@@ -53,20 +70,7 @@ mod tests {
     use crate::usecase::get::towns::contains_town;
 
     #[test]
-    fn success() {
-        let mut data = WorldData::default();
-        let town_id = data.town_manager.create(Town::new);
-        let id = data.mountain_manager.create(Mountain::new);
-        let terrain = Terrain::Hill { id };
-
-        assert!(edit_terrain(&mut data, town_id, 0, terrain).is_ok());
-
-        assert!(is_terrain(&data, town_id, 0, &terrain));
-        assert!(contains_town(&data.mountain_manager, id, town_id));
-    }
-
-    #[test]
-    fn overwrite() {
+    fn overwrite_mountain_with_river() {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
         let mountain_id = data.mountain_manager.create(Mountain::new);
@@ -78,8 +82,25 @@ mod tests {
         assert!(edit_terrain(&mut data, town_id, 0, river).is_ok());
 
         assert!(is_terrain(&data, town_id, 0, &river));
-        //assert!(!contains_town(&data.mountain_manager, mountain_id, town_id));
+        assert!(!contains_town(&data.mountain_manager, mountain_id, town_id));
         assert!(contains_town(&data.river_manager, river_id, town_id));
+    }
+
+    #[test]
+    fn overwrite_river_with_mountain() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let mountain_id = data.mountain_manager.create(Mountain::new);
+        let river_id = data.river_manager.create(River::new);
+        let mountain = Terrain::Hill { id: mountain_id };
+        let river = Terrain::River { id: river_id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, river).is_ok());
+        assert!(edit_terrain(&mut data, town_id, 0, mountain).is_ok());
+
+        assert!(is_terrain(&data, town_id, 0, &mountain));
+        assert!(contains_town(&data.mountain_manager, mountain_id, town_id));
+        assert!(!contains_town(&data.river_manager, river_id, town_id));
     }
 
     #[test]
