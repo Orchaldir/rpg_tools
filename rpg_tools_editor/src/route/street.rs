@@ -65,7 +65,7 @@ pub fn update_street(
 
 fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
     data.street_manager.get(id).map(|street| {
-        let towns = get_elements(&data.town_manager, &street.towns());
+        let towns = get_elements(&data.town_manager, street.towns());
 
         let builder = create_html()
             .h1(&format!("Street: {}", street.name()))

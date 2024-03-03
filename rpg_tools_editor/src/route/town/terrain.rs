@@ -73,7 +73,7 @@ pub fn edit_terrain_route(
     let town_id = TownId::new(id);
     let terrain = parse_terrain(&tools);
 
-    if let Err(e) = edit_terrain(&mut data, town_id, tile, terrain.clone()) {
+    if let Err(e) = edit_terrain(&mut data, town_id, tile, terrain) {
         println!(
             "Failed to change the terrain of tile {} of town {}: {}",
             tile, id, e
