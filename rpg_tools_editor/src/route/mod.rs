@@ -90,11 +90,6 @@ pub fn get_routes() -> Vec<Route> {
         edit_town,
         update_town,
         get_town_map,
-        get_terrain_editor,
-        get_terrain_editor_map,
-        edit_tile,
-        preview_tile,
-        update_tile,
     ];
     routes.extend(routes![
         get_all_buildings,
