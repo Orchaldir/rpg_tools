@@ -7,12 +7,10 @@ use crate::utils::storage::DeleteElementResult;
 /// Tries to delete a [`building`](Building).
 pub fn delete_building(data: &mut WorldData, id: BuildingId) -> DeleteResult {
     let building = match data.building_manager.delete(id) {
-        DeleteElementResult::SwappedAndRemoved {
-            element,
-            id_to_update,
-        } => {
+        DeleteElementResult::SwappedAndRemoved { element, .. } => {
             if let Some(building) = data.building_manager.get_mut(id) {
                 if let Some(town) = data.town_manager.get_mut(building.lot.town) {
+                    town.set_lot_construction(&building.lot, Construction::None);
                     town.set_lot_construction(&building.lot, Construction::Building { id });
                 }
             }
