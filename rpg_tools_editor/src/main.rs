@@ -34,7 +34,7 @@ fn rocket() -> _ {
             town_renderer: TileMapRenderer::new(100, 10, 1),
             tools: Mutex::new(ToolData {
                 selected_street: StreetId::default(),
-                terrain: "".to_string(),
+                terrain: "Plain".to_string(),
                 id: None,
             }),
         })
