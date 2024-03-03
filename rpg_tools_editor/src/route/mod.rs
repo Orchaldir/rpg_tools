@@ -17,7 +17,7 @@ use crate::route::town::street::{
     update_street_editor,
 };
 use crate::route::town::terrain::{
-    edit_terrain, get_terrain_editor, get_terrain_editor_map, update_terrain_editor,
+    edit_terrain_route, get_terrain_editor, get_terrain_editor_map, update_terrain_editor,
 };
 use crate::route::town::{
     add_town, edit_town, get_all_towns, get_town_details, get_town_map, update_town,
@@ -93,7 +93,7 @@ pub fn get_routes() -> Vec<Route> {
         get_terrain_editor,
         get_terrain_editor_map,
         update_terrain_editor,
-        edit_terrain,
+        edit_terrain_route,
     ];
     routes.extend(routes![
         get_all_buildings,

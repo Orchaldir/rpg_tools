@@ -13,6 +13,7 @@ use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::usecase::edit::town::terrain::edit_terrain;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::town::render_constructs;
@@ -62,22 +63,33 @@ pub fn get_terrain_editor_map(state: &State<EditorData>, id: usize) -> Option<Ra
 }
 
 #[get("/town/<id>/terrain/edit/<tile>")]
-pub fn edit_terrain(state: &State<EditorData>, id: usize, tile: usize) -> Option<RawHtml<String>> {
+pub fn edit_terrain_route(
+    state: &State<EditorData>,
+    id: usize,
+    tile: usize,
+) -> Option<RawHtml<String>> {
     let mut data = state.data.lock().expect("lock shared data");
     let tools = state.tools.lock().expect("lock shared data");
     let town_id = TownId::new(id);
+    let terrain = parse_terrain(&tools);
 
-    if let Some(town) = data.town_manager.get_mut(town_id) {
-        if let Some(old_tile) = town.map.get_tile_mut(tile) {
-            old_tile.terrain = parse_terrain(&tools);
-        }
+    if let Err(e) = edit_terrain(&mut data, town_id, tile, terrain.clone()) {
+        println!(
+            "Failed to change the terrain of tile {} of town {}: {}",
+            tile, id, e
+        );
+    } else {
+        println!(
+            "Changed the terrain of tile {} of town {} to {:?}",
+            tile, id, terrain,
+        );
     }
 
     get_terrain_creator_html(&data, &tools, town_id)
 }
 
 pub fn link_edit_terrain(id: TownId, tile: usize) -> String {
-    uri!(edit_terrain(id.id(), tile)).to_string()
+    uri!(edit_terrain_route(id.id(), tile)).to_string()
 }
 
 fn get_terrain_creator_html(
