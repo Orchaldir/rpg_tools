@@ -2,8 +2,11 @@ use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::BuildingId;
 use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
+use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::TownId;
 use crate::model::world::WorldData;
+
+// Construction
 
 pub fn get_construction(data: &WorldData, town_id: TownId, tile: usize) -> Option<&Construction> {
     data.town_manager
@@ -82,4 +85,14 @@ pub fn is_any_street(data: &WorldData, town_id: TownId, tile: usize) -> bool {
     check_construction(data, town_id, tile, |construction| {
         matches!(construction, Construction::Street { .. })
     })
+}
+
+// Terrain
+
+pub fn is_terrain(data: &WorldData, town_id: TownId, tile: usize, terrain: &Terrain) -> bool {
+    data.town_manager
+        .get(town_id)
+        .and_then(|town| town.map.get_tile(tile))
+        .map(|tile| tile.terrain.eq(terrain))
+        .unwrap_or(false)
 }

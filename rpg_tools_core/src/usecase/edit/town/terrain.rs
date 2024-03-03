@@ -27,4 +27,19 @@ pub fn edit_terrain(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::world::mountain::Mountain;
+    use crate::model::world::town::Town;
+    use crate::usecase::get::town::is_terrain;
+
+    #[test]
+    fn success() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let id = data.mountain_manager.create(Mountain::new);
+        let terrain = Terrain::Hill { id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, terrain).is_ok());
+
+        assert!(is_terrain(&data, town_id, 0, &terrain));
+    }
 }

@@ -51,6 +51,7 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
+
         assert!(is_street(&data, town_id, 0, street_id));
         assert!(data
             .street_manager
@@ -67,6 +68,7 @@ mod tests {
         let town_id = data.town_manager.create(Town::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+
         assert!(is_free(&data, town_id, 0));
         assert!(data.street_manager.is_empty());
     }
@@ -78,6 +80,7 @@ mod tests {
         let town_id = TownId::new(0);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+
         assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
 
@@ -88,6 +91,7 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 10, street_id).is_err());
+
         assert!(is_free(&data, town_id, 0));
         assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
@@ -100,6 +104,7 @@ mod tests {
         let building_id = create_building(&mut data, BuildingLot::new(town_id, 0)).unwrap();
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_err());
+
         assert!(is_building(&data, town_id, 0, building_id));
         assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
     }
@@ -110,9 +115,10 @@ mod tests {
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
         let street_id1 = data.street_manager.create(Street::new);
-
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
+
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id1).is_err());
+
         assert!(is_street(&data, town_id, 0, street_id));
         assert!(data
             .street_manager
