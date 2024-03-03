@@ -1,6 +1,7 @@
 pub mod construction;
 pub mod terrain;
 pub mod tile;
+pub mod towns;
 
 use crate::model::math::size2d::Size2d;
 use crate::model::world::building::lot::BuildingLot;

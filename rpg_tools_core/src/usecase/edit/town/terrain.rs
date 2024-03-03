@@ -1,4 +1,5 @@
 use crate::model::world::town::terrain::Terrain;
+use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::model::world::WorldData;
 use crate::utils::storage::{Element, Id};
@@ -15,7 +16,8 @@ pub fn edit_terrain(
         if let Some(tile) = town.map.get_tile_mut(tile) {
             match terrain {
                 Terrain::Hill { id } | Terrain::Mountain { id } => {
-                    if let Some(mountain) = data.mountain_manager.get(id) {
+                    if let Some(mountain) = data.mountain_manager.get_mut(id) {
+                        mountain.towns_mut().insert(town_id);
                     } else {
                         bail!("Unknown mountain id {}!", town_id.id());
                     }
@@ -47,6 +49,7 @@ mod tests {
     use crate::model::world::river::RiverId;
     use crate::model::world::town::Town;
     use crate::usecase::get::town::is_terrain;
+    use crate::usecase::get::towns::contains_town;
 
     #[test]
     fn success() {
@@ -58,6 +61,7 @@ mod tests {
         assert!(edit_terrain(&mut data, town_id, 0, terrain).is_ok());
 
         assert!(is_terrain(&data, town_id, 0, &terrain));
+        assert!(contains_town(&data.mountain_manager, id, town_id));
     }
 
     #[test]
