@@ -1,28 +1,21 @@
 use crate::html::create_html;
 use crate::route::town::link_town_details;
-use crate::route::town::tile::TileUpdate;
 use crate::route::util::get_all_elements;
 use crate::svg::RawSvg;
 use crate::{EditorData, ToolData};
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
-use rpg_tools_core::model::world::street::StreetId;
-use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::renderer::LinkRenderer;
-use rpg_tools_rendering::usecase::map::town::{
-    render_buildings, render_constructs, render_street, render_street_color, render_streets_complex,
-};
+use rpg_tools_rendering::usecase::map::town::render_constructs;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/terrain/editor")]
