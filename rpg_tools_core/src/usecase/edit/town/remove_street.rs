@@ -1,4 +1,5 @@
 use crate::model::world::town::construction::Construction;
+use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::model::world::WorldData;
 use crate::utils::storage::{Element, Id};
@@ -13,7 +14,7 @@ pub fn remove_street_from_tile(data: &mut WorldData, town_id: TownId, tile: usiz
 
                 if !town.contains_street(id) {
                     if let Some(street) = data.street_manager.get_mut(id) {
-                        street.towns.remove(&town_id);
+                        street.towns_mut().remove(&town_id);
                     }
                 }
 
@@ -38,6 +39,7 @@ mod tests {
     use crate::model::world::WorldData;
     use crate::usecase::edit::town::add_street::add_street_to_tile;
     use crate::usecase::get::town::{is_any_street, is_street};
+    use crate::usecase::get::towns::contains_town;
 
     #[test]
     fn delete_last_street_in_town() {
@@ -49,7 +51,7 @@ mod tests {
         assert!(remove_street_from_tile(&mut data, town_id, 0).is_ok());
 
         assert!(!is_any_street(&data, town_id, 0));
-        assert!(data.street_manager.get(street_id).unwrap().towns.is_empty());
+        assert!(!contains_town(&data.street_manager, street_id, town_id));
     }
 
     #[test]
@@ -66,12 +68,7 @@ mod tests {
 
         assert!(!is_any_street(&data, town_id, 0));
         assert!(is_street(&data, town_id, 1, street_id));
-        assert!(data
-            .street_manager
-            .get(street_id)
-            .unwrap()
-            .towns
-            .contains(&town_id));
+        assert!(contains_town(&data.street_manager, street_id, town_id));
     }
 
     #[test]
