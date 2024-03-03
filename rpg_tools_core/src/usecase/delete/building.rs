@@ -11,7 +11,7 @@ pub fn delete_building(data: &mut WorldData, id: BuildingId) -> DeleteResult {
             element,
             id_to_update,
         } => {
-            if let Some(building) = data.building_manager.get_mut(id_to_update) {
+            if let Some(building) = data.building_manager.get_mut(id) {
                 if let Some(town) = data.town_manager.get_mut(building.lot.town) {
                     town.set_lot_construction(&building.lot, Construction::Building { id });
                 }
@@ -28,4 +28,49 @@ pub fn delete_building(data: &mut WorldData, id: BuildingId) -> DeleteResult {
     }
 
     DeleteResult::Ok
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::model::math::size2d::Size2d;
+    use crate::model::world::building::lot::BuildingLot;
+    use crate::model::world::town::Town;
+    use crate::model::world::WorldData;
+    use crate::usecase::create::building::create_building;
+    use crate::usecase::get::town::{is_building, is_free};
+
+    #[test]
+    fn success() {
+        let mut data = WorldData::default();
+        let town_id = data
+            .town_manager
+            .create(|id| Town::simple(id, Size2d::square(2)));
+        let id0 = create_building(&mut data, BuildingLot::tile(0)).unwrap();
+        let id1 = create_building(&mut data, BuildingLot::tile(1)).unwrap();
+
+        assert_eq!(DeleteResult::Ok, delete_building(&mut data, id0));
+
+        assert!(data.building_manager.contains(id0));
+        assert!(!data.building_manager.contains(id1));
+        assert!(is_free(&data, town_id, 0));
+        assert!(is_building(&data, town_id, 1, id0));
+    }
+
+    #[test]
+    fn delete_last() {
+        let mut data = WorldData::default();
+        let town_id = data
+            .town_manager
+            .create(|id| Town::simple(id, Size2d::square(2)));
+        let id0 = create_building(&mut data, BuildingLot::tile(0)).unwrap();
+        let id1 = create_building(&mut data, BuildingLot::tile(1)).unwrap();
+
+        assert_eq!(DeleteResult::Ok, delete_building(&mut data, id1));
+
+        assert!(data.building_manager.contains(id0));
+        assert!(!data.building_manager.contains(id1));
+        assert!(is_building(&data, town_id, 0, id0));
+        assert!(is_free(&data, town_id, 1));
+    }
 }

@@ -52,7 +52,7 @@ mod tests {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
 
-        let id = create_building(&mut data, create_lot(0)).unwrap();
+        let id = create_building(&mut data, BuildingLot::tile(0)).unwrap();
 
         assert_first_building(&data, town_id, id, 0);
     }
@@ -61,7 +61,7 @@ mod tests {
     fn unknown_town() {
         let mut data = WorldData::default();
 
-        assert!(create_building(&mut data, create_lot(0)).is_err());
+        assert!(create_building(&mut data, BuildingLot::tile(0)).is_err());
         assert!(data.building_manager.is_empty())
     }
 
@@ -70,7 +70,7 @@ mod tests {
         let mut data = WorldData::default();
         data.town_manager.create(Town::new);
 
-        assert!(create_building(&mut data, create_lot(1)).is_err());
+        assert!(create_building(&mut data, BuildingLot::tile(1)).is_err());
         assert!(data.building_manager.is_empty())
     }
 
@@ -88,9 +88,9 @@ mod tests {
     fn occupied_by_building() {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
-        let id = create_building(&mut data, create_lot(0)).unwrap();
+        let id = create_building(&mut data, BuildingLot::tile(0)).unwrap();
 
-        assert!(create_building(&mut data, create_lot(0)).is_err());
+        assert!(create_building(&mut data, BuildingLot::tile(0)).is_err());
 
         assert_first_building(&data, town_id, id, 0);
     }
@@ -102,7 +102,7 @@ mod tests {
         let street_id = data.street_manager.create(Street::new);
 
         assert!(add_street_to_tile(&mut data, town_id, 0, street_id).is_ok());
-        assert!(create_building(&mut data, create_lot(0)).is_err());
+        assert!(create_building(&mut data, BuildingLot::tile(0)).is_err());
 
         assert!(data.building_manager.is_empty());
         assert!(is_street(&data, town_id, 0, street_id));
@@ -119,7 +119,7 @@ mod tests {
         let mut data = WorldData::default();
         let town_id = data.town_manager.create(Town::new);
         assert!(resize_town(&mut data, town_id, 3, 2).is_ok());
-        let other_id = create_building(&mut data, create_lot(tile)).unwrap();
+        let other_id = create_building(&mut data, BuildingLot::tile(tile)).unwrap();
         let lot = BuildingLot::big(town_id, 0, Size2d::new(3, 2));
 
         assert!(create_building(&mut data, lot).is_err());
@@ -127,15 +127,11 @@ mod tests {
         assert_first_building(&data, town_id, other_id, tile);
     }
 
-    fn create_lot(tile: usize) -> BuildingLot {
-        BuildingLot::new(TownId::default(), tile)
-    }
-
     fn assert_first_building(data: &WorldData, town_id: TownId, id: BuildingId, tile: usize) {
         assert_eq!(id.id(), 0);
         assert_eq!(
             data.building_manager.get(id).unwrap(),
-            &Building::new(id, create_lot(tile))
+            &Building::new(id, BuildingLot::tile(tile))
         );
         assert!(is_building(&data, town_id, tile, id));
     }

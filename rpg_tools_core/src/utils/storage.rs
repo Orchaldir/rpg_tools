@@ -63,6 +63,10 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
         self.elements.len()
     }
 
+    pub fn contains(&self, id: I) -> bool {
+        id.id() < self.elements.len()
+    }
+
     pub fn get_all(&self) -> &Vec<T> {
         &self.elements
     }
