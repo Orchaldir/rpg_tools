@@ -23,7 +23,7 @@ impl Id for RiverId {
 pub struct River {
     id: RiverId,
     name: String,
-    pub towns: HashSet<TownId>,
+    towns: HashSet<TownId>,
 }
 
 impl River {
