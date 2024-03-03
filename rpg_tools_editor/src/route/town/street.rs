@@ -31,7 +31,7 @@ pub fn get_street_editor(state: &State<EditorData>, id: usize) -> Option<RawHtml
     get_street_creator_html(&data, TownId::new(id), tools.selected_street)
 }
 
-pub fn link_street_creator(id: TownId) -> String {
+pub fn link_street_editor(id: TownId) -> String {
     uri!(get_street_editor(id.id())).to_string()
 }
 

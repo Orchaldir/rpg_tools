@@ -18,10 +18,14 @@ use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::usecase::map::town::render_constructs;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
-#[get("/town/<id>/tile/all")]
-pub fn get_all_tiles(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
+#[get("/town/<id>/terrain/editor")]
+pub fn get_terrain_editor(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_tiles_html(&data, TownId::new(id))
+    get_terrain_editor_html(&data, TownId::new(id))
+}
+
+pub fn link_terrain_editor(id: TownId) -> String {
+    uri!(get_terrain_editor(id.id())).to_string()
 }
 
 #[get("/town/<id>/tile/map.svg")]
@@ -96,7 +100,7 @@ pub fn update_tile(
         }
     }
 
-    get_all_tiles_html(&data, town_id)
+    get_terrain_editor_html(&data, town_id)
 }
 
 fn render_to_svg(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
@@ -117,7 +121,7 @@ fn render_to_svg(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> R
     RawSvg::new(svg.export())
 }
 
-fn get_all_tiles_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_terrain_editor_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_tile_edit_map(id.id())).to_string();
     let back_uri = link_town_details(id);
 
@@ -146,7 +150,7 @@ fn get_form_html(
     town: &Town,
     tile: &TownTile,
 ) -> RawHtml<String> {
-    let back_uri = uri!(get_all_tiles(id = id.id())).to_string();
+    let back_uri = link_terrain_editor(id);
     let mountains_uri = get_all_elements(&data.mountain_manager);
     let rivers_uri = get_all_elements(&data.river_manager);
     let preview_uri = uri!(preview_tile(id.id(), index)).to_string();
