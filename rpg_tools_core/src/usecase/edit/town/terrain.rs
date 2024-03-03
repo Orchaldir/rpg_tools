@@ -13,6 +13,17 @@ pub fn edit_terrain(
 ) -> Result<()> {
     if let Some(town) = data.town_manager.get_mut(town_id) {
         if let Some(tile) = town.map.get_tile_mut(tile) {
+            match terrain {
+                Terrain::Hill { id } | Terrain::Mountain { id } => {
+                    if let Some(mountain) = data.mountain_manager.get(id) {
+                    } else {
+                        bail!("Unknown mountain id {}!", town_id.id());
+                    }
+                }
+                Terrain::Plain => {}
+                Terrain::River { .. } => {}
+            }
+
             tile.terrain = terrain;
 
             Ok(())
@@ -27,7 +38,7 @@ pub fn edit_terrain(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::world::mountain::Mountain;
+    use crate::model::world::mountain::{Mountain, MountainId};
     use crate::model::world::town::Town;
     use crate::usecase::get::town::is_terrain;
 
@@ -41,5 +52,17 @@ mod tests {
         assert!(edit_terrain(&mut data, town_id, 0, terrain).is_ok());
 
         assert!(is_terrain(&data, town_id, 0, &terrain));
+    }
+
+    #[test]
+    fn unknown_mountain() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let id = MountainId::default();
+        let terrain = Terrain::Hill { id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, terrain).is_err());
+
+        assert!(is_terrain(&data, town_id, 0, &Terrain::Plain));
     }
 }
