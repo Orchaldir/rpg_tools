@@ -126,4 +126,24 @@ mod tests {
 
         assert!(is_terrain(&data, town_id, 0, &Terrain::Plain));
     }
+
+    #[test]
+    fn unknown_town() {
+        let mut data = WorldData::default();
+        let town_id = TownId::default();
+        let mountain_id = data.mountain_manager.create(Mountain::new);
+        let mountain = Terrain::Hill { id: mountain_id };
+
+        assert!(edit_terrain(&mut data, town_id, 0, mountain).is_err());
+    }
+
+    #[test]
+    fn outside_map() {
+        let mut data = WorldData::default();
+        let town_id = data.town_manager.create(Town::new);
+        let mountain_id = data.mountain_manager.create(Mountain::new);
+        let mountain = Terrain::Hill { id: mountain_id };
+
+        assert!(edit_terrain(&mut data, town_id, 1, mountain).is_err());
+    }
 }
