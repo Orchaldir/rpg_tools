@@ -1,5 +1,6 @@
 use std::hash::Hash;
 use std::marker::PhantomData;
+use std::mem::replace;
 
 pub trait Id: Copy + Hash + Eq + PartialEq {
     fn new(id: usize) -> Self;
@@ -18,9 +19,9 @@ pub trait Element<I: Id>: Eq + PartialEq {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-pub enum DeleteElementResult<I: Id> {
-    DeletedLastElement,
-    SwappedAndRemoved { id_to_update: I },
+pub enum DeleteElementResult<I: Id, T: Element<I>> {
+    DeletedLastElement { element: T },
+    SwappedAndRemoved { element: T, id_to_update: I },
     NotFound,
 }
 
@@ -54,12 +55,20 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
         id
     }
 
-    pub fn get_all(&self) -> &Vec<T> {
-        &self.elements
+    pub fn is_empty(&self) -> bool {
+        self.elements.is_empty()
     }
 
-    pub fn get_all_mut(&mut self) -> &mut Vec<T> {
-        &mut self.elements
+    pub fn len(&self) -> usize {
+        self.elements.len()
+    }
+
+    pub fn contains(&self, id: I) -> bool {
+        id.id() < self.elements.len()
+    }
+
+    pub fn get_all(&self) -> &Vec<T> {
+        &self.elements
     }
 
     pub fn get(&self, id: I) -> Option<&T> {
@@ -71,20 +80,21 @@ impl<I: Id, T: Element<I>> Storage<I, T> {
     }
 
     /// Deletes an element by swapping it with the last one, if necessary.
-    pub fn delete(&mut self, id: I) -> DeleteElementResult<I> {
+    pub fn delete(&mut self, id: I) -> DeleteElementResult<I, T> {
         let len = self.elements.len();
 
         if id.id() >= len {
             return DeleteElementResult::NotFound;
         } else if id.id() + 1 == len {
-            self.elements.pop();
-            return DeleteElementResult::DeletedLastElement;
+            return DeleteElementResult::DeletedLastElement {
+                element: self.elements.pop().unwrap(),
+            };
         }
 
         let last = self.elements.pop().unwrap();
-        self.elements[id.id()] = last.with_id(id);
 
         DeleteElementResult::SwappedAndRemoved {
+            element: replace(&mut self.elements[id.id()], last.with_id(id)),
             id_to_update: I::new(len - 1),
         }
     }
@@ -108,7 +118,7 @@ mod tests {
 
         let id = storage.create(Town::new);
 
-        assert_eq!(1, storage.get_all().len());
+        assert_eq!(1, storage.len());
         assert_element(&storage, id, "Town 0");
     }
 
@@ -124,7 +134,12 @@ mod tests {
         let mut storage: Storage<TownId, Town> = Storage::default();
         let id = storage.create(Town::new);
 
-        assert_eq!(DeletedLastElement, storage.delete(id));
+        assert_eq!(
+            DeletedLastElement {
+                element: Town::new(id),
+            },
+            storage.delete(id)
+        );
         assert!(storage.get_all().is_empty());
     }
 
@@ -135,9 +150,15 @@ mod tests {
         let id1 = storage.create(Town::new);
         let id2 = storage.create(Town::new);
 
-        assert_eq!(SwappedAndRemoved { id_to_update: id2 }, storage.delete(id0));
+        assert_eq!(
+            SwappedAndRemoved {
+                element: Town::new(id0),
+                id_to_update: id2
+            },
+            storage.delete(id0)
+        );
 
-        assert_eq!(2, storage.get_all().len());
+        assert_eq!(2, storage.len());
         assert_element(&storage, id0, "Town 2");
         assert_element(&storage, id1, "Town 1");
     }
@@ -148,7 +169,7 @@ mod tests {
         let id = storage.create(Town::new);
 
         assert_eq!(NotFound, storage.delete(TownId::new(5)));
-        assert_eq!(1, storage.get_all().len());
+        assert_eq!(1, storage.len());
         assert_element(&storage, id, "Town 0");
     }
 

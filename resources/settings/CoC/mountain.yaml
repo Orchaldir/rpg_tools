@@ -1,2 +1,4 @@
 - id: 0
   name: Hangman's Hill
+  towns:
+    - 0

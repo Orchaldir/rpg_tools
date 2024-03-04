@@ -73,7 +73,7 @@ mod tests {
 
         assert!(resize_town(&mut data, TownId::default(), 2, 3).is_err());
 
-        assert!(data.town_manager.get_all().is_empty());
+        assert!(data.town_manager.is_empty());
     }
 
     #[test]
@@ -111,8 +111,8 @@ mod tests {
         let mut data = WorldData::default();
 
         assert!(resize_building(&mut data, BuildingId::default(), 2, 2).is_err());
-        assert!(data.town_manager.get_all().is_empty());
-        assert!(data.building_manager.get_all().is_empty());
+        assert!(data.town_manager.is_empty());
+        assert!(data.building_manager.is_empty());
     }
 
     #[test]

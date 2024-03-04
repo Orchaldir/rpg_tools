@@ -1,10 +1,12 @@
 use crate::html::create_html;
-use crate::route::util::get_all_html;
+use crate::route::town::link_town_details;
+use crate::route::util::{get_all_html, get_elements};
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
+use rpg_tools_core::model::world::town::towns::WithTowns;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -63,10 +65,16 @@ pub fn update_mountain(
 
 fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
     data.mountain_manager.get(id).map(|mountain| {
+        let towns = get_elements(&data.town_manager, mountain.towns());
+
         let builder = create_html()
             .h1(&format!("Mountain: {}", mountain.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
+            .field_usize("Towns:", towns.len())
+            .list(&towns, |b, &town| {
+                b.link(&link_town_details(town.id()), town.name())
+            })
             .p(|b| b.link(&format!("/mountain/{}/edit", id.id()), "Edit"))
             .p(|b| b.link("/mountain/all", "Back"));
 

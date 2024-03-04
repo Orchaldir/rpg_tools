@@ -2,3 +2,7 @@
   name: Armitage Street
   towns:
   - 0
+- id: 1
+  name: Miskatonic Avenue
+  towns:
+  - 0

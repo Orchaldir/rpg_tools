@@ -22,4 +22,8 @@ impl BuildingLot {
     pub fn big(town: TownId, tile: usize, size: Size2d) -> Self {
         BuildingLot { town, tile, size }
     }
+
+    pub fn tile(tile: usize) -> BuildingLot {
+        Self::new(TownId::default(), tile)
+    }
 }

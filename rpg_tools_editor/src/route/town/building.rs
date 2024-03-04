@@ -13,7 +13,7 @@ use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::town::{render_buildings, render_street, render_streets};
+use rpg_tools_rendering::usecase::map::town::render_constructs;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/building/creator")]
@@ -79,7 +79,7 @@ fn render_building_creator_map(
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles_with_link(
+    renderer.render_links(
         &mut builder,
         &Point2d::default(),
         &town.map,
@@ -93,10 +93,7 @@ fn render_building_creator_map(
         },
     );
 
-    render_buildings(data, &mut builder, renderer, town);
-    render_streets(renderer, town, |aabb, _id| {
-        render_street(&mut builder, &aabb);
-    });
+    render_constructs(data, &mut builder, renderer, town);
 
     let svg = builder.finish();
     RawSvg::new(svg.export())

@@ -6,6 +6,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::river::{River, RiverId};
+use rpg_tools_core::model::world::town::towns::WithTowns;
 use rpg_tools_core::model::world::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -64,7 +65,7 @@ pub fn update_river(
 
 fn get_details_html(data: &WorldData, id: RiverId) -> Option<RawHtml<String>> {
     data.river_manager.get(id).map(|river| {
-        let towns = get_elements(&data.town_manager, &river.towns);
+        let towns = get_elements(&data.town_manager, river.towns());
 
         let builder = create_html()
             .h1(&format!("River: {}", river.name()))

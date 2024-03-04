@@ -27,7 +27,7 @@ pub fn get_all_html<ID: Id, ELEMENT: Element<ID>>(
     RawHtml(
         create_html()
             .h1(title)
-            .field("Count:", &storage.get_all().len().to_string())
+            .field("Count:", &storage.len().to_string())
             .list(storage.get_all(), |b, e| {
                 b.link(
                     &format!("/{}/{}/details", storage.name(), e.id().id()),

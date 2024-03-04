@@ -1,5 +1,5 @@
 use crate::html::{create_html, EditorBuilder};
-use crate::route::building::link_all_buildings;
+use crate::route::building::{delete_building_route, link_all_buildings};
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, update_building,
 };
@@ -13,10 +13,11 @@ use crate::route::street::{
 use crate::route::town::building::{add_building, get_building_creator, get_building_creator_map};
 use crate::route::town::link_all_towns;
 use crate::route::town::street::{
-    add_street_to_town, get_street_editor, get_street_editor_map, update_street_editor,
+    add_street_to_town, get_street_editor, get_street_editor_map, remove_street_from_town,
+    update_street_editor,
 };
-use crate::route::town::tile::{
-    edit_tile, get_all_tiles, get_tile_edit_map, preview_tile, update_tile,
+use crate::route::town::terrain::{
+    edit_terrain_route, get_terrain_editor, get_terrain_editor_map, update_terrain_editor,
 };
 use crate::route::town::{
     add_town, edit_town, get_all_towns, get_town_details, get_town_map, update_town,
@@ -89,11 +90,10 @@ pub fn get_routes() -> Vec<Route> {
         edit_town,
         update_town,
         get_town_map,
-        get_all_tiles,
-        get_tile_edit_map,
-        edit_tile,
-        preview_tile,
-        update_tile,
+        get_terrain_editor,
+        get_terrain_editor_map,
+        update_terrain_editor,
+        edit_terrain_route,
     ];
     routes.extend(routes![
         get_all_buildings,
@@ -102,11 +102,13 @@ pub fn get_routes() -> Vec<Route> {
         get_building_creator_map,
         add_building,
         edit_building,
+        delete_building_route,
         update_building,
         get_street_editor,
         get_street_editor_map,
         update_street_editor,
         add_street_to_town,
+        remove_street_from_town,
     ]);
 
     routes

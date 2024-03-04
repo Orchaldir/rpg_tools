@@ -1,5 +1,8 @@
+use crate::model::world::town::towns::WithTowns;
+use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 /// The unique identifier of a [`mountain`](Mountain).
 #[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
@@ -20,6 +23,7 @@ impl Id for MountainId {
 pub struct Mountain {
     id: MountainId,
     name: String,
+    towns: HashSet<TownId>,
 }
 
 impl Mountain {
@@ -27,6 +31,7 @@ impl Mountain {
         Mountain {
             id,
             name: format!("Mountain {}", id.0),
+            towns: Default::default(),
         }
     }
 }
@@ -46,5 +51,15 @@ impl Element<MountainId> for Mountain {
 
     fn set_name(&mut self, name: String) {
         self.name = name;
+    }
+}
+
+impl WithTowns for Mountain {
+    fn towns(&self) -> &HashSet<TownId> {
+        &self.towns
+    }
+
+    fn towns_mut(&mut self) -> &mut HashSet<TownId> {
+        &mut self.towns
     }
 }

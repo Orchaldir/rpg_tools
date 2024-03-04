@@ -1,3 +1,4 @@
+use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
@@ -22,7 +23,7 @@ impl Id for StreetId {
 pub struct Street {
     id: StreetId,
     name: String,
-    pub towns: HashSet<TownId>,
+    towns: HashSet<TownId>,
 }
 
 impl Street {
@@ -50,5 +51,15 @@ impl Element<StreetId> for Street {
 
     fn set_name(&mut self, name: String) {
         self.name = name;
+    }
+}
+
+impl WithTowns for Street {
+    fn towns(&self) -> &HashSet<TownId> {
+        &self.towns
+    }
+
+    fn towns_mut(&mut self) -> &mut HashSet<TownId> {
+        &mut self.towns
     }
 }

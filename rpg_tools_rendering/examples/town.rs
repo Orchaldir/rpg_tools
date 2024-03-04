@@ -19,12 +19,12 @@ fn main() {
         id: MountainId::default(),
     };
 
-    let renderer = TileMapRenderer::new(100, 10, 1);
+    let renderer = TileMapRenderer::new(100, 1);
 
     let size = renderer.calculate_map_size(&map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(&mut builder, &Point2d::default(), &map, TownTile::get_color);
+    renderer.render_color(&mut builder, &Point2d::default(), &map, TownTile::get_color);
 
     let svg = builder.finish();
 

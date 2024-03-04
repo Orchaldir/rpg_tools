@@ -1,11 +1,12 @@
 pub mod building;
 pub mod street;
-pub mod tile;
+pub mod terrain;
 
 use crate::html::create_html;
 use crate::route::building::link_building_details;
 use crate::route::town::building::link_building_creator;
-use crate::route::town::street::link_street_creator;
+use crate::route::town::street::link_street_editor;
+use crate::route::town::terrain::link_terrain_editor;
 use crate::route::util::get_all_html;
 use crate::svg::RawSvg;
 use crate::EditorData;
@@ -14,6 +15,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::building::BuildingId;
+use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
@@ -22,7 +24,9 @@ use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
 use rpg_tools_rendering::renderer::{LinkRenderer, Tooltip};
-use rpg_tools_rendering::usecase::map::town::{render_building, render_street, render_streets};
+use rpg_tools_rendering::usecase::map::town::{
+    render_building, render_street, render_streets_complex,
+};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/all")]
@@ -114,10 +118,10 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
             .field_usize("Id:", id.id())
             .field_usize("Buildings:", buildings)
             .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
-            .p(|b| b.link(&format!("/town/{}/tile/all", id.id()), "Edit Terrain"))
+            .p(|b| b.link(&link_terrain_editor(id), "Edit Terrain"))
             .p(|b| b.link(&link_building_creator(id), "Add Buildings"))
-            .p(|b| b.link(&link_street_creator(id), "Add Streets"))
-            .p(|b| b.link("/town/all", "Back"))
+            .p(|b| b.link(&link_street_editor(id), "Edit Streets"))
+            .p(|b| b.link(&link_all_towns(), "Back"))
             .h2("Map")
             .center(|b| b.svg(&map_uri, "800"));
         RawHtml(builder.finish())
@@ -133,11 +137,18 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles(
+    renderer.render_tooltips(
         &mut builder,
         &Point2d::default(),
         &town.map,
         TownTile::get_color,
+        |tile| match tile.terrain {
+            Terrain::Hill { id } | Terrain::Mountain { id } => {
+                data.mountain_manager.get(id).map(|m| m.name().to_string())
+            }
+            Terrain::Plain => None,
+            Terrain::River { id } => data.river_manager.get(id).map(|r| r.name().to_string()),
+        },
     );
 
     data.building_manager
@@ -152,7 +163,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
             builder.clear_tooltip();
         });
 
-    render_streets(renderer, town, |aabb, id| {
+    render_streets_complex(renderer, town, |aabb, id, _index| {
         if let Some(street) = data.street_manager.get(id) {
             builder.tooltip(street.name())
         }

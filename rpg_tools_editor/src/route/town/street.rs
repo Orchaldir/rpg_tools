@@ -6,16 +6,21 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
 use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
 use rpg_tools_core::model::world::WorldData;
-use rpg_tools_core::usecase::create::street::add_street_to_tile;
+use rpg_tools_core::usecase::edit::town::add_street::add_street_to_tile;
+use rpg_tools_core::usecase::edit::town::remove_street::remove_street_from_tile;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
-use rpg_tools_rendering::usecase::map::town::{render_buildings, render_street, render_streets};
+use rpg_tools_rendering::renderer::LinkRenderer;
+use rpg_tools_rendering::usecase::map::town::{
+    render_buildings, render_street, render_street_color, render_streets_complex,
+};
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 
 #[get("/town/<id>/street/editor")]
@@ -26,7 +31,7 @@ pub fn get_street_editor(state: &State<EditorData>, id: usize) -> Option<RawHtml
     get_street_creator_html(&data, TownId::new(id), tools.selected_street)
 }
 
-pub fn link_street_creator(id: TownId) -> String {
+pub fn link_street_editor(id: TownId) -> String {
     uri!(get_street_editor(id.id())).to_string()
 }
 
@@ -53,9 +58,11 @@ pub fn update_street_editor(
 #[get("/town/<id>/street/editor.svg")]
 pub fn get_street_editor_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
     let data = state.data.lock().expect("lock shared data");
-    data.town_manager
-        .get(TownId::new(id))
-        .map(|town| render_street_editor_map(&data, &state.town_renderer, town))
+    let tools = state.tools.lock().expect("lock shared tools");
+
+    data.town_manager.get(TownId::new(id)).map(|town| {
+        render_street_editor_map(&data, &state.town_renderer, town, tools.selected_street)
+    })
 }
 
 #[get("/town/<id>/street/add/<tile>")]
@@ -86,6 +93,34 @@ pub fn link_add_street_to_town(id: TownId, tile: usize) -> String {
     uri!(add_street_to_town(id.id(), tile)).to_string()
 }
 
+#[get("/town/<id>/street/remove/<tile>")]
+pub fn remove_street_from_town(
+    state: &State<EditorData>,
+    id: usize,
+    tile: usize,
+) -> Option<RawHtml<String>> {
+    let mut data = state.data.lock().expect("lock shared data");
+    let tools = state.tools.lock().expect("lock shared data");
+    let town_id = TownId::new(id);
+
+    if remove_street_from_tile(&mut data, town_id, tile).is_ok() {
+        println!(
+            "Removed street {} on tile {} of town {}",
+            tools.selected_street.id(),
+            tile,
+            id
+        );
+    } else {
+        println!("Failed to remove a street on tile {} of town {}", tile, id);
+    }
+
+    get_street_creator_html(&data, town_id, tools.selected_street)
+}
+
+pub fn link_remove_street_from_town(id: TownId, tile: usize) -> String {
+    uri!(remove_street_from_town(id.id(), tile)).to_string()
+}
+
 fn get_street_creator_html(
     data: &WorldData,
     id: TownId,
@@ -109,11 +144,16 @@ fn get_street_creator_html(
     })
 }
 
-fn render_street_editor_map(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_street_editor_map(
+    data: &WorldData,
+    renderer: &TileMapRenderer,
+    town: &Town,
+    selected: StreetId,
+) -> RawSvg {
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 
-    renderer.render_tiles_with_link(
+    renderer.render_links(
         &mut builder,
         &Point2d::default(),
         &town.map,
@@ -128,8 +168,16 @@ fn render_street_editor_map(data: &WorldData, renderer: &TileMapRenderer, town: 
     );
 
     render_buildings(data, &mut builder, renderer, town);
-    render_streets(renderer, town, |aabb, _id| {
-        render_street(&mut builder, &aabb)
+    render_streets_complex(renderer, town, |aabb, id, index| {
+        builder.link(&link_remove_street_from_town(town.id(), index));
+
+        if id.eq(&selected) {
+            render_street_color(&mut builder, &aabb, Color::Yellow);
+        } else {
+            render_street(&mut builder, &aabb);
+        }
+
+        builder.close();
     });
 
     let svg = builder.finish();

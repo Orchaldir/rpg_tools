@@ -7,6 +7,8 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::usecase::delete::building::delete_building;
+use rpg_tools_core::usecase::delete::DeleteResult;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_building;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -39,6 +41,22 @@ pub fn edit_building(state: &State<EditorData>, id: usize) -> Option<RawHtml<Str
 
 pub fn link_edit_building(id: BuildingId) -> String {
     uri!(edit_building(id.id())).to_string()
+}
+
+#[get("/building/<id>/delete")]
+pub fn delete_building_route(state: &State<EditorData>, id: usize) -> RawHtml<String> {
+    let mut data = state.data.lock().expect("lock shared data");
+    let building_id = BuildingId::new(id);
+
+    if delete_building(&mut data, building_id) == DeleteResult::Ok {
+        println!("Deleted building {}", id);
+    }
+
+    get_all_html(&data.building_manager, "Buildings")
+}
+
+pub fn link_delete_building(id: BuildingId) -> String {
+    uri!(delete_building_route(id.id())).to_string()
 }
 
 #[derive(FromForm, Debug)]
@@ -87,6 +105,7 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
             .field_usize("Tile:", building.lot().tile)
             .field_size2d("Size:", &building.lot().size)
             .p(|b| b.link(&link_edit_building(id), "Edit"))
+            .p(|b| b.link(&link_delete_building(id), "Delete"))
             .p(|b| b.link(&link_all_buildings(), "Back"));
 
         RawHtml(builder.finish())
