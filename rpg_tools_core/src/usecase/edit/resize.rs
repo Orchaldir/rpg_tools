@@ -29,7 +29,7 @@ pub fn resize_building(
     let lot = data
         .building_manager
         .get(building_id)
-        .map(|building| building.lot().clone())
+        .map(|building| building.lot.clone())
         .context("Building doesn't exist")?;
 
     if let Some(town) = data.town_manager.get_mut(lot.town) {

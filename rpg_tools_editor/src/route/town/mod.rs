@@ -107,7 +107,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
         .building_manager
         .get_all()
         .iter()
-        .filter(|&building| building.lot().town.eq(&id))
+        .filter(|&building| building.lot.town.eq(&id))
         .count();
     let map_uri = uri!(get_town_map(id.id())).to_string();
 
@@ -154,7 +154,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     data.building_manager
         .get_all()
         .iter()
-        .filter(|&building| building.lot().town.eq(&town.id()))
+        .filter(|&building| building.lot.town.eq(&town.id()))
         .for_each(|building| {
             builder.tooltip(building.name());
             builder.link(&get_link(building.id()));

@@ -95,15 +95,15 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
             .field("Name:", building.name())
             .h3("Lot");
 
-        if let Some(town) = data.town_manager.get(building.lot().town) {
+        if let Some(town) = data.town_manager.get(building.lot.town) {
             builder = builder.complex_field("Town", |b| {
                 b.link(&link_town_details(town.id()), town.name())
             })
         }
 
         builder = builder
-            .field_usize("Tile:", building.lot().tile)
-            .field_size2d("Size:", &building.lot().size)
+            .field_usize("Tile:", building.lot.tile)
+            .field_size2d("Size:", &building.lot.size)
             .p(|b| b.link(&link_edit_building(id), "Edit"))
             .p(|b| b.link(&link_delete_building(id), "Delete"))
             .p(|b| b.link(&link_all_buildings(), "Back"));
