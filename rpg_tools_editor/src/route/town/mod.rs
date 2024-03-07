@@ -110,6 +110,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
         .filter(|&building| building.lot.town.eq(&id))
         .count();
     let map_uri = uri!(get_town_map(id.id())).to_string();
+    let edit_uri = uri!(edit_town(id = id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
@@ -117,7 +118,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Buildings:", buildings)
-            .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
+            .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_terrain_editor(id), "Edit Terrain"))
             .p(|b| b.link(&link_building_creator(id), "Add Buildings"))
             .p(|b| b.link(&link_street_editor(id), "Edit Streets"))
