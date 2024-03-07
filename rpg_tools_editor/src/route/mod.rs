@@ -3,6 +3,10 @@ use crate::route::building::{delete_building_route, link_all_buildings};
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, update_building,
 };
+use crate::route::character::{
+    add_character, edit_character, get_all_characters, get_character_details, link_all_characters,
+    update_character,
+};
 use crate::route::mountain::{
     add_mountain, edit_mountain, get_all_mountains, get_mountain_details, link_all_mountains,
     update_mountain,
@@ -31,6 +35,7 @@ use rocket::response::content::RawHtml;
 use rocket::{Route, State};
 
 pub mod building;
+pub mod character;
 pub mod mountain;
 pub mod river;
 pub mod street;
@@ -47,6 +52,7 @@ pub fn home(state: &State<EditorData>) -> RawHtml<String> {
             .h1("RPG Tools - Editor")
             .h2("Overview")
             .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)
+            .add_storage_link("Characters:", &link_all_characters(), &data.characters)
             .add_storage_link("Mountains:", &link_all_mountains(), &data.mountain_manager)
             .add_storage_link("Rivers:", &link_all_rivers(), &data.river_manager)
             .add_storage_link("Streets:", &link_all_streets(), &data.street_manager)
@@ -112,6 +118,11 @@ pub fn get_routes() -> Vec<Route> {
         update_street_editor,
         add_street_to_town,
         remove_street_from_town,
+        get_all_characters,
+        get_character_details,
+        add_character,
+        edit_character,
+        update_character,
     ]);
 
     routes
