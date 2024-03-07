@@ -23,7 +23,7 @@ impl Id for CharacterId {
 pub struct Character {
     id: CharacterId,
     name: String,
-    gender: Gender,
+    pub gender: Gender,
 }
 
 impl Character {
@@ -33,10 +33,6 @@ impl Character {
             name: format!("Character {}", id.0),
             gender: Gender::default(),
         }
-    }
-
-    pub fn gender(&self) -> Gender {
-        self.gender
     }
 }
 
