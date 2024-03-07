@@ -6,7 +6,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::usecase::delete::building::delete_building;
 use rpg_tools_core::usecase::delete::DeleteResult;
 use rpg_tools_core::usecase::edit::name::update_name;

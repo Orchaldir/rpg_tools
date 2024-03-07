@@ -1,7 +1,7 @@
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::{Building, BuildingId};
 use crate::model::world::town::construction::Construction;
-use crate::model::world::WorldData;
+use crate::model::WorldData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
@@ -42,7 +42,7 @@ mod tests {
     use crate::model::math::size2d::Size2d;
     use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
-    use crate::model::world::WorldData;
+    use crate::model::WorldData;
     use crate::usecase::edit::resize::resize_town;
     use crate::usecase::edit::town::add_street::add_street_to_tile;
     use crate::usecase::get::town::{is_building, is_street};

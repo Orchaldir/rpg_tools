@@ -7,7 +7,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::town::towns::WithTowns;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 

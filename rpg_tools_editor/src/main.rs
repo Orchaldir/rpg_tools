@@ -5,7 +5,7 @@ use crate::init::init;
 use crate::route::get_routes;
 use rocket::fs::FileServer;
 use rpg_tools_core::model::world::street::StreetId;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_rendering::usecase::map::TileMapRenderer;
 use std::sync::Mutex;
 

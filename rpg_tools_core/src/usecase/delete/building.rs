@@ -1,6 +1,6 @@
 use crate::model::world::building::BuildingId;
 use crate::model::world::town::construction::Construction;
-use crate::model::world::WorldData;
+use crate::model::WorldData;
 use crate::usecase::delete::DeleteResult;
 use crate::utils::storage::DeleteElementResult;
 
@@ -34,7 +34,7 @@ mod tests {
     use crate::model::math::size2d::Size2d;
     use crate::model::world::building::lot::BuildingLot;
     use crate::model::world::town::Town;
-    use crate::model::world::WorldData;
+    use crate::model::WorldData;
     use crate::usecase::create::building::create_building;
     use crate::usecase::get::town::{is_building, is_free};
 

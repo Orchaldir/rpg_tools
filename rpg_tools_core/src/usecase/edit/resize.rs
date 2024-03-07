@@ -5,7 +5,7 @@ use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::WorldData;
 use anyhow::{bail, Context, Result};
 
 pub fn resize_town(data: &mut WorldData, id: TownId, width: u32, height: u32) -> Result<()> {
@@ -63,7 +63,7 @@ mod tests {
     use super::*;
     use crate::model::world::building::Building;
     use crate::model::world::town::{Town, TownId};
-    use crate::model::world::WorldData;
+    use crate::model::WorldData;
     use crate::usecase::create::building::create_building;
     use crate::usecase::get::town::get_constructions;
 

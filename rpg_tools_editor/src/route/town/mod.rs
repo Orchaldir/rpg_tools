@@ -18,7 +18,7 @@ use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};

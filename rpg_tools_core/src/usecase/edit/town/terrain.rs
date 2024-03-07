@@ -1,7 +1,7 @@
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::WorldData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 

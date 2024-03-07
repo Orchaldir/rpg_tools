@@ -4,7 +4,7 @@ use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::WorldData;
 
 // Construction
 

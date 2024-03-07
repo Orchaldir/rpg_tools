@@ -10,7 +10,7 @@ use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::construction::Construction::Street;
 use rpg_tools_core::model::world::town::Town;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::utils::storage::Element;
 
 pub fn render_buildings(

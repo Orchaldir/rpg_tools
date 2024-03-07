@@ -12,7 +12,7 @@ use rpg_tools_core::model::world::river::RiverId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::usecase::edit::town::terrain::edit_terrain;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;

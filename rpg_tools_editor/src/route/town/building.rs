@@ -9,7 +9,7 @@ use rpg_tools_core::model::world::building::lot::BuildingLot;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::WorldData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
