@@ -107,7 +107,7 @@ fn get_terrain_creator_html(
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
             .h1(&format!("Add Streets to Town {}", town.name()))
-            .form(&update_uri, |mut b| {
+            .form_with_change(&update_uri, &update_uri, |mut b| {
                 b = b.select(
                     "Terrain",
                     "terrain",

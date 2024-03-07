@@ -187,8 +187,10 @@ impl HtmlBuilder {
         self.text(&number.to_string())
     }
 
-    pub fn form<F: FnOnce(FormBuilder) -> FormBuilder>(self, submit: &str, f: F) -> Self {
-        self.form_with_change(submit, submit, f)
+    pub fn form<F: FnOnce(FormBuilder) -> FormBuilder>(mut self, submit: &str, f: F) -> Self {
+        self = self.open_tag("form");
+
+        Self::submit_button(f(FormBuilder::new(self)), submit)
     }
 
     pub fn form_with_change<F: FnOnce(FormBuilder) -> FormBuilder>(
@@ -200,7 +202,11 @@ impl HtmlBuilder {
         self = self
             .open_tag_with_3_attributes("form", "id", "editor", "action", update, "method", "post");
 
-        f(FormBuilder::new(self))
+        Self::submit_button(f(FormBuilder::new(self)), submit)
+    }
+
+    fn submit_button(builder: FormBuilder, submit: &str) -> Self {
+        builder
             .finish()
             .open_tag_with_2_attributes("button", "formaction", submit, "formmethod", "post")
             .text("Submit")

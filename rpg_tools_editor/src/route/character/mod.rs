@@ -49,6 +49,7 @@ pub fn edit_character(state: &State<EditorData>, id: usize) -> Option<RawHtml<St
 #[derive(FromForm, Debug)]
 pub struct CharacterUpdate<'r> {
     name: &'r str,
+    gender: &'r str,
 }
 
 #[post("/character/<id>/update", data = "<update>")]
@@ -95,6 +96,12 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
             .form(&submit_uri, |b| {
                 b.text_input("Name", "name", character.name())
                     .error(name_error)
+                    .select(
+                        "Gender:",
+                        "gender",
+                        &["Female", "Genderless", "Male"],
+                        &character.gender.to_string(),
+                    )
             })
             .p(|b| b.link(&link_character_details(id), "Back"));
 
