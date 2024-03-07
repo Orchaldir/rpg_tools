@@ -12,7 +12,7 @@ use rpg_tools_core::model::world::river::RiverId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::town::terrain::edit_terrain;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
@@ -93,7 +93,7 @@ pub fn link_edit_terrain(id: TownId, tile: usize) -> String {
 }
 
 fn get_terrain_creator_html(
-    data: &WorldData,
+    data: &RpgData,
     tools: &ToolData,
     id: TownId,
 ) -> Option<RawHtml<String>> {
@@ -129,7 +129,7 @@ fn get_terrain_creator_html(
     })
 }
 
-fn render_terrain_editor_map(data: &WorldData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
+fn render_terrain_editor_map(data: &RpgData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 

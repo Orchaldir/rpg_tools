@@ -7,7 +7,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::town::towns::WithTowns;
-use rpg_tools_core::model::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
@@ -71,7 +71,7 @@ pub fn update_mountain(
     get_details_html(&data, mountain_id)
 }
 
-fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &RpgData, id: MountainId) -> Option<RawHtml<String>> {
     let edit_uri = uri!(edit_mountain(id = id.id())).to_string();
 
     data.mountain_manager.get(id).map(|mountain| {
@@ -92,7 +92,7 @@ fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>>
     })
 }
 
-fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &RpgData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
     let submit_uri = uri!(update_mountain(id.id())).to_string();
 
     data.mountain_manager.get(id).map(|mountain| {

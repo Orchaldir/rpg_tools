@@ -1,11 +1,11 @@
 use crate::model::world::building::BuildingId;
 use crate::model::world::town::construction::Construction;
-use crate::model::WorldData;
+use crate::model::RpgData;
 use crate::usecase::delete::DeleteResult;
 use crate::utils::storage::DeleteElementResult;
 
 /// Tries to delete a [`building`](Building).
-pub fn delete_building(data: &mut WorldData, id: BuildingId) -> DeleteResult {
+pub fn delete_building(data: &mut RpgData, id: BuildingId) -> DeleteResult {
     let building = match data.building_manager.delete(id) {
         DeleteElementResult::SwappedAndRemoved { element, .. } => {
             if let Some(building) = data.building_manager.get_mut(id) {
@@ -34,13 +34,13 @@ mod tests {
     use crate::model::math::size2d::Size2d;
     use crate::model::world::building::lot::BuildingLot;
     use crate::model::world::town::Town;
-    use crate::model::WorldData;
+    use crate::model::RpgData;
     use crate::usecase::create::building::create_building;
     use crate::usecase::get::town::{is_building, is_free};
 
     #[test]
     fn test_swapped_and_removed() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data
             .town_manager
             .create(|id| Town::simple(id, Size2d::square(2)));
@@ -57,7 +57,7 @@ mod tests {
 
     #[test]
     fn test_delete_last() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data
             .town_manager
             .create(|id| Town::simple(id, Size2d::square(2)));
@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_not_found() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let id = BuildingId::default();
 
         assert_eq!(DeleteResult::NotFound, delete_building(&mut data, id));

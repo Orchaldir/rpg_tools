@@ -6,7 +6,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::building::BuildingId;
-use rpg_tools_core::model::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::delete::building::delete_building;
 use rpg_tools_core::usecase::delete::DeleteResult;
 use rpg_tools_core::usecase::edit::name::update_name;
@@ -86,7 +86,7 @@ pub fn update_building(
     get_building_details_html(&data, building_id)
 }
 
-pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<RawHtml<String>> {
+pub fn get_building_details_html(data: &RpgData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
         let mut builder = create_html()
             .h1(&format!("Building: {}", building.name()))
@@ -113,7 +113,7 @@ pub fn get_building_details_html(data: &WorldData, id: BuildingId) -> Option<Raw
 }
 
 fn get_edit_html(
-    data: &WorldData,
+    data: &RpgData,
     id: BuildingId,
     name_error: &str,
     size_error: &str,

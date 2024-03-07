@@ -10,11 +10,11 @@ use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::construction::Construction::Street;
 use rpg_tools_core::model::world::town::Town;
-use rpg_tools_core::model::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::utils::storage::Element;
 
 pub fn render_buildings(
-    data: &WorldData,
+    data: &RpgData,
     builder: &mut SvgBuilder,
     renderer: &TileMapRenderer,
     town: &Town,
@@ -80,7 +80,7 @@ pub fn render_street_color(builder: &mut SvgBuilder, aabb: &AABB, color: Color) 
 }
 
 pub fn render_constructs(
-    data: &WorldData,
+    data: &RpgData,
     builder: &mut SvgBuilder,
     renderer: &TileMapRenderer,
     town: &Town,

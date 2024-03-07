@@ -12,9 +12,9 @@ pub mod color;
 pub mod math;
 pub mod world;
 
-/// Contains the terrain features & settlements.
+/// Contains all the data of the rpg.
 #[derive(Debug, Default)]
-pub struct WorldData {
+pub struct RpgData {
     pub setting: String,
     pub building_manager: Storage<BuildingId, Building>,
     pub mountain_manager: Storage<MountainId, Mountain>,
@@ -23,7 +23,7 @@ pub struct WorldData {
     pub town_manager: Storage<TownId, Town>,
 }
 
-impl WorldData {
+impl RpgData {
     pub fn load(setting: &str) -> anyhow::Result<Self> {
         Ok(Self {
             setting: setting.to_string(),

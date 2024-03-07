@@ -1,13 +1,13 @@
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
-use crate::model::WorldData;
+use crate::model::RpgData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
 /// Tries to edit the [`terrain`](Terrain) of a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn edit_terrain(
-    data: &mut WorldData,
+    data: &mut RpgData,
     town_id: TownId,
     tile: usize,
     terrain: Terrain,
@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn overwrite_mountain_with_river() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let mountain_id = data.mountain_manager.create(Mountain::new);
         let river_id = data.river_manager.create(River::new);
@@ -88,7 +88,7 @@ mod tests {
 
     #[test]
     fn overwrite_river_with_mountain() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let mountain_id = data.mountain_manager.create(Mountain::new);
         let river_id = data.river_manager.create(River::new);
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn unknown_mountain() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let id = MountainId::default();
         let terrain = Terrain::Hill { id };
@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn unknown_river() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let id = RiverId::default();
         let terrain = Terrain::River { id };
@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn unknown_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = TownId::default();
         let mountain_id = data.mountain_manager.create(Mountain::new);
         let mountain = Terrain::Hill { id: mountain_id };
@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn outside_map() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let mountain_id = data.mountain_manager.create(Mountain::new);
         let mountain = Terrain::Hill { id: mountain_id };

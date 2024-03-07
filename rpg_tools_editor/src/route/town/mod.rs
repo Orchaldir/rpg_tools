@@ -18,7 +18,7 @@ use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -102,7 +102,7 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_town(&data, &state.town_renderer, town, link_building_details))
 }
 
-fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &RpgData, id: TownId) -> Option<RawHtml<String>> {
     let buildings = data
         .building_manager
         .get_all()
@@ -130,7 +130,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
 }
 
 fn render_town<F: FnMut(BuildingId) -> String>(
-    data: &WorldData,
+    data: &RpgData,
     renderer: &TileMapRenderer,
     town: &Town,
     mut get_link: F,
@@ -177,7 +177,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     RawSvg::new(svg.export())
 }
 
-fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &RpgData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     let submit_uri = uri!(update_town(id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {
