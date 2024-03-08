@@ -1,4 +1,5 @@
 use crate::html::create_html;
+use crate::route::link_home;
 use rocket::response::content::RawHtml;
 use rpg_tools_core::utils::storage::{Element, Id, Storage};
 use std::collections::HashSet;
@@ -35,7 +36,7 @@ pub fn get_all_html<ID: Id, ELEMENT: Element<ID>>(
                 )
             })
             .p(|b| b.link(&format!("/{}/new", storage.name()), "Add"))
-            .p(|b| b.link("/", "Back"))
+            .p(|b| b.link(&link_home(), "Back"))
             .finish(),
     )
 }

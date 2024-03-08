@@ -62,6 +62,10 @@ pub fn home(state: &State<EditorData>) -> RawHtml<String> {
     )
 }
 
+pub fn link_home() -> String {
+    uri!(home()).to_string()
+}
+
 #[get("/save")]
 pub fn save(state: &State<EditorData>) -> Status {
     let data = state.data.lock().expect("lock shared data");
