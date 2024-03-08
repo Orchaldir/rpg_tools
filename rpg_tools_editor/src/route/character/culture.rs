@@ -1,4 +1,5 @@
 use crate::html::create_html;
+use crate::route::character::link_character_details;
 use crate::route::util::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
@@ -73,10 +74,22 @@ fn get_details_html(data: &RpgData, id: CultureId) -> Option<RawHtml<String>> {
     let edit_uri = uri!(edit_culture(id = id.id())).to_string();
 
     data.cultures.get(id).map(|culture| {
+        let characters: Vec<_> = data
+            .characters
+            .get_all()
+            .iter()
+            .filter(|c| c.culture.eq(&id))
+            .map(|c| (c.id(), c.name()))
+            .collect();
+
         let builder = create_html()
             .h1(&format!("Culture: {}", culture.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
+            .field_usize("Characters:", characters.len())
+            .list(&characters, |b, &character| {
+                b.link(&link_character_details(character.0), character.1)
+            })
             .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_all_cultures(), "Back"));
 
