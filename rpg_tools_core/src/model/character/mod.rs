@@ -1,3 +1,4 @@
+use crate::model::character::culture::CultureId;
 use crate::model::character::gender::Gender;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
@@ -25,6 +26,7 @@ pub struct Character {
     id: CharacterId,
     name: String,
     pub gender: Gender,
+    pub culture: CultureId,
 }
 
 impl Character {
@@ -33,6 +35,7 @@ impl Character {
             id,
             name: format!("Character {}", id.0),
             gender: Gender::default(),
+            culture: Default::default(),
         }
     }
 }

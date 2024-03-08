@@ -79,11 +79,18 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
     let edit_uri = uri!(edit_character(id = id.id())).to_string();
 
     data.characters.get(id).map(|character| {
+        let culture = data
+            .cultures
+            .get(character.culture)
+            .map(|culture| culture.name())
+            .unwrap_or("Unknown");
+
         let builder = create_html()
             .h1(&format!("Character: {}", character.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
             .field("Gender:", &character.gender.to_string())
+            .field("Culture:", culture)
             .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_all_characters(), "Back"));
 
