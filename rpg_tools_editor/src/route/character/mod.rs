@@ -1,6 +1,7 @@
 pub mod culture;
 
 use crate::html::create_html;
+use crate::route::character::culture::link_culture_details;
 use crate::route::util::get_all_html;
 use crate::EditorData;
 use rocket::form::Form;
@@ -79,18 +80,19 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
     let edit_uri = uri!(edit_character(id = id.id())).to_string();
 
     data.characters.get(id).map(|character| {
-        let culture = data
-            .cultures
-            .get(character.culture)
-            .map(|culture| culture.name())
-            .unwrap_or("Unknown");
-
-        let builder = create_html()
+        let mut builder = create_html()
             .h1(&format!("Character: {}", character.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
-            .field("Gender:", &character.gender.to_string())
-            .field("Culture:", culture)
+            .field("Gender:", &character.gender.to_string());
+
+        if let Some(culture) = data.cultures.get(character.culture) {
+            builder = builder.complex_field("Culture", |b| {
+                b.link(&link_culture_details(culture.id()), culture.name())
+            })
+        }
+
+        builder = builder
             .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_all_characters(), "Back"));
 
