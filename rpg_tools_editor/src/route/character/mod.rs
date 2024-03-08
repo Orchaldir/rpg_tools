@@ -86,7 +86,7 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
             .field_usize("Id:", id.id())
             .field("Gender:", &character.gender.to_string())
             .option(data.cultures.get(character.culture), |culture, b| {
-                b.complex_field("Culture", |b| {
+                b.complex_field("Culture:", |b| {
                     b.link(&link_culture_details(culture.id()), culture.name())
                 })
             })
