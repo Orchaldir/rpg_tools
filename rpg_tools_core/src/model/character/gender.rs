@@ -15,3 +15,14 @@ impl Display for Gender {
         write!(f, "{:?}", self)
     }
 }
+
+impl From<&str> for Gender {
+    fn from(string: &str) -> Self {
+        match string {
+            "Female" => Self::Female,
+            "Genderless" => Self::Genderless,
+            "Male" => Self::Male,
+            _ => Self::default(),
+        }
+    }
+}
