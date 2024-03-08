@@ -1,3 +1,5 @@
+pub mod culture;
+
 use crate::html::create_html;
 use crate::route::util::get_all_html;
 use crate::EditorData;
