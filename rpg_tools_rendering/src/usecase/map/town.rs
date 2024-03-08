@@ -10,11 +10,11 @@ use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::construction::Construction::Street;
 use rpg_tools_core::model::world::town::Town;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::utils::storage::Element;
 
 pub fn render_buildings(
-    data: &WorldData,
+    data: &RpgData,
     builder: &mut SvgBuilder,
     renderer: &TileMapRenderer,
     town: &Town,
@@ -22,7 +22,7 @@ pub fn render_buildings(
     data.building_manager
         .get_all()
         .iter()
-        .filter(|&building| building.lot().town.eq(&town.id()))
+        .filter(|&building| building.lot.town.eq(&town.id()))
         .for_each(|building| render_building(builder, renderer, town, building));
 }
 
@@ -36,9 +36,9 @@ pub fn render_building(
     let start = renderer.calculate_index_position(
         &Point2d::default(),
         town.map.get_size(),
-        building.lot().tile,
+        building.lot.tile,
     );
-    let size = renderer.calculate_size(building.lot().size);
+    let size = renderer.calculate_size(building.lot.size);
     let aabb = AABB::new(start, size).shrink(renderer.tile_size / 4);
 
     builder.render_rectangle(&aabb, &style);
@@ -80,7 +80,7 @@ pub fn render_street_color(builder: &mut SvgBuilder, aabb: &AABB, color: Color) 
 }
 
 pub fn render_constructs(
-    data: &WorldData,
+    data: &RpgData,
     builder: &mut SvgBuilder,
     renderer: &TileMapRenderer,
     town: &Town,

@@ -7,7 +7,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::mountain::{Mountain, MountainId};
 use rpg_tools_core::model::world::town::towns::WithTowns;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
@@ -15,6 +15,10 @@ use rpg_tools_core::utils::storage::{Element, Id};
 pub fn get_all_mountains(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
     get_all_html(&data.mountain_manager, "Mountains")
+}
+
+pub fn link_all_mountains() -> String {
+    uri!(get_all_mountains()).to_string()
 }
 
 #[get("/mountain/new")]
@@ -32,6 +36,10 @@ pub fn add_mountain(data: &State<EditorData>) -> Option<RawHtml<String>> {
 pub fn get_mountain_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_html(&data, MountainId::new(id))
+}
+
+pub fn link_mountain_details(id: MountainId) -> String {
+    uri!(get_mountain_details(id = id.id())).to_string()
 }
 
 #[get("/mountain/<id>/edit")]
@@ -63,7 +71,9 @@ pub fn update_mountain(
     get_details_html(&data, mountain_id)
 }
 
-fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &RpgData, id: MountainId) -> Option<RawHtml<String>> {
+    let edit_uri = uri!(edit_mountain(id = id.id())).to_string();
+
     data.mountain_manager.get(id).map(|mountain| {
         let towns = get_elements(&data.town_manager, mountain.towns());
 
@@ -75,14 +85,14 @@ fn get_details_html(data: &WorldData, id: MountainId) -> Option<RawHtml<String>>
             .list(&towns, |b, &town| {
                 b.link(&link_town_details(town.id()), town.name())
             })
-            .p(|b| b.link(&format!("/mountain/{}/edit", id.id()), "Edit"))
-            .p(|b| b.link("/mountain/all", "Back"));
+            .p(|b| b.link(&edit_uri, "Edit"))
+            .p(|b| b.link(&link_all_mountains(), "Back"));
 
         RawHtml(builder.finish())
     })
 }
 
-fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &RpgData, id: MountainId, name_error: &str) -> Option<RawHtml<String>> {
     let submit_uri = uri!(update_mountain(id.id())).to_string();
 
     data.mountain_manager.get(id).map(|mountain| {
@@ -93,7 +103,7 @@ fn get_edit_html(data: &WorldData, id: MountainId, name_error: &str) -> Option<R
                 b.text_input("Name", "name", mountain.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/mountain/{}/details", id.id()), "Back"));
+            .p(|b| b.link(&link_mountain_details(id), "Back"));
 
         RawHtml(builder.finish())
     })

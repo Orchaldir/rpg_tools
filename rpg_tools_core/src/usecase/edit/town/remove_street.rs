@@ -1,12 +1,12 @@
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::RpgData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
 /// Tries to remove a [`street`](Street) from a [`tile`](crate::model::world::town::tile::TownTile).
-pub fn remove_street_from_tile(data: &mut WorldData, town_id: TownId, tile: usize) -> Result<()> {
+pub fn remove_street_from_tile(data: &mut RpgData, town_id: TownId, tile: usize) -> Result<()> {
     if let Some(town) = data.town_manager.get_mut(town_id) {
         if let Some(tile) = town.map.get_tile_mut(tile) {
             if let Construction::Street { id } = tile.construction {
@@ -36,14 +36,14 @@ mod tests {
     use crate::model::math::size2d::Size2d;
     use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
-    use crate::model::world::WorldData;
+    use crate::model::RpgData;
     use crate::usecase::edit::town::add_street::add_street_to_tile;
     use crate::usecase::get::town::{is_any_street, is_street};
     use crate::usecase::get::towns::contains_town;
 
     #[test]
     fn delete_last_street_in_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
         add_street_to_tile(&mut data, town_id, 0, street_id).unwrap();
@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn delete_street_in_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data
             .town_manager
             .create(|id| Town::simple(id, Size2d::square(2)));
@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn unknown_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         data.street_manager.create(Street::new);
 
         assert!(remove_street_from_tile(&mut data, TownId::new(0), 0).is_err());
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn outside_map() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         data.street_manager.create(Street::new);
 
@@ -90,7 +90,7 @@ mod tests {
 
     #[test]
     fn no_street() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         data.street_manager.create(Street::new);
 

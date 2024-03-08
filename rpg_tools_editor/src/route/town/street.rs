@@ -12,7 +12,7 @@ use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::town::add_street::add_street_to_tile;
 use rpg_tools_core::usecase::edit::town::remove_street::remove_street_from_tile;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -122,7 +122,7 @@ pub fn link_remove_street_from_town(id: TownId, tile: usize) -> String {
 }
 
 fn get_street_creator_html(
-    data: &WorldData,
+    data: &RpgData,
     id: TownId,
     street_id: StreetId,
 ) -> Option<RawHtml<String>> {
@@ -145,7 +145,7 @@ fn get_street_creator_html(
 }
 
 fn render_street_editor_map(
-    data: &WorldData,
+    data: &RpgData,
     renderer: &TileMapRenderer,
     town: &Town,
     selected: StreetId,

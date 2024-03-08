@@ -4,18 +4,18 @@ use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::RpgData;
 
 // Construction
 
-pub fn get_construction(data: &WorldData, town_id: TownId, tile: usize) -> Option<&Construction> {
+pub fn get_construction(data: &RpgData, town_id: TownId, tile: usize) -> Option<&Construction> {
     data.town_manager
         .get(town_id)
         .and_then(|town| town.map.get_tile(tile))
         .map(|tile| &tile.construction)
 }
 
-pub fn get_constructions(data: &WorldData, town_id: TownId) -> Vec<&Construction> {
+pub fn get_constructions(data: &RpgData, town_id: TownId) -> Vec<&Construction> {
     data.town_manager
         .get(town_id)
         .iter()
@@ -25,7 +25,7 @@ pub fn get_constructions(data: &WorldData, town_id: TownId) -> Vec<&Construction
 }
 
 pub fn check_construction<F: FnOnce(&Construction) -> bool>(
-    data: &WorldData,
+    data: &RpgData,
     town_id: TownId,
     tile: usize,
     check: F,
@@ -36,7 +36,7 @@ pub fn check_construction<F: FnOnce(&Construction) -> bool>(
 }
 
 pub fn is_construction(
-    data: &WorldData,
+    data: &RpgData,
     town_id: TownId,
     tile: usize,
     construction: Construction,
@@ -44,23 +44,14 @@ pub fn is_construction(
     check_construction(data, town_id, tile, |c| c.eq(&construction))
 }
 
-pub fn is_lot_construction(
-    data: &WorldData,
-    lot: &BuildingLot,
-    construction: Construction,
-) -> bool {
+pub fn is_lot_construction(data: &RpgData, lot: &BuildingLot, construction: Construction) -> bool {
     data.town_manager
         .get(lot.town)
         .map(|town| town.is_lot_construction(lot, &construction))
         .unwrap_or(false)
 }
 
-pub fn is_building(
-    data: &WorldData,
-    town_id: TownId,
-    tile: usize,
-    building_id: BuildingId,
-) -> bool {
+pub fn is_building(data: &RpgData, town_id: TownId, tile: usize, building_id: BuildingId) -> bool {
     is_construction(
         data,
         town_id,
@@ -69,19 +60,19 @@ pub fn is_building(
     )
 }
 
-pub fn is_free(data: &WorldData, town_id: TownId, tile: usize) -> bool {
+pub fn is_free(data: &RpgData, town_id: TownId, tile: usize) -> bool {
     is_construction(data, town_id, tile, Construction::None)
 }
 
-pub fn is_lot_free(data: &WorldData, lot: &BuildingLot) -> bool {
+pub fn is_lot_free(data: &RpgData, lot: &BuildingLot) -> bool {
     is_lot_construction(data, lot, Construction::None)
 }
 
-pub fn is_street(data: &WorldData, town_id: TownId, tile: usize, street_id: StreetId) -> bool {
+pub fn is_street(data: &RpgData, town_id: TownId, tile: usize, street_id: StreetId) -> bool {
     is_construction(data, town_id, tile, Construction::Street { id: street_id })
 }
 
-pub fn is_any_street(data: &WorldData, town_id: TownId, tile: usize) -> bool {
+pub fn is_any_street(data: &RpgData, town_id: TownId, tile: usize) -> bool {
     check_construction(data, town_id, tile, |construction| {
         matches!(construction, Construction::Street { .. })
     })
@@ -89,7 +80,7 @@ pub fn is_any_street(data: &WorldData, town_id: TownId, tile: usize) -> bool {
 
 // Terrain
 
-pub fn is_terrain(data: &WorldData, town_id: TownId, tile: usize, terrain: &Terrain) -> bool {
+pub fn is_terrain(data: &RpgData, town_id: TownId, tile: usize, terrain: &Terrain) -> bool {
     data.town_manager
         .get(town_id)
         .and_then(|town| town.map.get_tile(tile))

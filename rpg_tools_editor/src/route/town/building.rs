@@ -9,7 +9,7 @@ use rpg_tools_core::model::world::building::lot::BuildingLot;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::create::building::create_building;
 use rpg_tools_core::utils::storage::{Element, Id};
 use rpg_tools_rendering::renderer::svg::builder::SvgBuilder;
@@ -57,7 +57,7 @@ pub fn link_add_building(id: TownId, tile: usize) -> String {
     uri!(add_building(id.id(), tile)).to_string()
 }
 
-fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_building_creator_html(data: &RpgData, id: TownId) -> Option<RawHtml<String>> {
     let map_uri = uri!(get_building_creator_map(id.id())).to_string();
     let back_uri = link_town_details(id);
 
@@ -71,11 +71,7 @@ fn get_building_creator_html(data: &WorldData, id: TownId) -> Option<RawHtml<Str
     })
 }
 
-fn render_building_creator_map(
-    data: &WorldData,
-    renderer: &TileMapRenderer,
-    town: &Town,
-) -> RawSvg {
+fn render_building_creator_map(data: &RpgData, renderer: &TileMapRenderer, town: &Town) -> RawSvg {
     let size = renderer.calculate_map_size(&town.map);
     let mut builder = SvgBuilder::new(size);
 

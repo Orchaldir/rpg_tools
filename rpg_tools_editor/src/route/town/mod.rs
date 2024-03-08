@@ -18,7 +18,7 @@ use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
 use rpg_tools_core::model::world::town::{Town, TownId};
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::usecase::edit::resize::resize_town;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -102,14 +102,15 @@ pub fn get_town_map(state: &State<EditorData>, id: usize) -> Option<RawSvg> {
         .map(|town| render_town(&data, &state.town_renderer, town, link_building_details))
 }
 
-fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &RpgData, id: TownId) -> Option<RawHtml<String>> {
     let buildings = data
         .building_manager
         .get_all()
         .iter()
-        .filter(|&building| building.lot().town.eq(&id))
+        .filter(|&building| building.lot.town.eq(&id))
         .count();
     let map_uri = uri!(get_town_map(id.id())).to_string();
+    let edit_uri = uri!(edit_town(id = id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {
         let builder = create_html()
@@ -117,7 +118,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Buildings:", buildings)
-            .p(|b| b.link(&format!("/town/{}/edit", id.id()), "Edit"))
+            .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_terrain_editor(id), "Edit Terrain"))
             .p(|b| b.link(&link_building_creator(id), "Add Buildings"))
             .p(|b| b.link(&link_street_editor(id), "Edit Streets"))
@@ -129,7 +130,7 @@ fn get_details_html(data: &WorldData, id: TownId) -> Option<RawHtml<String>> {
 }
 
 fn render_town<F: FnMut(BuildingId) -> String>(
-    data: &WorldData,
+    data: &RpgData,
     renderer: &TileMapRenderer,
     town: &Town,
     mut get_link: F,
@@ -154,7 +155,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     data.building_manager
         .get_all()
         .iter()
-        .filter(|&building| building.lot().town.eq(&town.id()))
+        .filter(|&building| building.lot.town.eq(&town.id()))
         .for_each(|building| {
             builder.tooltip(building.name());
             builder.link(&get_link(building.id()));
@@ -176,7 +177,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
     RawSvg::new(svg.export())
 }
 
-fn get_edit_html(data: &WorldData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &RpgData, id: TownId, name_error: &str) -> Option<RawHtml<String>> {
     let submit_uri = uri!(update_town(id.id())).to_string();
 
     data.town_manager.get(id).map(|town| {

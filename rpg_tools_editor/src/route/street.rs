@@ -7,7 +7,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::world::street::{Street, StreetId};
 use rpg_tools_core::model::world::town::towns::WithTowns;
-use rpg_tools_core::model::world::WorldData;
+use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
@@ -15,6 +15,10 @@ use rpg_tools_core::utils::storage::{Element, Id};
 pub fn get_all_streets(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
     get_all_html(&data.street_manager, "Streets")
+}
+
+pub fn link_all_streets() -> String {
+    uri!(get_all_streets()).to_string()
 }
 
 #[get("/street/new")]
@@ -32,6 +36,10 @@ pub fn add_street(data: &State<EditorData>) -> Option<RawHtml<String>> {
 pub fn get_street_details(state: &State<EditorData>, id: usize) -> Option<RawHtml<String>> {
     let data = state.data.lock().expect("lock shared data");
     get_details_html(&data, StreetId::new(id))
+}
+
+pub fn link_street_details(id: StreetId) -> String {
+    uri!(get_street_details(id = id.id())).to_string()
 }
 
 #[get("/street/<id>/edit")]
@@ -63,7 +71,9 @@ pub fn update_street(
     get_details_html(&data, street_id)
 }
 
-fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
+fn get_details_html(data: &RpgData, id: StreetId) -> Option<RawHtml<String>> {
+    let edit_uri = uri!(edit_street(id = id.id())).to_string();
+
     data.street_manager.get(id).map(|street| {
         let towns = get_elements(&data.town_manager, street.towns());
 
@@ -75,14 +85,14 @@ fn get_details_html(data: &WorldData, id: StreetId) -> Option<RawHtml<String>> {
             .list(&towns, |b, &town| {
                 b.link(&link_town_details(town.id()), town.name())
             })
-            .p(|b| b.link(&format!("/street/{}/edit", id.id()), "Edit"))
-            .p(|b| b.link("/street/all", "Back"));
+            .p(|b| b.link(&edit_uri, "Edit"))
+            .p(|b| b.link(&link_all_streets(), "Back"));
 
         RawHtml(builder.finish())
     })
 }
 
-fn get_edit_html(data: &WorldData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
+fn get_edit_html(data: &RpgData, id: StreetId, name_error: &str) -> Option<RawHtml<String>> {
     let submit_uri = uri!(update_street(id.id())).to_string();
 
     data.street_manager.get(id).map(|street| {
@@ -93,7 +103,7 @@ fn get_edit_html(data: &WorldData, id: StreetId, name_error: &str) -> Option<Raw
                 b.text_input("Name", "name", street.name())
                     .error(name_error)
             })
-            .p(|b| b.link(&format!("/street/{}/details", id.id()), "Back"));
+            .p(|b| b.link(&link_street_details(id), "Back"));
 
         RawHtml(builder.finish())
     })

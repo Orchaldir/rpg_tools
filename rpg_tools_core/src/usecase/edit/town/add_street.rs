@@ -2,13 +2,13 @@ use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::RpgData;
 use crate::utils::storage::{Element, Id};
 use anyhow::{bail, Result};
 
 /// Tries to add a [`street`](Street) to a [`tile`](crate::model::world::town::tile::TownTile).
 pub fn add_street_to_tile(
-    data: &mut WorldData,
+    data: &mut RpgData,
     town_id: TownId,
     tile: usize,
     street_id: StreetId,
@@ -41,14 +41,14 @@ mod tests {
     use crate::model::world::building::lot::BuildingLot;
     use crate::model::world::street::Street;
     use crate::model::world::town::{Town, TownId};
-    use crate::model::world::WorldData;
+    use crate::model::RpgData;
     use crate::usecase::create::building::create_building;
     use crate::usecase::get::town::{is_building, is_free, is_street};
     use crate::usecase::get::towns::contains_town;
 
     #[test]
     fn create_successful() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
 
@@ -60,7 +60,7 @@ mod tests {
 
     #[test]
     fn unknown_street() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let street_id = StreetId::new(0);
         let town_id = data.town_manager.create(Town::new);
 
@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn unknown_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let street_id = data.street_manager.create(Street::new);
         let town_id = TownId::new(0);
 
@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn outside_map() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
 
@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn occupied_by_building() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
         let building_id = create_building(&mut data, BuildingLot::new(town_id, 0)).unwrap();
@@ -108,7 +108,7 @@ mod tests {
 
     #[test]
     fn occupied_by_street() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let street_id = data.street_manager.create(Street::new);
         let street_id1 = data.street_manager.create(Street::new);

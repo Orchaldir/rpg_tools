@@ -5,10 +5,10 @@ use crate::model::world::town::construction::Construction;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::tile::TownTile;
 use crate::model::world::town::TownId;
-use crate::model::world::WorldData;
+use crate::model::RpgData;
 use anyhow::{bail, Context, Result};
 
-pub fn resize_town(data: &mut WorldData, id: TownId, width: u32, height: u32) -> Result<()> {
+pub fn resize_town(data: &mut RpgData, id: TownId, width: u32, height: u32) -> Result<()> {
     data.town_manager
         .get_mut(id)
         .map(|town| {
@@ -21,7 +21,7 @@ pub fn resize_town(data: &mut WorldData, id: TownId, width: u32, height: u32) ->
 }
 
 pub fn resize_building(
-    data: &mut WorldData,
+    data: &mut RpgData,
     building_id: BuildingId,
     width: u32,
     height: u32,
@@ -29,7 +29,7 @@ pub fn resize_building(
     let lot = data
         .building_manager
         .get(building_id)
-        .map(|building| building.lot().clone())
+        .map(|building| building.lot.clone())
         .context("Building doesn't exist")?;
 
     if let Some(town) = data.town_manager.get_mut(lot.town) {
@@ -63,13 +63,13 @@ mod tests {
     use super::*;
     use crate::model::world::building::Building;
     use crate::model::world::town::{Town, TownId};
-    use crate::model::world::WorldData;
+    use crate::model::RpgData;
     use crate::usecase::create::building::create_building;
     use crate::usecase::get::town::get_constructions;
 
     #[test]
     fn resize_non_existing_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
 
         assert!(resize_town(&mut data, TownId::default(), 2, 3).is_err());
 
@@ -78,7 +78,7 @@ mod tests {
 
     #[test]
     fn resize_building_successful() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data
             .town_manager
             .create(|id| Town::simple(id, Size2d::new(3, 2)));
@@ -108,7 +108,7 @@ mod tests {
 
     #[test]
     fn resize_building_with_unknown_town() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
 
         assert!(resize_building(&mut data, BuildingId::default(), 2, 2).is_err());
         assert!(data.town_manager.is_empty());
@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn resize_building_with_unknown_building() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         data.town_manager
             .create(|id| Town::simple(id, Size2d::new(3, 2)));
 
@@ -126,7 +126,7 @@ mod tests {
 
     #[test]
     fn resize_building_with_too_small_map() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data.town_manager.create(Town::new);
         let lot = BuildingLot::new(town_id, 0);
         let building_id = create_building(&mut data, lot.clone()).unwrap();
@@ -143,7 +143,7 @@ mod tests {
 
     #[test]
     fn resize_building_blocked_by_other_building() {
-        let mut data = WorldData::default();
+        let mut data = RpgData::default();
         let town_id = data
             .town_manager
             .create(|id| Town::simple(id, Size2d::new(2, 1)));
