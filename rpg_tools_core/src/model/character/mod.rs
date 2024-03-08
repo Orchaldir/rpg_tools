@@ -2,6 +2,7 @@ use crate::model::character::gender::Gender;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
+pub mod culture;
 pub mod gender;
 
 /// The unique identifier of a [`character`](Character).
