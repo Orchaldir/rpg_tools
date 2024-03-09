@@ -130,6 +130,15 @@ impl Lastname {
             | Lastname::Matronymic { name } => Some(name),
         }
     }
+
+    pub fn get_type(&self) -> &str {
+        match self {
+            Lastname::None => "None",
+            Lastname::Family { .. } => "Family",
+            Lastname::Patronymic { .. } => "Patronymic",
+            Lastname::Matronymic { .. } => "Matronymic",
+        }
+    }
 }
 
 #[cfg(test)]

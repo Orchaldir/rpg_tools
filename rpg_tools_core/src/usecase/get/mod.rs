@@ -1,5 +1,6 @@
 use crate::model::name::Name;
 
+pub mod name;
 pub mod town;
 pub mod towns;
 
