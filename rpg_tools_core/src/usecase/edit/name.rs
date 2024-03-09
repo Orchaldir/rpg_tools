@@ -1,4 +1,4 @@
-use crate::model::name::EditableName;
+use crate::model::name::{EditableName, Name};
 use crate::utils::storage::{Element, Id, Storage};
 use anyhow::{bail, Context, Result};
 
@@ -8,23 +8,23 @@ pub fn update_name<ID: Id, ELEMENT: Element<ID> + EditableName>(
     id: ID,
     name: &str,
 ) -> Result<()> {
-    let trimmed = name.trim().to_string();
+    if let Some(name) = Name::new(name) {
+        if storage
+            .get_all()
+            .iter()
+            .filter(|r| r.id().ne(&id))
+            .any(|r| r.name().eq(&name))
+        {
+            bail!("Name '{}' already exists!", name)
+        }
 
-    if trimmed.is_empty() {
+        storage
+            .get_mut(id)
+            .map(|r| r.set_name(name))
+            .context("Id doesn't exist")
+    } else {
         bail!("Name is empty!")
-    } else if storage
-        .get_all()
-        .iter()
-        .filter(|r| r.id().ne(&id))
-        .any(|r| r.name().eq(&trimmed))
-    {
-        bail!("Name '{}' already exists!", trimmed)
     }
-
-    storage
-        .get_mut(id)
-        .map(|r| r.set_name(trimmed))
-        .context("Id doesn't exist")
 }
 
 #[cfg(test)]
@@ -85,6 +85,9 @@ mod tests {
 
         assert!(update_name(&mut storage, id, input).is_ok());
 
-        assert_eq!(result, storage.get(id).map(|r| r.name()).unwrap());
+        assert_eq!(
+            result,
+            &storage.get(id).map(|r| r.name()).unwrap().to_string()
+        );
     }
 }

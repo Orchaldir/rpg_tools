@@ -1,4 +1,4 @@
-use crate::model::name::EditableName;
+use crate::model::name::{EditableName, Name};
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
@@ -20,14 +20,14 @@ impl Id for CultureId {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Culture {
     id: CultureId,
-    name: String,
+    name: Name,
 }
 
 impl Culture {
     pub fn new(id: CultureId) -> Self {
         Culture {
             id,
-            name: format!("Culture {}", id.0),
+            name: Name::new(format!("Culture {}", id.0)).unwrap(),
         }
     }
 }
@@ -40,14 +40,13 @@ impl Element<CultureId> for Culture {
     fn with_id(self, id: CultureId) -> Self {
         Culture { id, ..self }
     }
-
-    fn name(&self) -> &str {
-        &self.name
-    }
 }
 
 impl EditableName for Culture {
-    fn set_name(&mut self, name: String) {
+    fn name(&self) -> &Name {
+        &self.name
+    }
+    fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 }

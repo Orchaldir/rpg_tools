@@ -1,9 +1,10 @@
+use crate::model::name::EditableName;
 use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::model::RpgData;
-use crate::utils::storage::{Element, Id};
+use crate::utils::storage::Id;
 use anyhow::{bail, Result};
 
 /// Tries to add a [`street`](Street) to a [`tile`](crate::model::world::town::tile::TownTile).

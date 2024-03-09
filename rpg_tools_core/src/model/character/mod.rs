@@ -1,7 +1,7 @@
 use crate::model::character::culture::CultureId;
 use crate::model::character::gender::Gender;
 use crate::model::character::name::CharacterName;
-use crate::model::name::{EditableName, Name};
+use crate::model::name::Name;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
@@ -50,9 +50,5 @@ impl Element<CharacterId> for Character {
 
     fn with_id(self, id: CharacterId) -> Self {
         Character { id, ..self }
-    }
-
-    fn name(&self) -> &str {
-        self.name.to_string()
     }
 }

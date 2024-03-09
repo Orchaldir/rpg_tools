@@ -4,7 +4,7 @@ pub mod tile;
 pub mod towns;
 
 use crate::model::math::size2d::Size2d;
-use crate::model::name::EditableName;
+use crate::model::name::{EditableName, Name};
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::BuildingId;
 use crate::model::world::street::StreetId;
@@ -33,23 +33,19 @@ impl Id for TownId {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Town {
     id: TownId,
-    name: String,
+    name: Name,
     pub map: TileMap<TownTile>,
 }
 
 impl Town {
     pub fn new(id: TownId) -> Self {
-        Town {
-            id,
-            name: format!("Town {}", id.0),
-            map: TileMap::simple(Size2d::square(1), TownTile::new(Terrain::Plain)),
-        }
+        Self::simple(id, Size2d::square(1))
     }
 
     pub fn simple(id: TownId, size: Size2d) -> Self {
         Town {
             id,
-            name: format!("Town {}", id.0),
+            name: Name::new(format!("Town {}", id.0)).unwrap(),
             map: TileMap::simple(size, TownTile::new(Terrain::Plain)),
         }
     }
@@ -176,14 +172,13 @@ impl Element<TownId> for Town {
     fn with_id(self, id: TownId) -> Self {
         Town { id, ..self }
     }
-
-    fn name(&self) -> &str {
-        &self.name
-    }
 }
 
 impl EditableName for Town {
-    fn set_name(&mut self, name: String) {
+    fn name(&self) -> &Name {
+        &self.name
+    }
+    fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 }
