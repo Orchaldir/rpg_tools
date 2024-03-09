@@ -1,3 +1,4 @@
+use crate::model::name::EditableName;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
@@ -43,7 +44,9 @@ impl Element<CultureId> for Culture {
     fn name(&self) -> &str {
         &self.name
     }
+}
 
+impl EditableName for Culture {
     fn set_name(&mut self, name: String) {
         self.name = name;
     }

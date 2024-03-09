@@ -4,6 +4,7 @@ pub mod tile;
 pub mod towns;
 
 use crate::model::math::size2d::Size2d;
+use crate::model::name::EditableName;
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::BuildingId;
 use crate::model::world::street::StreetId;
@@ -179,7 +180,9 @@ impl Element<TownId> for Town {
     fn name(&self) -> &str {
         &self.name
     }
+}
 
+impl EditableName for Town {
     fn set_name(&mut self, name: String) {
         self.name = name;
     }

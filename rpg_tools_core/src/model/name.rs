@@ -34,3 +34,7 @@ impl Display for Name {
         write!(f, "{}", self.text)
     }
 }
+
+pub trait EditableName {
+    fn set_name(&mut self, name: String);
+}

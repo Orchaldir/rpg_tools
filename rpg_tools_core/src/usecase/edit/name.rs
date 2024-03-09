@@ -1,8 +1,9 @@
+use crate::model::name::EditableName;
 use crate::utils::storage::{Element, Id, Storage};
 use anyhow::{bail, Context, Result};
 
 /// Tries to update the name of an [`element`](Element).
-pub fn update_name<ID: Id, ELEMENT: Element<ID>>(
+pub fn update_name<ID: Id, ELEMENT: Element<ID> + EditableName>(
     storage: &mut Storage<ID, ELEMENT>,
     id: ID,
     name: &str,

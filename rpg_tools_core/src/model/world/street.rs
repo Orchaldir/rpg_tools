@@ -1,3 +1,4 @@
+use crate::model::name::EditableName;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
@@ -48,7 +49,9 @@ impl Element<StreetId> for Street {
     fn name(&self) -> &str {
         &self.name
     }
+}
 
+impl EditableName for Street {
     fn set_name(&mut self, name: String) {
         self.name = name;
     }

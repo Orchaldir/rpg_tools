@@ -1,5 +1,6 @@
 use crate::model::character::culture::CultureId;
 use crate::model::character::gender::Gender;
+use crate::model::name::EditableName;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
@@ -53,7 +54,9 @@ impl Element<CharacterId> for Character {
     fn name(&self) -> &str {
         &self.name
     }
+}
 
+impl EditableName for Character {
     fn set_name(&mut self, name: String) {
         self.name = name;
     }

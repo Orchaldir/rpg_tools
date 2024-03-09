@@ -1,5 +1,6 @@
 pub mod lot;
 
+use crate::model::name::EditableName;
 use crate::model::world::building::lot::BuildingLot;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
@@ -48,7 +49,9 @@ impl Element<BuildingId> for Building {
     fn name(&self) -> &str {
         &self.name
     }
+}
 
+impl EditableName for Building {
     fn set_name(&mut self, name: String) {
         self.name = name;
     }

@@ -14,8 +14,6 @@ pub trait Element<I: Id>: Eq + PartialEq {
     fn with_id(self, id: I) -> Self;
 
     fn name(&self) -> &str;
-
-    fn set_name(&mut self, name: String);
 }
 
 #[derive(Debug, PartialEq, Eq)]
