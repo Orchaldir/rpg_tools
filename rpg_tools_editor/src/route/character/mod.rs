@@ -13,6 +13,7 @@ use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::character::gender::update_gender;
 use rpg_tools_core::usecase::edit::name::character::update_character_name;
+use rpg_tools_core::usecase::get::get_str;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/character/all")]
@@ -132,39 +133,35 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
             .h1(&format!("Edit Character: {}", character.name))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input(
-                    "First Name",
-                    "first_name",
-                    &character.name.first().to_string(),
-                )
-                .error(name_error)
-                .text_input(
-                    "Middle Name",
-                    "middle_name",
-                    character.name.middle().map(|n| n.str()).unwrap_or(""),
-                )
-                .select(
-                    "Last Name Type:",
-                    "last_type",
-                    &["None", "Family", "Patronymic", "Matronymic"],
-                    match character.name.last() {
-                        Lastname::None => "None",
-                        Lastname::Family { .. } => "Family",
-                        Lastname::Patronymic { .. } => "Patronymic",
-                        Lastname::Matronymic { .. } => "Matronymic",
-                    },
-                )
-                .text_input(
-                    "Last Name",
-                    "last_name",
-                    &character.name.last().name().map(|n| n.str()).unwrap_or(""),
-                )
-                .select(
-                    "Gender:",
-                    "gender",
-                    &["Female", "Genderless", "Male"],
-                    &character.gender.to_string(),
-                )
+                b.text_input("First Name", "first_name", &character.name.first().str())
+                    .error(name_error)
+                    .text_input(
+                        "Middle Name",
+                        "middle_name",
+                        get_str(character.name.middle()),
+                    )
+                    .select(
+                        "Last Name Type:",
+                        "last_type",
+                        &["None", "Family", "Patronymic", "Matronymic"],
+                        match character.name.last() {
+                            Lastname::None => "None",
+                            Lastname::Family { .. } => "Family",
+                            Lastname::Patronymic { .. } => "Patronymic",
+                            Lastname::Matronymic { .. } => "Matronymic",
+                        },
+                    )
+                    .text_input(
+                        "Last Name",
+                        "last_name",
+                        get_str(character.name.last().name()),
+                    )
+                    .select(
+                        "Gender:",
+                        "gender",
+                        &["Female", "Genderless", "Male"],
+                        &character.gender.to_string(),
+                    )
             })
             .p(|b| b.link(&link_character_details(id), "Back"));
 
