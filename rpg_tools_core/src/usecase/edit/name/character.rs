@@ -15,13 +15,13 @@ pub fn update_character_name(
         .get_all()
         .iter()
         .filter(|r| r.id().ne(&id))
-        .any(|r| r.name().eq(&name))
+        .any(|r| r.name.eq(&name))
     {
         bail!("Name '{}' already exists!", name)
     }
 
     data.characters
         .get_mut(id)
-        .map(|r| r.set_name(name))
+        .map(|r| r.name = name)
         .context("Id doesn't exist")
 }

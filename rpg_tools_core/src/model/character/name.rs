@@ -1,4 +1,5 @@
 use crate::model::name::Name;
+use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use std::fmt::{Display, Formatter};
 
@@ -35,6 +36,34 @@ impl CharacterName {
             first,
             middle: Some(middle),
             last,
+        }
+    }
+
+    /// Returns a character name with middle name.
+    pub fn parse<S: Into<String>>(first: S, middle: S, last: S, last_type: S) -> Result<Self> {
+        if let Some(first) = Name::new(first) {
+            let last_type: String = last_type.into();
+
+            let last_name = if last_type.eq("None") {
+                Lastname::None
+            } else if let Some(name) = Name::new(last) {
+                match last_type.as_str() {
+                    "Family" => Lastname::Family(name),
+                    "Patronymic" => Lastname::Patronymic(name),
+                    "Matronymic" => Lastname::Matronymic(name),
+                    _ => return bail!("Unknown type of last name"),
+                }
+            } else {
+                return bail!("Last name is invalid");
+            };
+
+            Ok(Self {
+                first,
+                middle: Name::new(middle),
+                last: last_name,
+            })
+        } else {
+            bail!("First name is invalid")
         }
     }
 

@@ -84,13 +84,20 @@ pub fn update_character(
 
     let character_id = CharacterId::new(id);
 
-    let name = CharacterName::full()
-
-    if let Err(e) = update_character_name(&mut data, character_id, update.gender.into()) {
-        return get_edit_html(&data, character_id, &e.to_string());
-    }
-    else if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
-        return get_edit_html(&data, character_id, &e.to_string());
+    match CharacterName::parse(
+        update.first_name,
+        update.middle_name,
+        update.last_name,
+        update.last_type,
+    ) {
+        Ok(name) => {
+            if let Err(e) = update_character_name(&mut data, character_id, name) {
+                return get_edit_html(&data, character_id, &e.to_string());
+            } else if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
+                return get_edit_html(&data, character_id, &e.to_string());
+            }
+        }
+        Err(e) => return get_edit_html(&data, character_id, &e.to_string()),
     }
 
     get_details_html(&data, character_id)
