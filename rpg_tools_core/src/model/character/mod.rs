@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 
 pub mod culture;
 pub mod gender;
+pub mod name;
 
 /// The unique identifier of a [`character`](Character).
 #[derive(Default, Copy, Clone, Debug, Eq, PartialEq, Hash, Serialize, Deserialize)]
