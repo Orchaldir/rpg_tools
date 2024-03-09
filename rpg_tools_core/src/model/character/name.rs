@@ -158,4 +158,59 @@ mod tests {
 
         assert_eq!(desired, name);
     }
+
+    #[test]
+    fn parse_without_middle() {
+        let name = CharacterName::parse("A", " ", "C", "Patronymic").unwrap();
+        let desired = CharacterName::simple(
+            Name::new("A").unwrap(),
+            Lastname::Patronymic(Name::new("C").unwrap()),
+        );
+
+        assert_eq!(desired, name);
+    }
+
+    #[test]
+    fn parse_family() {
+        let name = CharacterName::parse(" A ", " B ", " C ", "Family").unwrap();
+        let desired = CharacterName::full(
+            Name::new("A").unwrap(),
+            Name::new("B").unwrap(),
+            Lastname::Family(Name::new("C").unwrap()),
+        );
+
+        assert_eq!(desired, name);
+    }
+
+    #[test]
+    fn parse_no_last_name() {
+        let name = CharacterName::parse(" A ", " B ", "", "None").unwrap();
+        let desired = CharacterName::full(
+            Name::new("A").unwrap(),
+            Name::new("B").unwrap(),
+            Lastname::None,
+        );
+
+        assert_eq!(desired, name);
+    }
+
+    #[test]
+    fn parse_missing_first_name() {
+        assert!(CharacterName::parse("", "B", "C", "Family").is_err());
+        assert!(CharacterName::parse("", "B", "C", "Patronymic").is_err());
+        assert!(CharacterName::parse("", "B", "C", "Matronymic").is_err());
+        assert!(CharacterName::parse("", "B", "", "None").is_err());
+    }
+
+    #[test]
+    fn parse_missing_last_name() {
+        assert!(CharacterName::parse(" A ", " B ", "", "Family").is_err());
+        assert!(CharacterName::parse(" A ", " B ", "", "Patronymic").is_err());
+        assert!(CharacterName::parse(" A ", " B ", "", "Matronymic").is_err());
+    }
+
+    #[test]
+    fn parse_unknown_type_of_last_name() {
+        assert!(CharacterName::parse(" A ", " B ", "C", "Unknown").is_err());
+    }
 }
