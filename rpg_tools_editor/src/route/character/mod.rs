@@ -112,14 +112,18 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
             .h1(&format!("Character: {}", character.name))
             .h2("Data")
             .field_usize("Id:", id.id())
+            .h3("Name")
             .field("First Name:", get_first_name(character))
             .option(character.name.middle(), |middle, b| {
                 b.field("Middle Name:", middle.str())
             })
-            .field("Last Name Type:", character.name.last().get_type())
             .option(character.name.last().name(), |last, b| {
-                b.field("Last Name:", last.str())
+                b.field(
+                    &format!("{}:", character.name.last().get_type()),
+                    last.str(),
+                )
             })
+            .h3("Other")
             .option(data.cultures.get(character.culture), |culture, b| {
                 b.complex_field("Culture:", |b| {
                     b.link(&link_culture_details(culture.id()), culture.name().str())
@@ -146,7 +150,7 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
                     .select(
                         "Last Name Type:",
                         "last_type",
-                        &["None", "Family", "Patronymic", "Matronymic"],
+                        &["None", "Family Name", "Patronymic", "Matronymic"],
                         character.name.last().get_type(),
                     )
                     .text_input("Last Name:", "last_name", get_last_name(character))

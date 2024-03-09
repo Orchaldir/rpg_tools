@@ -48,7 +48,7 @@ impl CharacterName {
                 Lastname::None
             } else if let Some(name) = Name::new(last) {
                 match last_type.as_str() {
-                    "Family" => Lastname::Family { name },
+                    "Family Name" => Lastname::Family { name },
                     "Patronymic" => Lastname::Patronymic { name },
                     "Matronymic" => Lastname::Matronymic { name },
                     _ => return bail!("Unknown type of last name"),
@@ -134,7 +134,7 @@ impl Lastname {
     pub fn get_type(&self) -> &str {
         match self {
             Lastname::None => "None",
-            Lastname::Family { .. } => "Family",
+            Lastname::Family { .. } => "Family Name",
             Lastname::Patronymic { .. } => "Patronymic",
             Lastname::Matronymic { .. } => "Matronymic",
         }
