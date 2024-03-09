@@ -6,6 +6,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::character::culture::{Culture, CultureId};
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
@@ -79,16 +80,16 @@ fn get_details_html(data: &RpgData, id: CultureId) -> Option<RawHtml<String>> {
             .get_all()
             .iter()
             .filter(|c| c.culture.eq(&id))
-            .map(|c| (c.id(), c.name()))
+            .map(|c| (c.id(), c.name.to_string()))
             .collect();
 
         let builder = create_html()
-            .h1(&format!("Culture: {}", culture.name()))
+            .h1(&format!("Culture: {}", culture.name().str()))
             .h2("Data")
             .field_usize("Id:", id.id())
             .field_usize("Characters:", characters.len())
-            .list(&characters, |b, &character| {
-                b.link(&link_character_details(character.0), character.1)
+            .list(&characters, |b, character| {
+                b.link(&link_character_details(character.0), &character.1)
             })
             .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_all_cultures(), "Back"));
@@ -102,10 +103,10 @@ fn get_edit_html(data: &RpgData, id: CultureId, name_error: &str) -> Option<RawH
 
     data.cultures.get(id).map(|culture| {
         let builder = create_html()
-            .h1(&format!("Edit Culture: {}", culture.name()))
+            .h1(&format!("Edit Culture: {}", culture.name().str()))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input("Name", "name", culture.name())
+                b.text_input("Name", "name", culture.name().str())
                     .error(name_error)
             })
             .p(|b| b.link(&link_culture_details(id), "Back"));

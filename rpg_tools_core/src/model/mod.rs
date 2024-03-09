@@ -12,6 +12,7 @@ use std::path::PathBuf;
 pub mod character;
 pub mod color;
 pub mod math;
+pub mod name;
 pub mod world;
 
 /// Contains all the data of the rpg.

@@ -5,6 +5,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::delete::building::delete_building;
@@ -89,14 +90,14 @@ pub fn update_building(
 pub fn get_building_details_html(data: &RpgData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
         let builder = create_html()
-            .h1(&format!("Building: {}", building.name()))
+            .h1(&format!("Building: {}", building.name().str()))
             .h2("Data")
             .field_usize("Id:", id.id())
-            .field("Name:", building.name())
+            .field("Name:", &building.name().to_string())
             .h3("Lot")
             .option(data.town_manager.get(building.lot.town), |town, b| {
                 b.complex_field("Town:", |b| {
-                    b.link(&link_town_details(town.id()), town.name())
+                    b.link(&link_town_details(town.id()), town.name().str())
                 })
             })
             .field_usize("Tile:", building.lot.tile)
@@ -119,10 +120,10 @@ fn get_edit_html(
 
     data.building_manager.get(id).map(|building| {
         let builder = create_html()
-            .h1(&format!("Edit Building: {}", building.name()))
+            .h1(&format!("Edit Building: {}", building.name().str()))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input("Name", "name", building.name())
+                b.text_input("Name", "name", building.name().str())
                     .error(name_error)
                     .number_input("Width", "width", building.lot.size.width() as usize, 1, 100)
                     .number_input(

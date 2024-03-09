@@ -1,5 +1,6 @@
 pub mod lot;
 
+use crate::model::name::{Name, WithName};
 use crate::model::world::building::lot::BuildingLot;
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
@@ -22,7 +23,7 @@ impl Id for BuildingId {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Building {
     id: BuildingId,
-    name: String,
+    name: Name,
     pub lot: BuildingLot,
 }
 
@@ -30,7 +31,7 @@ impl Building {
     pub fn new(id: BuildingId, lot: BuildingLot) -> Self {
         Building {
             id,
-            name: format!("Building {}", id.0),
+            name: Name::new(format!("Building {}", id.0)).unwrap(),
             lot,
         }
     }
@@ -44,12 +45,14 @@ impl Element<BuildingId> for Building {
     fn with_id(self, id: BuildingId) -> Self {
         Building { id, ..self }
     }
+}
 
-    fn name(&self) -> &str {
+impl WithName for Building {
+    fn name(&self) -> &Name {
         &self.name
     }
 
-    fn set_name(&mut self, name: String) {
+    fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 }

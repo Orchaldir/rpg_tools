@@ -8,6 +8,7 @@ use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::color::Color;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::street::StreetId;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;

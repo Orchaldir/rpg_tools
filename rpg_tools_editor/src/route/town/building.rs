@@ -5,6 +5,7 @@ use crate::EditorData;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::building::lot::BuildingLot;
 use rpg_tools_core::model::world::town::construction::Construction;
 use rpg_tools_core::model::world::town::tile::TownTile;

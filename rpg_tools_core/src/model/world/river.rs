@@ -1,3 +1,4 @@
+use crate::model::name::{Name, WithName};
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
@@ -22,7 +23,7 @@ impl Id for RiverId {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct River {
     id: RiverId,
-    name: String,
+    name: Name,
     towns: HashSet<TownId>,
 }
 
@@ -30,7 +31,7 @@ impl River {
     pub fn new(id: RiverId) -> Self {
         River {
             id,
-            name: format!("River {}", id.0),
+            name: Name::new(format!("River {}", id.0)).unwrap(),
             towns: HashSet::new(),
         }
     }
@@ -44,12 +45,13 @@ impl Element<RiverId> for River {
     fn with_id(self, id: RiverId) -> Self {
         River { id, ..self }
     }
+}
 
-    fn name(&self) -> &str {
+impl WithName for River {
+    fn name(&self) -> &Name {
         &self.name
     }
-
-    fn set_name(&mut self, name: String) {
+    fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 }

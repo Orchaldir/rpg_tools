@@ -1,8 +1,9 @@
+use crate::model::name::WithName;
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::{Building, BuildingId};
 use crate::model::world::town::construction::Construction;
 use crate::model::RpgData;
-use crate::utils::storage::{Element, Id};
+use crate::utils::storage::Id;
 use anyhow::{bail, Result};
 
 /// Tries to add a [`building`](Building) to a [`tile`](crate::model::world::town::tile::TownTile).
@@ -28,7 +29,7 @@ pub fn create_building(data: &mut RpgData, lot: BuildingLot) -> Result<BuildingI
                 lot.tile,
                 lot.size.width(),
                 lot.size.height(),
-                town.name()
+                town.name().str()
             );
         }
     } else {

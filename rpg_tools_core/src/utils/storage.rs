@@ -12,10 +12,6 @@ pub trait Element<I: Id>: Eq + PartialEq {
     fn id(&self) -> I;
 
     fn with_id(self, id: I) -> Self;
-
-    fn name(&self) -> &str;
-
-    fn set_name(&mut self, name: String);
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -109,6 +105,7 @@ impl<I: Id, T: Element<I>> Default for Storage<I, T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::model::name::WithName;
     use crate::model::world::town::{Town, TownId};
     use crate::utils::storage::DeleteElementResult::*;
 
@@ -177,6 +174,6 @@ mod tests {
         let element = storage.get(id).unwrap();
 
         assert_eq!(id, element.id());
-        assert_eq!(name, element.name());
+        assert_eq!(name, &element.name().to_string());
     }
 }

@@ -14,6 +14,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::building::BuildingId;
 use rpg_tools_core::model::world::town::terrain::Terrain;
 use rpg_tools_core::model::world::town::tile::TownTile;
@@ -157,7 +158,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
         .iter()
         .filter(|&building| building.lot.town.eq(&town.id()))
         .for_each(|building| {
-            builder.tooltip(building.name());
+            builder.tooltip(building.name().str());
             builder.link(&get_link(building.id()));
             render_building(&mut builder, renderer, town, building);
             builder.close();
@@ -166,7 +167,7 @@ fn render_town<F: FnMut(BuildingId) -> String>(
 
     render_streets_complex(renderer, town, |aabb, id, _index| {
         if let Some(street) = data.street_manager.get(id) {
-            builder.tooltip(street.name())
+            builder.tooltip(street.name().str())
         }
 
         render_street(&mut builder, &aabb);
@@ -185,7 +186,7 @@ fn get_edit_html(data: &RpgData, id: TownId, name_error: &str) -> Option<RawHtml
             .h1(&format!("Edit Town: {}", town.name()))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input("Name", "name", town.name())
+                b.text_input("Name", "name", town.name().str())
                     .error(name_error)
                     .number_input(
                         "Width",

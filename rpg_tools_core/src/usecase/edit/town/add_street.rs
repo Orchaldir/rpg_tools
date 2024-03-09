@@ -1,9 +1,10 @@
+use crate::model::name::WithName;
 use crate::model::world::street::StreetId;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::model::RpgData;
-use crate::utils::storage::{Element, Id};
+use crate::utils::storage::Id;
 use anyhow::{bail, Result};
 
 /// Tries to add a [`street`](Street) to a [`tile`](crate::model::world::town::tile::TownTile).
@@ -29,7 +30,7 @@ pub fn add_street_to_tile(
             bail!("Tile {} is outside town {}!", tile, town.name());
         }
 
-        bail!("Tile {} in town {} is occupied!", tile, town.name(),);
+        bail!("Tile {} in town {} is occupied!", tile, town.name());
     } else {
         bail!("Unknown town id {}!", town_id.id());
     }

@@ -1,3 +1,4 @@
+use crate::model::name::{Name, WithName};
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
@@ -22,7 +23,7 @@ impl Id for MountainId {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Mountain {
     id: MountainId,
-    name: String,
+    name: Name,
     towns: HashSet<TownId>,
 }
 
@@ -30,7 +31,7 @@ impl Mountain {
     pub fn new(id: MountainId) -> Self {
         Mountain {
             id,
-            name: format!("Mountain {}", id.0),
+            name: Name::new(format!("Mountain {}", id.0)).unwrap(),
             towns: Default::default(),
         }
     }
@@ -44,12 +45,13 @@ impl Element<MountainId> for Mountain {
     fn with_id(self, id: MountainId) -> Self {
         Mountain { id, ..self }
     }
+}
 
-    fn name(&self) -> &str {
+impl WithName for Mountain {
+    fn name(&self) -> &Name {
         &self.name
     }
-
-    fn set_name(&mut self, name: String) {
+    fn set_name(&mut self, name: Name) {
         self.name = name;
     }
 }

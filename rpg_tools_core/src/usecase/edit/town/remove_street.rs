@@ -1,8 +1,9 @@
+use crate::model::name::WithName;
 use crate::model::world::town::construction::Construction;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::model::RpgData;
-use crate::utils::storage::{Element, Id};
+use crate::utils::storage::Id;
 use anyhow::{bail, Result};
 
 /// Tries to remove a [`street`](Street) from a [`tile`](crate::model::world::town::tile::TownTile).
