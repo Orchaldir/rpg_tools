@@ -2,21 +2,33 @@ pub mod culture;
 
 use crate::html::create_html;
 use crate::route::character::culture::link_culture_details;
-use crate::route::util::get_all_html;
+use crate::route::link_home;
 use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::character::{Character, CharacterId};
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::character::gender::update_gender;
-use rpg_tools_core::usecase::edit::name::update_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/character/all")]
 pub fn get_all_characters(state: &State<EditorData>) -> RawHtml<String> {
     let data = state.data.lock().expect("lock shared data");
-    get_all_html(&data.characters, "Characters")
+    let new_uri = uri!(add_character()).to_string();
+
+    RawHtml(
+        create_html()
+            .h1("Characters")
+            .field("Count:", &data.characters.len().to_string())
+            .list(data.characters.get_all(), |b, e| {
+                b.link(&link_character_details(e.id()), &e.name.to_string())
+            })
+            .p(|b| b.link(&new_uri, "Add"))
+            .p(|b| b.link(&link_home(), "Back"))
+            .finish(),
+    )
 }
 
 pub fn link_all_characters() -> String {
@@ -79,13 +91,13 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
 
     data.characters.get(id).map(|character| {
         let builder = create_html()
-            .h1(&format!("Character: {}", character.name()))
+            .h1(&format!("Character: {}", character.name))
             .h2("Data")
             .field_usize("Id:", id.id())
             .field("Gender:", &character.gender.to_string())
             .option(data.cultures.get(character.culture), |culture, b| {
                 b.complex_field("Culture:", |b| {
-                    b.link(&link_culture_details(culture.id()), culture.name())
+                    b.link(&link_culture_details(culture.id()), culture.name().str())
                 })
             })
             .p(|b| b.link(&edit_uri, "Edit"))
@@ -100,7 +112,7 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
 
     data.characters.get(id).map(|character| {
         let builder = create_html()
-            .h1(&format!("Edit Character: {}", character.name()))
+            .h1(&format!("Edit Character: {}", character.name))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
                 b.text_input(

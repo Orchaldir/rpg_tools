@@ -58,16 +58,16 @@ impl CharacterName {
 
 impl Display for CharacterName {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        self.first.fmt(f)?;
+        write!(f, "{}", self.first.str())?;
 
         if let Some(middle) = &self.middle {
-            write!(f, " {}", middle.to_string())?;
+            write!(f, " {}", middle.str())?;
         }
 
         if let Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) =
             &self.last
         {
-            write!(f, " {}", name.to_string())?;
+            write!(f, " {}", name.str())?;
         }
 
         Ok(())

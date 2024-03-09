@@ -30,7 +30,7 @@ pub fn add_street_to_tile(
             bail!("Tile {} is outside town {}!", tile, town.name());
         }
 
-        bail!("Tile {} in town {} is occupied!", tile, town.name(),);
+        bail!("Tile {} in town {} is occupied!", tile, town.name());
     } else {
         bail!("Unknown town id {}!", town_id.id());
     }

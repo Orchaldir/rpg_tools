@@ -29,7 +29,7 @@ pub fn create_building(data: &mut RpgData, lot: BuildingLot) -> Result<BuildingI
                 lot.tile,
                 lot.size.width(),
                 lot.size.height(),
-                town.name().to_string()
+                town.name().str()
             );
         }
     } else {

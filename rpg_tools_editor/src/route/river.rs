@@ -5,6 +5,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::river::{River, RiverId};
 use rpg_tools_core::model::world::town::towns::WithTowns;
 use rpg_tools_core::model::RpgData;
@@ -83,7 +84,7 @@ fn get_details_html(data: &RpgData, id: RiverId) -> Option<RawHtml<String>> {
             .field_usize("Id:", id.id())
             .field_usize("Towns:", towns.len())
             .list(&towns, |b, &town| {
-                b.link(&link_town_details(town.id()), town.name())
+                b.link(&link_town_details(town.id()), town.name().str())
             })
             .p(|b| b.link(&edit_uri, "Edit"))
             .p(|b| b.link(&link_all_rivers(), "Back"));
@@ -100,7 +101,8 @@ fn get_edit_html(data: &RpgData, id: RiverId, name_error: &str) -> Option<RawHtm
             .h1(&format!("Edit River: {}", river.name()))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input("Name", "name", river.name()).error(name_error)
+                b.text_input("Name", "name", river.name().str())
+                    .error(name_error)
             })
             .p(|b| b.link(&link_river_details(id), "Back"));
 

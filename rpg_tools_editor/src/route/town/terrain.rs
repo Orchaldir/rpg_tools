@@ -7,6 +7,7 @@ use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
 use rpg_tools_core::model::math::point2d::Point2d;
+use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::world::mountain::MountainId;
 use rpg_tools_core::model::world::river::RiverId;
 use rpg_tools_core::model::world::town::terrain::Terrain;

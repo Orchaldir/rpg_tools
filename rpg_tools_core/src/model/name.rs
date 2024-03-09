@@ -27,6 +27,10 @@ impl Name {
             Some(Self { text: trimmed })
         }
     }
+
+    pub fn str(&self) -> &str {
+        &self.text
+    }
 }
 
 impl Display for Name {
