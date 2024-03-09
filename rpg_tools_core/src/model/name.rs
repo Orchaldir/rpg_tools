@@ -3,9 +3,7 @@ use std::fmt::{Display, Formatter};
 
 /// A valid name.
 #[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub struct Name {
-    text: String,
-}
+pub struct Name(String);
 
 impl Name {
     /// Returns a new name, if valid.
@@ -24,18 +22,18 @@ impl Name {
         if trimmed.is_empty() {
             None
         } else {
-            Some(Self { text: trimmed })
+            Some(Self(trimmed))
         }
     }
 
     pub fn str(&self) -> &str {
-        &self.text
+        &self.0
     }
 }
 
 impl Display for Name {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.text)
+        write!(f, "{}", self.0)
     }
 }
 
