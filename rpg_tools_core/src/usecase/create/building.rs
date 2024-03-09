@@ -1,4 +1,4 @@
-use crate::model::name::EditableName;
+use crate::model::name::WithName;
 use crate::model::world::building::lot::BuildingLot;
 use crate::model::world::building::{Building, BuildingId};
 use crate::model::world::town::construction::Construction;

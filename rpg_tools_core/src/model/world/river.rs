@@ -1,4 +1,4 @@
-use crate::model::name::{EditableName, Name};
+use crate::model::name::{Name, WithName};
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;
 use crate::utils::storage::{Element, Id};
@@ -47,7 +47,7 @@ impl Element<RiverId> for River {
     }
 }
 
-impl EditableName for River {
+impl WithName for River {
     fn name(&self) -> &Name {
         &self.name
     }

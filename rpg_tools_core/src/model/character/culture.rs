@@ -1,4 +1,4 @@
-use crate::model::name::{EditableName, Name};
+use crate::model::name::{Name, WithName};
 use crate::utils::storage::{Element, Id};
 use serde::{Deserialize, Serialize};
 
@@ -42,7 +42,7 @@ impl Element<CultureId> for Culture {
     }
 }
 
-impl EditableName for Culture {
+impl WithName for Culture {
     fn name(&self) -> &Name {
         &self.name
     }

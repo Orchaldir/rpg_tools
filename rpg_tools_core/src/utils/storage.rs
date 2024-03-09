@@ -105,7 +105,7 @@ impl<I: Id, T: Element<I>> Default for Storage<I, T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::name::EditableName;
+    use crate::model::name::WithName;
     use crate::model::world::town::{Town, TownId};
     use crate::utils::storage::DeleteElementResult::*;
 

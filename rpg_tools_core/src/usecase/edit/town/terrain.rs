@@ -1,4 +1,4 @@
-use crate::model::name::EditableName;
+use crate::model::name::WithName;
 use crate::model::world::town::terrain::Terrain;
 use crate::model::world::town::towns::WithTowns;
 use crate::model::world::town::TownId;

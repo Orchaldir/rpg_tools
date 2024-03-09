@@ -35,7 +35,7 @@ impl Display for Name {
     }
 }
 
-pub trait EditableName {
+pub trait WithName {
     fn name(&self) -> &Name;
     fn set_name(&mut self, name: Name);
 }
