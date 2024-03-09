@@ -1,0 +1,9 @@
+- id: 0
+  name:
+    first: Henry
+    middle: null
+    last:
+      type: Family
+      name: Armitage
+  gender: Male
+  culture: 0

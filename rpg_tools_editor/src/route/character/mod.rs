@@ -149,9 +149,9 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
                     &["None", "Family", "Patronymic", "Matronymic"],
                     match character.name.last() {
                         Lastname::None => "None",
-                        Lastname::Family(_) => "Family",
-                        Lastname::Patronymic(_) => "Patronymic",
-                        Lastname::Matronymic(_) => "Matronymic",
+                        Lastname::Family { .. } => "Family",
+                        Lastname::Patronymic { .. } => "Patronymic",
+                        Lastname::Matronymic { .. } => "Matronymic",
                     },
                 )
                 .text_input(

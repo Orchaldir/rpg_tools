@@ -48,9 +48,9 @@ impl CharacterName {
                 Lastname::None
             } else if let Some(name) = Name::new(last) {
                 match last_type.as_str() {
-                    "Family" => Lastname::Family(name),
-                    "Patronymic" => Lastname::Patronymic(name),
-                    "Matronymic" => Lastname::Matronymic(name),
+                    "Family" => Lastname::Family { name },
+                    "Patronymic" => Lastname::Patronymic { name },
+                    "Matronymic" => Lastname::Matronymic { name },
                     _ => return bail!("Unknown type of last name"),
                 }
             } else {
@@ -91,8 +91,9 @@ impl Display for CharacterName {
             write!(f, " {}", middle.str())?;
         }
 
-        if let Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) =
-            &self.last
+        if let Lastname::Family { name }
+        | Lastname::Patronymic { name }
+        | Lastname::Matronymic { name } = &self.last
         {
             write!(f, " {}", name.str())?;
         }
@@ -103,23 +104,30 @@ impl Display for CharacterName {
 
 /// The last name of a [`character`](crate::model::character::Character).
 #[derive(Default, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type")]
 pub enum Lastname {
     #[default]
     None,
-    Family(Name),
+    Family {
+        name: Name,
+    },
     /// A last name based on the first name of the father.
-    Patronymic(Name),
+    Patronymic {
+        name: Name,
+    },
     /// A last name based on the first name of the mother.
-    Matronymic(Name),
+    Matronymic {
+        name: Name,
+    },
 }
 
 impl Lastname {
     pub fn name(&self) -> Option<&Name> {
         match &self {
             Lastname::None => None,
-            Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) => {
-                Some(name)
-            }
+            Lastname::Family { name }
+            | Lastname::Patronymic { name }
+            | Lastname::Matronymic { name } => Some(name),
         }
     }
 }
@@ -132,7 +140,9 @@ mod tests {
     fn full_name_to_string() {
         let first = Name::new("A").unwrap();
         let middle = Name::new("B").unwrap();
-        let last = Lastname::Family(Name::new("C").unwrap());
+        let last = Lastname::Family {
+            name: Name::new("C").unwrap(),
+        };
         let full = CharacterName::full(first, middle, last);
 
         assert_eq!(full.to_string(), "A B C");
@@ -141,7 +151,9 @@ mod tests {
     #[test]
     fn simple_name_to_string() {
         let first = Name::new("First").unwrap();
-        let last = Lastname::Family(Name::new("Last").unwrap());
+        let last = Lastname::Family {
+            name: Name::new("Last").unwrap(),
+        };
         let simple = CharacterName::simple(first, last);
 
         assert_eq!(simple.to_string(), "First Last");
@@ -153,7 +165,9 @@ mod tests {
         let desired = CharacterName::full(
             Name::new("A").unwrap(),
             Name::new("B").unwrap(),
-            Lastname::Matronymic(Name::new("C").unwrap()),
+            Lastname::Matronymic {
+                name: Name::new("C").unwrap(),
+            },
         );
 
         assert_eq!(desired, name);
@@ -164,7 +178,9 @@ mod tests {
         let name = CharacterName::parse("A", " ", "C", "Patronymic").unwrap();
         let desired = CharacterName::simple(
             Name::new("A").unwrap(),
-            Lastname::Patronymic(Name::new("C").unwrap()),
+            Lastname::Patronymic {
+                name: Name::new("C").unwrap(),
+            },
         );
 
         assert_eq!(desired, name);
@@ -176,7 +192,9 @@ mod tests {
         let desired = CharacterName::full(
             Name::new("A").unwrap(),
             Name::new("B").unwrap(),
-            Lastname::Family(Name::new("C").unwrap()),
+            Lastname::Family {
+                name: Name::new("C").unwrap(),
+            },
         );
 
         assert_eq!(desired, name);
