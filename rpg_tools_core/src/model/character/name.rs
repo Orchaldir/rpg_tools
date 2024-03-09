@@ -197,7 +197,7 @@ mod tests {
 
     #[test]
     fn parse_family() {
-        let name = CharacterName::parse(" A ", " B ", " C ", "Family").unwrap();
+        let name = CharacterName::parse(" A ", " B ", " C ", "Family Name").unwrap();
         let desired = CharacterName::full(
             Name::new("A").unwrap(),
             Name::new("B").unwrap(),
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn parse_missing_first_name() {
-        assert!(CharacterName::parse("", "B", "C", "Family").is_err());
+        assert!(CharacterName::parse("", "B", "C", "Family Name").is_err());
         assert!(CharacterName::parse("", "B", "C", "Patronymic").is_err());
         assert!(CharacterName::parse("", "B", "C", "Matronymic").is_err());
         assert!(CharacterName::parse("", "B", "", "None").is_err());
@@ -231,7 +231,7 @@ mod tests {
 
     #[test]
     fn parse_missing_last_name() {
-        assert!(CharacterName::parse(" A ", " B ", "", "Family").is_err());
+        assert!(CharacterName::parse(" A ", " B ", "", "Family Name").is_err());
         assert!(CharacterName::parse(" A ", " B ", "", "Patronymic").is_err());
         assert!(CharacterName::parse(" A ", " B ", "", "Matronymic").is_err());
     }
