@@ -42,17 +42,15 @@ impl CharacterName {
         &self.first
     }
 
-    pub fn middle(&self) -> &Option<Name> {
-        &self.middle
+    pub fn middle(&self) -> Option<&Name> {
+        match &self.middle {
+            Some(middle) => Some(middle),
+            None => None,
+        }
     }
 
-    pub fn last(&self) -> Option<&Name> {
-        match &self.last {
-            Lastname::None => None,
-            Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) => {
-                Some(name)
-            }
-        }
+    pub fn last(&self) -> &Lastname {
+        &self.last
     }
 }
 
@@ -84,6 +82,17 @@ pub enum Lastname {
     Patronymic(Name),
     /// A last name based on the first name of the mother.
     Matronymic(Name),
+}
+
+impl Lastname {
+    pub fn name(&self) -> Option<&Name> {
+        match &self {
+            Lastname::None => None,
+            Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) => {
+                Some(name)
+            }
+        }
+    }
 }
 
 #[cfg(test)]

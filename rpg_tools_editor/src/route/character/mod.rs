@@ -7,6 +7,7 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
+use rpg_tools_core::model::character::name::Lastname;
 use rpg_tools_core::model::character::{Character, CharacterId};
 use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::RpgData;
@@ -65,6 +66,9 @@ pub fn edit_character(state: &State<EditorData>, id: usize) -> Option<RawHtml<St
 #[derive(FromForm, Debug)]
 pub struct CharacterUpdate<'r> {
     first_name: &'r str,
+    middle_name: &'r str,
+    last_type: &'r str,
+    last_name: &'r str,
     gender: &'r str,
 }
 
@@ -121,6 +125,27 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
                     &character.name.first().to_string(),
                 )
                 .error(name_error)
+                .text_input(
+                    "Middle Name",
+                    "middle_name",
+                    character.name.middle().map(|n| n.str()).unwrap_or(""),
+                )
+                .select(
+                    "Last Name Type:",
+                    "last_type",
+                    &["None", "Family", "Patronymic", "Matronymic"],
+                    match character.name.last() {
+                        Lastname::None => "None",
+                        Lastname::Family(_) => "Family",
+                        Lastname::Patronymic(_) => "Patronymic",
+                        Lastname::Matronymic(_) => "Matronymic",
+                    },
+                )
+                .text_input(
+                    "Last Name",
+                    "last_name",
+                    &character.name.last().name().map(|n| n.str()).unwrap_or(""),
+                )
                 .select(
                     "Gender:",
                     "gender",
