@@ -244,6 +244,7 @@ impl HtmlBuilder {
         self.complex_field(name, |b| b.usize(value))
     }
 
+    /// Only executes *f*, if *option* is some value.
     pub fn option<T, F: FnOnce(T, Self) -> Self>(self, option: Option<T>, f: F) -> Self {
         if let Some(value) = option {
             f(value, self)
