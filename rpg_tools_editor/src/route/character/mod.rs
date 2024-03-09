@@ -113,9 +113,13 @@ fn get_details_html(data: &RpgData, id: CharacterId) -> Option<RawHtml<String>> 
             .h2("Data")
             .field_usize("Id:", id.id())
             .field("First Name:", get_first_name(character))
-            .field("Middle Name:", get_middle_name(character))
+            .option(character.name.middle(), |middle, b| {
+                b.field("Middle Name:", middle.str())
+            })
             .field("Last Name Type:", character.name.last().get_type())
-            .field("Last Name:", get_last_name(character))
+            .option(character.name.last().name(), |last, b| {
+                b.field("Last Name:", last.str())
+            })
             .option(data.cultures.get(character.culture), |culture, b| {
                 b.complex_field("Culture:", |b| {
                     b.link(&link_culture_details(culture.id()), culture.name().str())
