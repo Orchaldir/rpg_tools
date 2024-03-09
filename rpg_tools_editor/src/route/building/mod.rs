@@ -88,20 +88,17 @@ pub fn update_building(
 
 pub fn get_building_details_html(data: &RpgData, id: BuildingId) -> Option<RawHtml<String>> {
     data.building_manager.get(id).map(|building| {
-        let mut builder = create_html()
+        let builder = create_html()
             .h1(&format!("Building: {}", building.name()))
             .h2("Data")
             .field_usize("Id:", id.id())
             .field("Name:", building.name())
-            .h3("Lot");
-
-        if let Some(town) = data.town_manager.get(building.lot.town) {
-            builder = builder.complex_field("Town", |b| {
-                b.link(&link_town_details(town.id()), town.name())
+            .h3("Lot")
+            .option(data.town_manager.get(building.lot.town), |town, b| {
+                b.complex_field("Town:", |b| {
+                    b.link(&link_town_details(town.id()), town.name())
+                })
             })
-        }
-
-        builder = builder
             .field_usize("Tile:", building.lot.tile)
             .field_size2d("Size:", &building.lot.size)
             .p(|b| b.link(&link_edit_building(id), "Edit"))

@@ -1,3 +1,4 @@
+use crate::model::character::culture::{Culture, CultureId};
 use crate::model::character::{Character, CharacterId};
 use crate::model::world::building::{Building, BuildingId};
 use crate::model::world::mountain::{Mountain, MountainId};
@@ -19,6 +20,7 @@ pub struct RpgData {
     pub setting: String,
     pub building_manager: Storage<BuildingId, Building>,
     pub characters: Storage<CharacterId, Character>,
+    pub cultures: Storage<CultureId, Culture>,
     pub mountain_manager: Storage<MountainId, Mountain>,
     pub river_manager: Storage<RiverId, River>,
     pub street_manager: Storage<StreetId, Street>,
@@ -31,6 +33,7 @@ impl RpgData {
             setting: setting.to_string(),
             building_manager: load_storage(setting, "building")?,
             characters: load_storage(setting, "character")?,
+            cultures: load_storage(setting, "culture")?,
             mountain_manager: load_storage(setting, "mountain")?,
             river_manager: load_storage(setting, "river")?,
             street_manager: load_storage(setting, "street")?,
@@ -41,6 +44,7 @@ impl RpgData {
     pub fn save(&self) -> anyhow::Result<()> {
         save_storage(&self.building_manager, &self.setting)?;
         save_storage(&self.characters, &self.setting)?;
+        save_storage(&self.cultures, &self.setting)?;
         save_storage(&self.mountain_manager, &self.setting)?;
         save_storage(&self.river_manager, &self.setting)?;
         save_storage(&self.street_manager, &self.setting)?;

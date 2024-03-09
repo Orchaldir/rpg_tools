@@ -3,6 +3,10 @@ use crate::route::building::{delete_building_route, link_all_buildings};
 use crate::route::building::{
     edit_building, get_all_buildings, get_building_details, update_building,
 };
+use crate::route::character::culture::{
+    add_culture, edit_culture, get_all_cultures, get_culture_details, link_all_cultures,
+    update_culture,
+};
 use crate::route::character::{
     add_character, edit_character, get_all_characters, get_character_details, link_all_characters,
     update_character,
@@ -53,6 +57,7 @@ pub fn home(state: &State<EditorData>) -> RawHtml<String> {
             .h2("Overview")
             .add_storage_link("Buildings:", &link_all_buildings(), &data.building_manager)
             .add_storage_link("Characters:", &link_all_characters(), &data.characters)
+            .add_storage_link("Cultures:", &link_all_cultures(), &data.cultures)
             .add_storage_link("Mountains:", &link_all_mountains(), &data.mountain_manager)
             .add_storage_link("Rivers:", &link_all_rivers(), &data.river_manager)
             .add_storage_link("Streets:", &link_all_streets(), &data.street_manager)
@@ -127,6 +132,11 @@ pub fn get_routes() -> Vec<Route> {
         add_character,
         edit_character,
         update_character,
+        get_all_cultures,
+        get_culture_details,
+        add_culture,
+        edit_culture,
+        update_culture,
     ]);
 
     routes
