@@ -20,20 +20,20 @@ impl CharacterName {
         }
     }
 
-    /// Returns a character name with middle name.
-    pub fn full(first: Name, middle: Name, last: Lastname) -> Self {
-        Self {
-            first,
-            middle: Some(middle),
-            last,
-        }
-    }
-
     /// Returns a character name without middle name.
     pub fn simple(first: Name, last: Lastname) -> Self {
         Self {
             first,
             middle: None,
+            last,
+        }
+    }
+
+    /// Returns a character name with middle name.
+    pub fn full(first: Name, middle: Name, last: Lastname) -> Self {
+        Self {
+            first,
+            middle: Some(middle),
             last,
         }
     }

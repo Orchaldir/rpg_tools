@@ -7,11 +7,12 @@ use crate::EditorData;
 use rocket::form::Form;
 use rocket::response::content::RawHtml;
 use rocket::State;
-use rpg_tools_core::model::character::name::Lastname;
+use rpg_tools_core::model::character::name::{CharacterName, Lastname};
 use rpg_tools_core::model::character::{Character, CharacterId};
 use rpg_tools_core::model::name::WithName;
 use rpg_tools_core::model::RpgData;
 use rpg_tools_core::usecase::edit::character::gender::update_gender;
+use rpg_tools_core::usecase::edit::name::character::update_character_name;
 use rpg_tools_core::utils::storage::{Element, Id};
 
 #[get("/character/all")]
@@ -83,7 +84,12 @@ pub fn update_character(
 
     let character_id = CharacterId::new(id);
 
-    if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
+    let name = CharacterName::full()
+
+    if let Err(e) = update_character_name(&mut data, character_id, update.gender.into()) {
+        return get_edit_html(&data, character_id, &e.to_string());
+    }
+    else if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
         return get_edit_html(&data, character_id, &e.to_string());
     }
 

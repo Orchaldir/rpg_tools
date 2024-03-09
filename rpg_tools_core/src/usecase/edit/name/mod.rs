@@ -1,3 +1,5 @@
+pub mod character;
+
 use crate::model::name::{Name, WithName};
 use crate::utils::storage::{Element, Id, Storage};
 use anyhow::{bail, Context, Result};
