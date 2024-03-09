@@ -146,4 +146,16 @@ mod tests {
 
         assert_eq!(simple.to_string(), "First Last");
     }
+
+    #[test]
+    fn parse_success() {
+        let name = CharacterName::parse("A", "B", "C", "Matronymic").unwrap();
+        let desired = CharacterName::full(
+            Name::new("A").unwrap(),
+            Name::new("B").unwrap(),
+            Lastname::Matronymic(Name::new("C").unwrap()),
+        );
+
+        assert_eq!(desired, name);
+    }
 }
