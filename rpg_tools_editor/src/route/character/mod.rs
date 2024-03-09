@@ -52,7 +52,7 @@ pub fn edit_character(state: &State<EditorData>, id: usize) -> Option<RawHtml<St
 
 #[derive(FromForm, Debug)]
 pub struct CharacterUpdate<'r> {
-    name: &'r str,
+    first_name: &'r str,
     gender: &'r str,
 }
 
@@ -67,9 +67,7 @@ pub fn update_character(
 
     let character_id = CharacterId::new(id);
 
-    if let Err(e) = update_name(&mut data.characters, character_id, update.name) {
-        return get_edit_html(&data, character_id, &e.to_string());
-    } else if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
+    if let Err(e) = update_gender(&mut data, character_id, update.gender.into()) {
         return get_edit_html(&data, character_id, &e.to_string());
     }
 
@@ -105,14 +103,18 @@ fn get_edit_html(data: &RpgData, id: CharacterId, name_error: &str) -> Option<Ra
             .h1(&format!("Edit Character: {}", character.name()))
             .field_usize("Id:", id.id())
             .form(&submit_uri, |b| {
-                b.text_input("Name", "name", character.name())
-                    .error(name_error)
-                    .select(
-                        "Gender:",
-                        "gender",
-                        &["Female", "Genderless", "Male"],
-                        &character.gender.to_string(),
-                    )
+                b.text_input(
+                    "First Name",
+                    "first_name",
+                    &character.name.first().to_string(),
+                )
+                .error(name_error)
+                .select(
+                    "Gender:",
+                    "gender",
+                    &["Female", "Genderless", "Male"],
+                    &character.gender.to_string(),
+                )
             })
             .p(|b| b.link(&link_character_details(id), "Back"));
 

@@ -11,6 +11,15 @@ pub struct CharacterName {
 }
 
 impl CharacterName {
+    /// Returns a character name with middle or last name.
+    pub fn only_first(first: Name) -> Self {
+        Self {
+            first,
+            middle: None,
+            last: Lastname::None,
+        }
+    }
+
     /// Returns a character name with middle name.
     pub fn full(first: Name, middle: Name, last: Lastname) -> Self {
         Self {
@@ -26,6 +35,23 @@ impl CharacterName {
             first,
             middle: None,
             last,
+        }
+    }
+
+    pub fn first(&self) -> &Name {
+        &self.first
+    }
+
+    pub fn middle(&self) -> &Option<Name> {
+        &self.middle
+    }
+
+    pub fn last(&self) -> Option<&Name> {
+        match &self.last {
+            Lastname::None => None,
+            Lastname::Family(name) | Lastname::Patronymic(name) | Lastname::Matronymic(name) => {
+                Some(name)
+            }
         }
     }
 }
